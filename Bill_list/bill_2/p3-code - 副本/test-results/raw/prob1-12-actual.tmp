@@ -1,0 +1,23 @@
+{
+    // Negative voltage sensor value should cause a failure and leave
+    // the batt_t struct 'actual' unchanged.
+    BATT_VOLTAGE_PORT = -7200;
+    BATT_STATUS_PORT  = 0b110011;
+    BATT_DISPLAY_PORT = -1;
+    memset(actual_batt, 0, sizeof(batt_t));
+    int ret = set_batt_from_ports(actual_batt);
+    printf("ret: %d\n",ret);
+    printf("actual = "); print_batt(actual_batt);
+    print_ports();
+}
+---OUTPUT---
+ret: 1
+actual = {
+  ->mlvolts = 0,
+  ->percent = 0,
+  ->mode    = 0,
+}
+BATT_VOLTAGE_PORT  : -7200
+BATT_STATUS_PORT   : 001 10011
+BATT_DISPLAY_PORT  : 111 11111 1111111 1111111 1111111 111
+index              :  29    24      17      10       3   0

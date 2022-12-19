@@ -1,0 +1,28 @@
+{
+    // call batt_update() with negative voltage reading which should
+    // bail out without changing anything.
+    BATT_VOLTAGE_PORT = -6421;  // Negative value causes error out
+    BATT_STATUS_PORT  = 0b111011; // Percent mode
+    BATT_DISPLAY_PORT = -1;
+    int ret = batt_update();
+    printf("ret: %d\n",ret);
+    printf("\n");  print_ports();  printf("\n");
+    printf("Display based on BATT_DISPLAY_PORT:\n");
+    print_batt_display();
+}
+---OUTPUT---
+ret: 1
+
+BATT_VOLTAGE_PORT  : -6421
+BATT_STATUS_PORT   : 001 11011
+BATT_DISPLAY_PORT  : 111 11111 1111111 1111111 1111111 111
+index              :  29    24      17      10       3   0
+
+Display based on BATT_DISPLAY_PORT:
++-^^^-+  ####   ####  ####     
+|#####|  #  #   #  #  #  #     
+|#####|  #  #   #  #  #  #     
+|#####|  ####   ####  ####  V  
+|#####|  #  #   #  #  #  #  %  
+|#####|  #  #   #  #  #  #     
++-----+  #### o ####  ####     

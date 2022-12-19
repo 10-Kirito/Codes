@@ -1,0 +1,27 @@
+{
+    // call batt_update() with given sensor and status
+    BATT_VOLTAGE_PORT = 7291;
+    BATT_STATUS_PORT  = 0b011011; // Percent mode
+    BATT_DISPLAY_PORT = -1;
+    int ret = batt_update();
+    printf("ret: %d\n",ret);
+    printf("\n");  print_ports();  printf("\n");
+    printf("Display based on BATT_DISPLAY_PORT:\n");
+    print_batt_display();
+}
+---OUTPUT---
+ret: 0
+
+BATT_VOLTAGE_PORT  : 7291
+BATT_STATUS_PORT   : 000 11011
+BATT_DISPLAY_PORT  : 000 01111 0000000 1111111 0111111 001
+index              :  29    24      17      10       3   0
+
+Display based on BATT_DISPLAY_PORT:
++-^^^-+         ####  ####     
+|     |         #  #  #  #     
+|#####|         #  #  #  #     
+|#####|         ####  #  #     
+|#####|         #  #  #  #  %  
+|#####|         #  #  #  #     
++-----+         ####  ####     

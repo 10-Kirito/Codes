@@ -1,0 +1,6 @@
+# ninja log v5
+23	607	6895242583873074	CMakeFiles/textadv.dir/State.cpp.obj	44f8035924f856cc
+1	708	6895242584880374	CMakeFiles/textadv.dir/Room.cpp.obj	f28f82f0eceb40ba
+34	1716	6895242594977856	CMakeFiles/textadv.dir/wordwrap.cpp.obj	eedf99e9898db048
+4	528	6895243231667568	CMakeFiles/textadv.dir/main.cpp.obj	dbc19fc7b85eb63b
+529	908	6895243235427527	textadv.exe	5f6579eaf83a99d0

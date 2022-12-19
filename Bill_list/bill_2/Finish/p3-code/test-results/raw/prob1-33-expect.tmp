@@ -1,0 +1,31 @@
+BATT_VOLTAGE_PORT set to: 6949
+BATT_STATUS_PORT  set to: 0x6F
+
+result = set_batt_from_ports( &batt );
+result: 0
+batt = {
+  .mlvolts = 3474
+  .percent = 59
+  .mode    = 2
+}
+
+result = set_display_from_batt(batt, &display);
+result: 0
+display is
+bits:  000 00111 1001111 1100110 0000111 110
+index:  29    24      17      10       3   0
+
+result = batt_update();
+result: 0
+BATT_DISPLAY_PORT is
+bits:  000 00111 1001111 1100110 0000111 110
+index:  29    24      17      10       3   0
+
+Battery Meter Display:
++-^^^-+  ####   #  #  ####     
+|     |     #   #  #     #     
+|     |     #   #  #     #     
+|#####|  ####   ####     #  V  
+|#####|     #      #     #     
+|#####|     #      #     #     
++-----+  #### o    #     #     

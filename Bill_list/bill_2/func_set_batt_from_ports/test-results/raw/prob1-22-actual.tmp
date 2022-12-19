@@ -1,0 +1,38 @@
+{
+    // 30% level is first point at which 2 bars show
+    BATT_VOLTAGE_PORT = -1;
+    BATT_STATUS_PORT  = -1;
+    BATT_DISPLAY_PORT = -1;
+    batt_t batt = {
+      .mlvolts = 6480,
+      .percent = 30,
+      .mode = 1,
+    };
+    int ret = set_display_from_batt(batt, dispint);
+    printf("ret: %d\n",ret);
+    printf("%-18s : %s\n%-18s : %s\n",
+           "dispint bits", bitstr(*dispint, INT_BITS),
+           "index", bitstr_index(INT_BITS));
+    printf("\n");  print_ports();  printf("\n");
+    BATT_DISPLAY_PORT = *dispint;
+    printf("Display based on dispint:\n");
+    print_batt_display();
+}
+---OUTPUT---
+ret: 0
+dispint bits       : 000 00011 0000000 1001111 0111111 001
+index              :  29    24      17      10       3   0
+
+BATT_VOLTAGE_PORT  : -1
+BATT_STATUS_PORT   : 111 11111
+BATT_DISPLAY_PORT  : 111 11111 1111111 1111111 1111111 111
+index              :  29    24      17      10       3   0
+
+Display based on dispint:
++-^^^-+         ####  ####     
+|     |            #  #  #     
+|     |            #  #  #     
+|     |         ####  #  #     
+|#####|            #  #  #  %  
+|#####|            #  #  #     
++-----+         ####  ####     

@@ -1,0 +1,1248 @@
+#+TITLE: test_hybrid_batt_update and hybrid_main tests
+#+TESTY: PREFIX="prob1"
+#+TESTY: USE_VALGRIND=1
+
+* set_batt_from_ports() 0 V
+#+TESTY: program='./test_hybrid_batt_update "set_batt_from_ports() 0 V"'
+#+BEGIN_SRC sh
+{
+    // Check sensor value of 0 and status set for voltage
+    BATT_VOLTAGE_PORT = 0;
+    BATT_STATUS_PORT  = 0b000000;
+    BATT_DISPLAY_PORT = -1;
+    int ret = set_batt_from_ports(actual_batt);
+    printf("ret: %d\n",ret);
+    printf("actual = "); print_batt(actual_batt);
+    print_ports();
+}
+---OUTPUT---
+ret: 0
+actual = {
+  ->mlvolts = 0,
+  ->percent = 0,
+  ->mode    = 2,
+}
+BATT_VOLTAGE_PORT  : 0
+BATT_STATUS_PORT   : 000 00000
+BATT_DISPLAY_PORT  : 111 11111 1111111 1111111 1111111 111
+index              :  29    24      17      10       3   0
+#+END_SRC
+
+* set_batt_from_ports() 0 P
+#+TESTY: program='./test_hybrid_batt_update "set_batt_from_ports() 0 P"'
+#+BEGIN_SRC sh
+{
+    // Check sensor value of 0 and status set for percent
+    BATT_VOLTAGE_PORT = 0;
+    BATT_STATUS_PORT  = 0b010000;
+    BATT_DISPLAY_PORT = -1;
+    int ret = set_batt_from_ports(actual_batt);
+    printf("ret: %d\n",ret);
+    printf("actual = "); print_batt(actual_batt);
+    print_ports();
+}
+---OUTPUT---
+ret: 0
+actual = {
+  ->mlvolts = 0,
+  ->percent = 0,
+  ->mode    = 1,
+}
+BATT_VOLTAGE_PORT  : 0
+BATT_STATUS_PORT   : 000 10000
+BATT_DISPLAY_PORT  : 111 11111 1111111 1111111 1111111 111
+index              :  29    24      17      10       3   0
+#+END_SRC
+
+* set_batt_from_ports() 7400 V
+#+TESTY: program='./test_hybrid_batt_update "set_batt_from_ports() 7400 V"'
+#+BEGIN_SRC sh
+{
+    // Check sensor value of 7400 (3.70 V) and status set for voltage
+    BATT_VOLTAGE_PORT = 7400;
+    BATT_STATUS_PORT  = 0b000000;
+    BATT_DISPLAY_PORT = -1;
+    int ret = set_batt_from_ports(actual_batt);
+    printf("ret: %d\n",ret);
+    printf("actual = "); print_batt(actual_batt);
+    print_ports();
+}
+---OUTPUT---
+ret: 0
+actual = {
+  ->mlvolts = 3700,
+  ->percent = 87,
+  ->mode    = 2,
+}
+BATT_VOLTAGE_PORT  : 7400
+BATT_STATUS_PORT   : 000 00000
+BATT_DISPLAY_PORT  : 111 11111 1111111 1111111 1111111 111
+index              :  29    24      17      10       3   0
+#+END_SRC
+
+* set_batt_from_ports() 7400 P
+#+TESTY: program='./test_hybrid_batt_update "set_batt_from_ports() 7400 P"'
+#+BEGIN_SRC sh
+{
+    // Check sensor value of 7400 (3.70 V) and status set for percent
+    BATT_VOLTAGE_PORT = 7400;
+    BATT_STATUS_PORT  = 0b010000;
+    BATT_DISPLAY_PORT = -1;
+    int ret = set_batt_from_ports(actual_batt);
+    printf("ret: %d\n",ret);
+    printf("actual = "); print_batt(actual_batt);
+    print_ports();
+}
+---OUTPUT---
+ret: 0
+actual = {
+  ->mlvolts = 3700,
+  ->percent = 87,
+  ->mode    = 1,
+}
+BATT_VOLTAGE_PORT  : 7400
+BATT_STATUS_PORT   : 000 10000
+BATT_DISPLAY_PORT  : 111 11111 1111111 1111111 1111111 111
+index              :  29    24      17      10       3   0
+#+END_SRC
+
+* set_batt_from_ports() mixed STATUS V
+#+TESTY: program='./test_hybrid_batt_update "set_batt_from_ports() mixed STATUS V"'
+#+BEGIN_SRC sh
+{
+    // Checks that only bit 4 of BATT_STATUS_PORT is used for
+    // determining the Voltage/Percent mode. Bit 4 is 0 but other bits
+    // are set in this test
+    BATT_VOLTAGE_PORT = 7500;
+    BATT_STATUS_PORT  = 0b10101001;
+    BATT_DISPLAY_PORT = -1;
+    int ret = set_batt_from_ports(actual_batt);
+    printf("ret: %d\n",ret);
+    printf("actual = "); print_batt(actual_batt);
+    print_ports();
+}
+---OUTPUT---
+ret: 0
+actual = {
+  ->mlvolts = 3750,
+  ->percent = 93,
+  ->mode    = 2,
+}
+BATT_VOLTAGE_PORT  : 7500
+BATT_STATUS_PORT   : 101 01001
+BATT_DISPLAY_PORT  : 111 11111 1111111 1111111 1111111 111
+index              :  29    24      17      10       3   0
+#+END_SRC
+
+* set_batt_from_ports() mixed STATUS P
+#+TESTY: program='./test_hybrid_batt_update "set_batt_from_ports() mixed STATUS P"'
+#+BEGIN_SRC sh
+{
+    // Checks that only bit 4 of BATT_STATUS_PORT is used for
+    // determining the Voltage/Percent mode. Bit 4 is 0 but other bits
+    // are set in this test
+    BATT_VOLTAGE_PORT = 6277;
+    BATT_STATUS_PORT  = 0b01110110;
+    BATT_DISPLAY_PORT = -1;
+    int ret = set_batt_from_ports(actual_batt);
+    printf("ret: %d\n",ret);
+    printf("actual = "); print_batt(actual_batt);
+    print_ports();
+}
+---OUTPUT---
+ret: 0
+actual = {
+  ->mlvolts = 3138,
+  ->percent = 17,
+  ->mode    = 1,
+}
+BATT_VOLTAGE_PORT  : 6277
+BATT_STATUS_PORT   : 011 10110
+BATT_DISPLAY_PORT  : 111 11111 1111111 1111111 1111111 111
+index              :  29    24      17      10       3   0
+#+END_SRC
+
+* set_batt_from_ports() 7845 P is 100%
+#+TESTY: program='./test_hybrid_batt_update "set_batt_from_ports() 7845 P is 100%"'
+#+BEGIN_SRC sh
+{
+    // Checks that the percentage is set to 100% if voltage port is
+    // sufficiently high.
+    BATT_VOLTAGE_PORT = 7845;
+    BATT_STATUS_PORT  = 0b010000;
+    BATT_DISPLAY_PORT = -1;
+    int ret = set_batt_from_ports(actual_batt);
+    printf("ret: %d\n",ret);
+    printf("actual = "); print_batt(actual_batt);
+    print_ports();
+}
+---OUTPUT---
+ret: 0
+actual = {
+  ->mlvolts = 3922,
+  ->percent = 100,
+  ->mode    = 1,
+}
+BATT_VOLTAGE_PORT  : 7845
+BATT_STATUS_PORT   : 000 10000
+BATT_DISPLAY_PORT  : 111 11111 1111111 1111111 1111111 111
+index              :  29    24      17      10       3   0
+#+END_SRC
+
+* set_batt_from_ports() 2500 V
+#+TESTY: program='./test_hybrid_batt_update "set_batt_from_ports() 2500 V"'
+#+BEGIN_SRC sh
+{
+    // Checks a low voltage rating should be 0 percent
+    BATT_VOLTAGE_PORT = 2500;
+    BATT_STATUS_PORT  = 0b000000;
+    BATT_DISPLAY_PORT = -1;
+    int ret = set_batt_from_ports(actual_batt);
+    printf("ret: %d\n",ret);
+    printf("actual = "); print_batt(actual_batt);
+    print_ports();
+}
+---OUTPUT---
+ret: 0
+actual = {
+  ->mlvolts = 1250,
+  ->percent = 0,
+  ->mode    = 2,
+}
+BATT_VOLTAGE_PORT  : 2500
+BATT_STATUS_PORT   : 000 00000
+BATT_DISPLAY_PORT  : 111 11111 1111111 1111111 1111111 111
+index              :  29    24      17      10       3   0
+#+END_SRC
+
+* set_batt_from_ports() 6579 P
+#+TESTY: program='./test_hybrid_batt_update "set_batt_from_ports() 6579 P"'
+#+BEGIN_SRC sh
+{
+    // Checks proper voltage / percent for a mid-range sensor value.
+    BATT_VOLTAGE_PORT = 6579;
+    BATT_STATUS_PORT  = 0b010000;
+    BATT_DISPLAY_PORT = -1;
+    int ret = set_batt_from_ports(actual_batt);
+    printf("ret: %d\n",ret);
+    printf("actual = "); print_batt(actual_batt);
+    print_ports();
+}
+---OUTPUT---
+ret: 0
+actual = {
+  ->mlvolts = 3289,
+  ->percent = 36,
+  ->mode    = 1,
+}
+BATT_VOLTAGE_PORT  : 6579
+BATT_STATUS_PORT   : 000 10000
+BATT_DISPLAY_PORT  : 111 11111 1111111 1111111 1111111 111
+index              :  29    24      17      10       3   0
+#+END_SRC
+
+* set_batt_from_ports() 6016 V
+#+TESTY: program='./test_hybrid_batt_update "set_batt_from_ports() 6016 V"'
+#+BEGIN_SRC sh
+{
+    // Low voltage sensor value should yield 1%
+    BATT_VOLTAGE_PORT = 6016;
+    BATT_STATUS_PORT  = 0b101100;
+    BATT_DISPLAY_PORT = -1;
+    int ret = set_batt_from_ports(actual_batt);
+    printf("ret: %d\n",ret);
+    printf("actual = "); print_batt(actual_batt);
+    print_ports();
+}
+---OUTPUT---
+ret: 0
+actual = {
+  ->mlvolts = 3008,
+  ->percent = 1,
+  ->mode    = 2,
+}
+BATT_VOLTAGE_PORT  : 6016
+BATT_STATUS_PORT   : 001 01100
+BATT_DISPLAY_PORT  : 111 11111 1111111 1111111 1111111 111
+index              :  29    24      17      10       3   0
+#+END_SRC
+
+* set_batt_from_ports() 6050 P
+#+TESTY: program='./test_hybrid_batt_update "set_batt_from_ports() 6050 P"'
+#+BEGIN_SRC sh
+{
+    // Low voltage sensor value, should be nonzero percent
+    BATT_VOLTAGE_PORT = 6050;
+    BATT_STATUS_PORT  = 0b110000;
+    BATT_DISPLAY_PORT = -1;
+    int ret = set_batt_from_ports(actual_batt);
+    printf("ret: %d\n",ret);
+    printf("actual = "); print_batt(actual_batt);
+    print_ports();
+}
+---OUTPUT---
+ret: 0
+actual = {
+  ->mlvolts = 3025,
+  ->percent = 3,
+  ->mode    = 1,
+}
+BATT_VOLTAGE_PORT  : 6050
+BATT_STATUS_PORT   : 001 10000
+BATT_DISPLAY_PORT  : 111 11111 1111111 1111111 1111111 111
+index              :  29    24      17      10       3   0
+#+END_SRC
+
+* set_batt_from_ports() FAILS
+#+TESTY: program='./test_hybrid_batt_update "set_batt_from_ports() FAILS"'
+#+BEGIN_SRC sh
+{
+    // Negative voltage sensor value should cause a failure and leave
+    // the batt_t struct 'actual' unchanged.
+    BATT_VOLTAGE_PORT = -7200;
+    BATT_STATUS_PORT  = 0b110011;
+    BATT_DISPLAY_PORT = -1;
+    memset(actual_batt, 0, sizeof(batt_t));
+    int ret = set_batt_from_ports(actual_batt);
+    printf("ret: %d\n",ret);
+    printf("actual = "); print_batt(actual_batt);
+    print_ports();
+}
+---OUTPUT---
+ret: 1
+actual = {
+  ->mlvolts = 0,
+  ->percent = 0,
+  ->mode    = 0,
+}
+BATT_VOLTAGE_PORT  : -7200
+BATT_STATUS_PORT   : 001 10011
+BATT_DISPLAY_PORT  : 111 11111 1111111 1111111 1111111 111
+index              :  29    24      17      10       3   0
+#+END_SRC
+
+* set_display_from_batt() 0 V
+#+TESTY: program='./test_hybrid_batt_update "set_display_from_batt() 0 V"'
+#+BEGIN_SRC sh
+{
+    // Show 0.0 V
+    BATT_VOLTAGE_PORT = -1;
+    BATT_STATUS_PORT  = -1;
+    BATT_DISPLAY_PORT = -1;
+    batt_t batt = {
+      .mlvolts = 0,
+      .percent = 0,
+      .mode = 2,
+    };
+    int ret = set_display_from_batt(batt, dispint);
+    printf("ret: %d\n",ret);
+    printf("%-18s : %s\n%-18s : %s\n",
+           "dispint bits", bitstr(*dispint, INT_BITS),
+           "index", bitstr_index(INT_BITS));
+    printf("\n");  print_ports();  printf("\n");
+    BATT_DISPLAY_PORT = *dispint;
+    printf("Display based on dispint:\n");
+    print_batt_display();
+}
+---OUTPUT---
+ret: 0
+dispint bits       : 000 00000 0111111 0111111 0111111 110
+index              :  29    24      17      10       3   0
+
+BATT_VOLTAGE_PORT  : -1
+BATT_STATUS_PORT   : 111 11111
+BATT_DISPLAY_PORT  : 111 11111 1111111 1111111 1111111 111
+index              :  29    24      17      10       3   0
+
+Display based on dispint:
++-^^^-+  ####   ####  ####     
+|     |  #  #   #  #  #  #     
+|     |  #  #   #  #  #  #     
+|     |  #  #   #  #  #  #  V  
+|     |  #  #   #  #  #  #     
+|     |  #  #   #  #  #  #     
++-----+  #### o ####  ####     
+#+END_SRC
+
+* set_display_from_batt() 0 %
+#+TESTY: program='./test_hybrid_batt_update "set_display_from_batt() 0 %"'
+#+BEGIN_SRC sh
+{
+    // Given 0 volts which should also show 0% battery remaining
+    BATT_VOLTAGE_PORT = -1;
+    BATT_STATUS_PORT  = -1;
+    BATT_DISPLAY_PORT = -1;
+    batt_t batt = {
+      .mlvolts = 0,
+      .percent = 0,
+      .mode = 1,
+    };
+    int ret = set_display_from_batt(batt, dispint);
+    printf("ret: %d\n",ret);
+    printf("%-18s : %s\n%-18s : %s\n",
+           "dispint bits", bitstr(*dispint, INT_BITS),
+           "index", bitstr_index(INT_BITS));
+    printf("\n");  print_ports();  printf("\n");
+    BATT_DISPLAY_PORT = *dispint;
+    printf("Display based on dispint:\n");
+    print_batt_display();
+}
+---OUTPUT---
+ret: 0
+dispint bits       : 000 00000 0000000 0000000 0111111 001
+index              :  29    24      17      10       3   0
+
+BATT_VOLTAGE_PORT  : -1
+BATT_STATUS_PORT   : 111 11111
+BATT_DISPLAY_PORT  : 111 11111 1111111 1111111 1111111 111
+index              :  29    24      17      10       3   0
+
+Display based on dispint:
++-^^^-+               ####     
+|     |               #  #     
+|     |               #  #     
+|     |               #  #     
+|     |               #  #  %  
+|     |               #  #     
++-----+               ####     
+#+END_SRC
+
+* set_display_from_batt() 3.50 V
+#+TESTY: program='./test_hybrid_batt_update "set_display_from_batt() 3.50 V"'
+#+BEGIN_SRC sh
+{
+    // Set dispint from the given batt which is in Voltage mode
+    // and should result in a bit arrangement showing 3.50 V. 
+    BATT_VOLTAGE_PORT = -1;
+    BATT_STATUS_PORT  = -1;
+    BATT_DISPLAY_PORT = -1;
+    batt_t batt = {
+      .mlvolts = 3500,
+      .percent = 62,
+      .mode = 2,
+    };
+    int ret = set_display_from_batt(batt, dispint);
+    printf("ret: %d\n",ret);
+    printf("%-18s : %s\n%-18s : %s\n",
+           "dispint bits", bitstr(*dispint, INT_BITS),
+           "index", bitstr_index(INT_BITS));
+    printf("\n");  print_ports();  printf("\n");
+    BATT_DISPLAY_PORT = *dispint;
+    printf("Display based on dispint:\n");
+    print_batt_display();
+}
+---OUTPUT---
+ret: 0
+dispint bits       : 000 00111 1001111 1101101 0111111 110
+index              :  29    24      17      10       3   0
+
+BATT_VOLTAGE_PORT  : -1
+BATT_STATUS_PORT   : 111 11111
+BATT_DISPLAY_PORT  : 111 11111 1111111 1111111 1111111 111
+index              :  29    24      17      10       3   0
+
+Display based on dispint:
++-^^^-+  ####   ####  ####     
+|     |     #   #     #  #     
+|     |     #   #     #  #     
+|#####|  ####   ####  #  #  V  
+|#####|     #      #  #  #     
+|#####|     #      #  #  #     
++-----+  #### o ####  ####     
+#+END_SRC
+
+* set_display_from_batt() 3.507 V
+#+TESTY: program='./test_hybrid_batt_update "set_display_from_batt() 3.507 V"'
+#+BEGIN_SRC sh
+{
+    // Should show 3.51 V: rounds Up associated with the last digit
+    // of the voltage reading.
+    BATT_VOLTAGE_PORT = -1;
+    BATT_STATUS_PORT  = -1;
+    BATT_DISPLAY_PORT = -1;
+    batt_t batt = {
+      .mlvolts = 3507,
+      .percent = 62,
+      .mode = 2,
+    };
+    int ret = set_display_from_batt(batt, dispint);
+    printf("ret: %d\n",ret);
+    printf("%-18s : %s\n%-18s : %s\n",
+           "dispint bits", bitstr(*dispint, INT_BITS),
+           "index", bitstr_index(INT_BITS));
+    printf("\n");  print_ports();  printf("\n");
+    BATT_DISPLAY_PORT = *dispint;
+    printf("Display based on dispint:\n");
+    print_batt_display();
+}
+---OUTPUT---
+ret: 0
+dispint bits       : 000 00111 1001111 1101101 0000110 110
+index              :  29    24      17      10       3   0
+
+BATT_VOLTAGE_PORT  : -1
+BATT_STATUS_PORT   : 111 11111
+BATT_DISPLAY_PORT  : 111 11111 1111111 1111111 1111111 111
+index              :  29    24      17      10       3   0
+
+Display based on dispint:
++-^^^-+  ####   ####     #     
+|     |     #   #        #     
+|     |     #   #        #     
+|#####|  ####   ####     #  V  
+|#####|     #      #     #     
+|#####|     #      #     #     
++-----+  #### o ####     #     
+#+END_SRC
+
+* set_display_from_batt() 62 %
+#+TESTY: program='./test_hybrid_batt_update "set_display_from_batt() 62 %"'
+#+BEGIN_SRC sh
+{
+    // Percent mode, show 62 %
+    BATT_VOLTAGE_PORT = -1;
+    BATT_STATUS_PORT  = -1;
+    BATT_DISPLAY_PORT = -1;
+    batt_t batt = {
+      .mlvolts = 3500,
+      .percent = 62,
+      .mode = 1,
+    };
+    int ret = set_display_from_batt(batt, dispint);
+    printf("ret: %d\n",ret);
+    printf("%-18s : %s\n%-18s : %s\n",
+           "dispint bits", bitstr(*dispint, INT_BITS),
+           "index", bitstr_index(INT_BITS));
+    printf("\n");  print_ports();  printf("\n");
+    BATT_DISPLAY_PORT = *dispint;
+    printf("Display based on dispint:\n");
+    print_batt_display();
+}
+---OUTPUT---
+ret: 0
+dispint bits       : 000 00111 0000000 1111101 1011011 001
+index              :  29    24      17      10       3   0
+
+BATT_VOLTAGE_PORT  : -1
+BATT_STATUS_PORT   : 111 11111
+BATT_DISPLAY_PORT  : 111 11111 1111111 1111111 1111111 111
+index              :  29    24      17      10       3   0
+
+Display based on dispint:
++-^^^-+         ####  ####     
+|     |         #        #     
+|     |         #        #     
+|#####|         ####  ####     
+|#####|         #  #  #     %  
+|#####|         #  #  #        
++-----+         ####  ####     
+#+END_SRC
+
+* set_display_from_batt() 87 %
+#+TESTY: program='./test_hybrid_batt_update "set_display_from_batt() 87 %"'
+#+BEGIN_SRC sh
+{
+    // Show 87 %
+    BATT_VOLTAGE_PORT = -1;
+    BATT_STATUS_PORT  = -1;
+    BATT_DISPLAY_PORT = -1;
+    batt_t batt = {
+      .mlvolts = 3700,
+      .percent = 87,
+      .mode = 1,
+    };
+    int ret = set_display_from_batt(batt, dispint);
+    printf("ret: %d\n",ret);
+    printf("%-18s : %s\n%-18s : %s\n",
+           "dispint bits", bitstr(*dispint, INT_BITS),
+           "index", bitstr_index(INT_BITS));
+    printf("\n");  print_ports();  printf("\n");
+    BATT_DISPLAY_PORT = *dispint;
+    printf("Display based on dispint:\n");
+    print_batt_display();
+}
+---OUTPUT---
+ret: 0
+dispint bits       : 000 01111 0000000 1111111 0000111 001
+index              :  29    24      17      10       3   0
+
+BATT_VOLTAGE_PORT  : -1
+BATT_STATUS_PORT   : 111 11111
+BATT_DISPLAY_PORT  : 111 11111 1111111 1111111 1111111 111
+index              :  29    24      17      10       3   0
+
+Display based on dispint:
++-^^^-+         ####  ####     
+|     |         #  #     #     
+|#####|         #  #     #     
+|#####|         ####     #     
+|#####|         #  #     #  %  
+|#####|         #  #     #     
++-----+         ####     #     
+#+END_SRC
+
+* set_display_from_batt() 4.21 V
+#+TESTY: program='./test_hybrid_batt_update "set_display_from_batt() 4.21 V"'
+#+BEGIN_SRC sh
+{
+    // Show 4.21 Volts
+    BATT_VOLTAGE_PORT = -1;
+    BATT_STATUS_PORT  = -1;
+    BATT_DISPLAY_PORT = -1;
+    batt_t batt = {
+      .mlvolts = 4217,
+      .percent = 100,
+      .mode = 2,
+    };
+    int ret = set_display_from_batt(batt, dispint);
+    printf("ret: %d\n",ret);
+    printf("%-18s : %s\n%-18s : %s\n",
+           "dispint bits", bitstr(*dispint, INT_BITS),
+           "index", bitstr_index(INT_BITS));
+    printf("\n");  print_ports();  printf("\n");
+    BATT_DISPLAY_PORT = *dispint;
+    printf("Display based on dispint:\n");
+    print_batt_display();
+}
+---OUTPUT---
+ret: 0
+dispint bits       : 000 11111 1100110 1011011 1011011 110
+index              :  29    24      17      10       3   0
+
+BATT_VOLTAGE_PORT  : -1
+BATT_STATUS_PORT   : 111 11111
+BATT_DISPLAY_PORT  : 111 11111 1111111 1111111 1111111 111
+index              :  29    24      17      10       3   0
+
+Display based on dispint:
++-^^^-+  #  #   ####  ####     
+|#####|  #  #      #     #     
+|#####|  #  #      #     #     
+|#####|  ####   ####  ####  V  
+|#####|     #   #     #        
+|#####|     #   #     #        
++-----+     # o ####  ####     
+#+END_SRC
+
+* set_display_from_batt() 100 %
+#+TESTY: program='./test_hybrid_batt_update "set_display_from_batt() 100 %"'
+#+BEGIN_SRC sh
+{
+    // Show 100%, the only case in which the hundreds digit of percent
+    // is used.
+    BATT_VOLTAGE_PORT = -1;
+    BATT_STATUS_PORT  = -1;
+    BATT_DISPLAY_PORT = -1;
+    batt_t batt = {
+      .mlvolts = 4217,
+      .percent = 100,
+      .mode = 1,
+    };
+    int ret = set_display_from_batt(batt, dispint);
+    printf("ret: %d\n",ret);
+    printf("%-18s : %s\n%-18s : %s\n",
+           "dispint bits", bitstr(*dispint, INT_BITS),
+           "index", bitstr_index(INT_BITS));
+    printf("\n");  print_ports();  printf("\n");
+    BATT_DISPLAY_PORT = *dispint;
+    printf("Display based on dispint:\n");
+    print_batt_display();
+}
+---OUTPUT---
+ret: 0
+dispint bits       : 000 11111 0000110 0111111 0111111 001
+index              :  29    24      17      10       3   0
+
+BATT_VOLTAGE_PORT  : -1
+BATT_STATUS_PORT   : 111 11111
+BATT_DISPLAY_PORT  : 111 11111 1111111 1111111 1111111 111
+index              :  29    24      17      10       3   0
+
+Display based on dispint:
++-^^^-+     #   ####  ####     
+|#####|     #   #  #  #  #     
+|#####|     #   #  #  #  #     
+|#####|     #   #  #  #  #     
+|#####|     #   #  #  #  #  %  
+|#####|     #   #  #  #  #     
++-----+     #   ####  ####     
+#+END_SRC
+
+* set_display_from_batt() level 1
+#+TESTY: program='./test_hybrid_batt_update "set_display_from_batt() level 1"'
+#+BEGIN_SRC sh
+{
+    // Non-zero level that should show 1 bar in the level meter
+    BATT_VOLTAGE_PORT = -1;
+    BATT_STATUS_PORT  = -1;
+    BATT_DISPLAY_PORT = -1;
+    batt_t batt = {
+      .mlvolts = 6151,
+      .percent = 9,
+      .mode = 1,
+    };
+    int ret = set_display_from_batt(batt, dispint);
+    printf("ret: %d\n",ret);
+    printf("%-18s : %s\n%-18s : %s\n",
+           "dispint bits", bitstr(*dispint, INT_BITS),
+           "index", bitstr_index(INT_BITS));
+    printf("\n");  print_ports();  printf("\n");
+    BATT_DISPLAY_PORT = *dispint;
+    printf("Display based on dispint:\n");
+    print_batt_display();
+}
+---OUTPUT---
+ret: 0
+dispint bits       : 000 00001 0000000 0000000 1101111 001
+index              :  29    24      17      10       3   0
+
+BATT_VOLTAGE_PORT  : -1
+BATT_STATUS_PORT   : 111 11111
+BATT_DISPLAY_PORT  : 111 11111 1111111 1111111 1111111 111
+index              :  29    24      17      10       3   0
+
+Display based on dispint:
++-^^^-+               ####     
+|     |               #  #     
+|     |               #  #     
+|     |               ####     
+|     |                  #  %  
+|#####|                  #     
++-----+               ####     
+#+END_SRC
+
+* set_display_from_batt() level 2
+#+TESTY: program='./test_hybrid_batt_update "set_display_from_batt() level 2"'
+#+BEGIN_SRC sh
+{
+    // 30% level is first point at which 2 bars show
+    BATT_VOLTAGE_PORT = -1;
+    BATT_STATUS_PORT  = -1;
+    BATT_DISPLAY_PORT = -1;
+    batt_t batt = {
+      .mlvolts = 6480,
+      .percent = 30,
+      .mode = 1,
+    };
+    int ret = set_display_from_batt(batt, dispint);
+    printf("ret: %d\n",ret);
+    printf("%-18s : %s\n%-18s : %s\n",
+           "dispint bits", bitstr(*dispint, INT_BITS),
+           "index", bitstr_index(INT_BITS));
+    printf("\n");  print_ports();  printf("\n");
+    BATT_DISPLAY_PORT = *dispint;
+    printf("Display based on dispint:\n");
+    print_batt_display();
+}
+---OUTPUT---
+ret: 0
+dispint bits       : 000 00011 0000000 1001111 0111111 001
+index              :  29    24      17      10       3   0
+
+BATT_VOLTAGE_PORT  : -1
+BATT_STATUS_PORT   : 111 11111
+BATT_DISPLAY_PORT  : 111 11111 1111111 1111111 1111111 111
+index              :  29    24      17      10       3   0
+
+Display based on dispint:
++-^^^-+         ####  ####     
+|     |            #  #  #     
+|     |            #  #  #     
+|     |         ####  #  #     
+|#####|            #  #  #  %  
+|#####|            #  #  #     
++-----+         ####  ####     
+#+END_SRC
+
+* set_display_from_batt() level 3
+#+TESTY: program='./test_hybrid_batt_update "set_display_from_batt() level 3"'
+#+BEGIN_SRC sh
+{
+    // 56% level is should show 3 bars
+    BATT_VOLTAGE_PORT = -1;
+    BATT_STATUS_PORT  = -1;
+    BATT_DISPLAY_PORT = -1;
+    batt_t batt = {
+      .mlvolts = 6900,
+      .percent = 56,
+      .mode = 2,
+    };
+    int ret = set_display_from_batt(batt, dispint);
+    printf("ret: %d\n",ret);
+    printf("%-18s : %s\n%-18s : %s\n",
+           "dispint bits", bitstr(*dispint, INT_BITS),
+           "index", bitstr_index(INT_BITS));
+    printf("\n");  print_ports();  printf("\n");
+    BATT_DISPLAY_PORT = *dispint;
+    printf("Display based on dispint:\n");
+    print_batt_display();
+}
+---OUTPUT---
+ret: 0
+dispint bits       : 000 00111 1111101 1101111 0111111 110
+index              :  29    24      17      10       3   0
+
+BATT_VOLTAGE_PORT  : -1
+BATT_STATUS_PORT   : 111 11111
+BATT_DISPLAY_PORT  : 111 11111 1111111 1111111 1111111 111
+index              :  29    24      17      10       3   0
+
+Display based on dispint:
++-^^^-+  ####   ####  ####     
+|     |  #      #  #  #  #     
+|     |  #      #  #  #  #     
+|#####|  ####   ####  #  #  V  
+|#####|  #  #      #  #  #     
+|#####|  #  #      #  #  #     
++-----+  #### o ####  ####     
+#+END_SRC
+
+* set_display_from_batt() level 4
+#+TESTY: program='./test_hybrid_batt_update "set_display_from_batt() level 4"'
+#+BEGIN_SRC sh
+{
+    // 89% is highest percentage at which 4 bars will be shown
+    BATT_VOLTAGE_PORT = -1;
+    BATT_STATUS_PORT  = -1;
+    BATT_DISPLAY_PORT = -1;
+    batt_t batt = {
+      .mlvolts = 3713,
+      .percent = 89,
+      .mode = 2,
+    };
+    int ret = set_display_from_batt(batt, dispint);
+    printf("ret: %d\n",ret);
+    printf("%-18s : %s\n%-18s : %s\n",
+           "dispint bits", bitstr(*dispint, INT_BITS),
+           "index", bitstr_index(INT_BITS));
+    printf("\n");  print_ports();  printf("\n");
+    BATT_DISPLAY_PORT = *dispint;
+    printf("Display based on dispint:\n");
+    print_batt_display();
+}
+---OUTPUT---
+ret: 0
+dispint bits       : 000 01111 1001111 0000111 0000110 110
+index              :  29    24      17      10       3   0
+
+BATT_VOLTAGE_PORT  : -1
+BATT_STATUS_PORT   : 111 11111
+BATT_DISPLAY_PORT  : 111 11111 1111111 1111111 1111111 111
+index              :  29    24      17      10       3   0
+
+Display based on dispint:
++-^^^-+  ####   ####     #     
+|     |     #      #     #     
+|#####|     #      #     #     
+|#####|  ####      #     #  V  
+|#####|     #      #     #     
+|#####|     #      #     #     
++-----+  #### o    #     #     
+#+END_SRC
+
+* set_display_from_batt() level 5
+#+TESTY: program='./test_hybrid_batt_update "set_display_from_batt() level 5"'
+#+BEGIN_SRC sh
+{
+    // 90% is lowest percentage at which 5 bars will be shown
+    BATT_VOLTAGE_PORT = -1;
+    BATT_STATUS_PORT  = -1;
+    BATT_DISPLAY_PORT = -1;
+    batt_t batt = {
+      .mlvolts = 7440,
+      .percent = 90,
+      .mode = 1,
+    };
+    int ret = set_display_from_batt(batt, dispint);
+    printf("ret: %d\n",ret);
+    printf("%-18s : %s\n%-18s : %s\n",
+           "dispint bits", bitstr(*dispint, INT_BITS),
+           "index", bitstr_index(INT_BITS));
+    printf("\n");  print_ports();  printf("\n");
+    BATT_DISPLAY_PORT = *dispint;
+    printf("Display based on dispint:\n");
+    print_batt_display();
+}
+---OUTPUT---
+ret: 0
+dispint bits       : 000 11111 0000000 1101111 0111111 001
+index              :  29    24      17      10       3   0
+
+BATT_VOLTAGE_PORT  : -1
+BATT_STATUS_PORT   : 111 11111
+BATT_DISPLAY_PORT  : 111 11111 1111111 1111111 1111111 111
+index              :  29    24      17      10       3   0
+
+Display based on dispint:
++-^^^-+         ####  ####     
+|#####|         #  #  #  #     
+|#####|         #  #  #  #     
+|#####|         ####  #  #     
+|#####|            #  #  #  %  
+|#####|            #  #  #     
++-----+         ####  ####     
+#+END_SRC
+
+* set_display_from_batt() level 5 V
+#+TESTY: program='./test_hybrid_batt_update "set_display_from_batt() level 5 V"'
+#+BEGIN_SRC sh
+{
+    // 90% is lowest percentage at which 5 bars will be shown
+    BATT_VOLTAGE_PORT = -1;
+    BATT_STATUS_PORT  = -1;
+    BATT_DISPLAY_PORT = -1;
+    batt_t batt = {
+      .mlvolts = 7427,
+      .percent = 89,
+      .mode = 2,
+    };
+    int ret = set_display_from_batt(batt, dispint);
+    printf("ret: %d\n",ret);
+    printf("%-18s : %s\n%-18s : %s\n",
+           "dispint bits", bitstr(*dispint, INT_BITS),
+           "index", bitstr_index(INT_BITS));
+    printf("\n");  print_ports();  printf("\n");
+    BATT_DISPLAY_PORT = *dispint;
+    printf("Display based on dispint:\n");
+    print_batt_display();
+}
+---OUTPUT---
+ret: 0
+dispint bits       : 000 01111 0000111 1100110 1001111 110
+index              :  29    24      17      10       3   0
+
+BATT_VOLTAGE_PORT  : -1
+BATT_STATUS_PORT   : 111 11111
+BATT_DISPLAY_PORT  : 111 11111 1111111 1111111 1111111 111
+index              :  29    24      17      10       3   0
+
+Display based on dispint:
++-^^^-+  ####   #  #  ####     
+|     |     #   #  #     #     
+|#####|     #   #  #     #     
+|#####|     #   ####  ####  V  
+|#####|     #      #     #     
+|#####|     #      #     #     
++-----+     # o    #  ####     
+#+END_SRC
+
+* set_display_from_batt() error
+#+TESTY: program='./test_hybrid_batt_update "set_display_from_batt() error"'
+#+BEGIN_SRC sh
+{
+    // Should detect negative voltage and error out
+    BATT_VOLTAGE_PORT = -1;
+    BATT_STATUS_PORT  = -1;
+    BATT_DISPLAY_PORT = -1;
+    batt_t batt = {
+      .mlvolts = -3421,
+      .percent = 0,
+      .mode = 1,
+    };
+    *dispint = -1;        // should not change from -1
+    int ret = set_display_from_batt(batt, dispint);
+    printf("ret: %d\n",ret);
+    printf("%-18s : %s\n%-18s : %s\n",
+           "dispint bits", bitstr(*dispint, INT_BITS),
+           "index", bitstr_index(INT_BITS));
+    printf("\n");  print_ports();  printf("\n");
+    BATT_DISPLAY_PORT = *dispint;
+    printf("Display based on dispint:\n");
+    print_batt_display();
+}
+---OUTPUT---
+ret: 0
+dispint bits       : 000 00000 0000000 0000000 0111111 001
+index              :  29    24      17      10       3   0
+
+BATT_VOLTAGE_PORT  : -1
+BATT_STATUS_PORT   : 111 11111
+BATT_DISPLAY_PORT  : 111 11111 1111111 1111111 1111111 111
+index              :  29    24      17      10       3   0
+
+Display based on dispint:
++-^^^-+               ####     
+|     |               #  #     
+|     |               #  #     
+|     |               #  #     
+|     |               #  #  %  
+|     |               #  #     
++-----+               ####     
+#+END_SRC
+
+* batt_update() 7400 V
+#+TESTY: program='./test_hybrid_batt_update "batt_update() 7400 V"'
+#+BEGIN_SRC sh
+{
+    // call batt_update() with given sensor and status
+    BATT_VOLTAGE_PORT = 7400;
+    BATT_STATUS_PORT  = 0b010100; // Volts mode
+    BATT_DISPLAY_PORT = -1;
+    int ret = batt_update();
+    printf("ret: %d\n",ret);
+    printf("\n");  print_ports();  printf("\n");
+    printf("Display based on BATT_DISPLAY_PORT:\n");
+    print_batt_display();
+}
+---OUTPUT---
+ret: 0
+
+BATT_VOLTAGE_PORT  : 7400
+BATT_STATUS_PORT   : 000 10100
+BATT_DISPLAY_PORT  : 000 01111 0000000 1111111 0000111 001
+index              :  29    24      17      10       3   0
+
+Display based on BATT_DISPLAY_PORT:
++-^^^-+         ####  ####     
+|     |         #  #     #     
+|#####|         #  #     #     
+|#####|         ####     #     
+|#####|         #  #     #  %  
+|#####|         #  #     #     
++-----+         ####     #     
+#+END_SRC
+
+* batt_update() 7291 P
+#+TESTY: program='./test_hybrid_batt_update "batt_update() 7291 P"'
+#+BEGIN_SRC sh
+{
+    // call batt_update() with given sensor and status
+    BATT_VOLTAGE_PORT = 7291;
+    BATT_STATUS_PORT  = 0b011011; // Percent mode
+    BATT_DISPLAY_PORT = -1;
+    int ret = batt_update();
+    printf("ret: %d\n",ret);
+    printf("\n");  print_ports();  printf("\n");
+    printf("Display based on BATT_DISPLAY_PORT:\n");
+    print_batt_display();
+}
+---OUTPUT---
+ret: 0
+
+BATT_VOLTAGE_PORT  : 7291
+BATT_STATUS_PORT   : 000 11011
+BATT_DISPLAY_PORT  : 000 01111 0000000 1111111 0111111 001
+index              :  29    24      17      10       3   0
+
+Display based on BATT_DISPLAY_PORT:
++-^^^-+         ####  ####     
+|     |         #  #  #  #     
+|#####|         #  #  #  #     
+|#####|         ####  #  #     
+|#####|         #  #  #  #  %  
+|#####|         #  #  #  #     
++-----+         ####  ####     
+#+END_SRC
+
+* batt_update() error
+#+TESTY: program='./test_hybrid_batt_update "batt_update() error"'
+#+BEGIN_SRC sh
+{
+    // call batt_update() with negative voltage reading which should
+    // bail out without changing anything.
+    BATT_VOLTAGE_PORT = -6421;  // Negative value causes error out
+    BATT_STATUS_PORT  = 0b111011; // Percent mode
+    BATT_DISPLAY_PORT = -1;
+    int ret = batt_update();
+    printf("ret: %d\n",ret);
+    printf("\n");  print_ports();  printf("\n");
+    printf("Display based on BATT_DISPLAY_PORT:\n");
+    print_batt_display();
+}
+---OUTPUT---
+ret: 1
+
+BATT_VOLTAGE_PORT  : -6421
+BATT_STATUS_PORT   : 001 11011
+BATT_DISPLAY_PORT  : 111 11111 1111111 1111111 1111111 111
+index              :  29    24      17      10       3   0
+
+Display based on BATT_DISPLAY_PORT:
++-^^^-+  ####   ####  ####     
+|#####|  #  #   #  #  #  #     
+|#####|  #  #   #  #  #  #     
+|#####|  ####   ####  ####  V  
+|#####|  #  #   #  #  #  #  %  
+|#####|  #  #   #  #  #  #     
++-----+  #### o ####  ####     
+#+END_SRC
+
+* ./hybrid_main 6301 V
+#+TESTY: program='./hybrid_main 6301 V'
+#+BEGIN_SRC sh
+BATT_VOLTAGE_PORT set to: 6301
+BATT_STATUS_PORT  set to: 0x6F
+
+result = set_batt_from_ports( &batt );
+result: 0
+batt = {
+  .mlvolts = 3150
+  .percent = 18
+  .mode    = 2
+}
+
+result = set_display_from_batt(batt, &display);
+result: 0
+display is
+bits:  000 00001 1001111 0000110 1101101 110
+index:  29    24      17      10       3   0
+
+result = batt_update();
+result: 0
+BATT_DISPLAY_PORT is
+bits:  000 00001 1001111 0000110 1101101 110
+index:  29    24      17      10       3   0
+
+Battery Meter Display:
++-^^^-+  ####      #  ####     
+|     |     #      #  #        
+|     |     #      #  #        
+|     |  ####      #  ####  V  
+|     |     #      #     #     
+|#####|     #      #     #     
++-----+  #### o    #  ####     
+#+END_SRC
+
+* ./hybrid_main 6582 P
+#+TESTY: program='./hybrid_main 6582 P'
+#+BEGIN_SRC sh
+BATT_VOLTAGE_PORT set to: 6582
+BATT_STATUS_PORT  set to: 0x91
+
+result = set_batt_from_ports( &batt );
+result: 0
+batt = {
+  .mlvolts = 3291
+  .percent = 36
+  .mode    = 1
+}
+
+result = set_display_from_batt(batt, &display);
+result: 0
+display is
+bits:  000 00011 0000000 1001111 1111101 001
+index:  29    24      17      10       3   0
+
+result = batt_update();
+result: 0
+BATT_DISPLAY_PORT is
+bits:  000 00011 0000000 1001111 1111101 001
+index:  29    24      17      10       3   0
+
+Battery Meter Display:
++-^^^-+         ####  ####     
+|     |            #  #        
+|     |            #  #        
+|     |         ####  ####     
+|#####|            #  #  #  %  
+|#####|            #  #  #     
++-----+         ####  ####     
+#+END_SRC
+
+* ./hybrid_main 6949 V
+#+TESTY: program='./hybrid_main 6949 V'
+#+BEGIN_SRC sh
+BATT_VOLTAGE_PORT set to: 6949
+BATT_STATUS_PORT  set to: 0x6F
+
+result = set_batt_from_ports( &batt );
+result: 0
+batt = {
+  .mlvolts = 3474
+  .percent = 59
+  .mode    = 2
+}
+
+result = set_display_from_batt(batt, &display);
+result: 0
+display is
+bits:  000 00111 1001111 1100110 0000111 110
+index:  29    24      17      10       3   0
+
+result = batt_update();
+result: 0
+BATT_DISPLAY_PORT is
+bits:  000 00111 1001111 1100110 0000111 110
+index:  29    24      17      10       3   0
+
+Battery Meter Display:
++-^^^-+  ####   #  #  ####     
+|     |     #   #  #     #     
+|     |     #   #  #     #     
+|#####|  ####   ####     #  V  
+|#####|     #      #     #     
+|#####|     #      #     #     
++-----+  #### o    #     #     
+#+END_SRC
+
+* ./hybrid_main 7204 P
+#+TESTY: program='./hybrid_main 7204 P'
+#+BEGIN_SRC sh
+BATT_VOLTAGE_PORT set to: 7204
+BATT_STATUS_PORT  set to: 0x91
+
+result = set_batt_from_ports( &batt );
+result: 0
+batt = {
+  .mlvolts = 3602
+  .percent = 75
+  .mode    = 1
+}
+
+result = set_display_from_batt(batt, &display);
+result: 0
+display is
+bits:  000 01111 0000000 0000111 1101101 001
+index:  29    24      17      10       3   0
+
+result = batt_update();
+result: 0
+BATT_DISPLAY_PORT is
+bits:  000 01111 0000000 0000111 1101101 001
+index:  29    24      17      10       3   0
+
+Battery Meter Display:
++-^^^-+         ####  ####     
+|     |            #  #        
+|#####|            #  #        
+|#####|            #  ####     
+|#####|            #     #  %  
+|#####|            #     #     
++-----+            #  ####     
+#+END_SRC
+
+* ./hybrid_main 7477 P
+#+TESTY: program='./hybrid_main 7477 P'
+#+BEGIN_SRC sh
+BATT_VOLTAGE_PORT set to: 7477
+BATT_STATUS_PORT  set to: 0x91
+
+result = set_batt_from_ports( &batt );
+result: 0
+batt = {
+  .mlvolts = 3738
+  .percent = 92
+  .mode    = 1
+}
+
+result = set_display_from_batt(batt, &display);
+result: 0
+display is
+bits:  000 11111 0000000 1101111 1011011 001
+index:  29    24      17      10       3   0
+
+result = batt_update();
+result: 0
+BATT_DISPLAY_PORT is
+bits:  000 11111 0000000 1101111 1011011 001
+index:  29    24      17      10       3   0
+
+Battery Meter Display:
++-^^^-+         ####  ####     
+|#####|         #  #     #     
+|#####|         #  #     #     
+|#####|         ####  ####     
+|#####|            #  #     %  
+|#####|            #  #        
++-----+         ####  ####     
+#+END_SRC

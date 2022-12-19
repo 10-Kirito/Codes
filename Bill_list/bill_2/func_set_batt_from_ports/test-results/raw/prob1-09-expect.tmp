@@ -1,0 +1,21 @@
+{
+    // Checks proper voltage / percent for a mid-range sensor value.
+    BATT_VOLTAGE_PORT = 6579;
+    BATT_STATUS_PORT  = 0b010000;
+    BATT_DISPLAY_PORT = -1;
+    int ret = set_batt_from_ports(actual_batt);
+    printf("ret: %d\n",ret);
+    printf("actual = "); print_batt(actual_batt);
+    print_ports();
+}
+---OUTPUT---
+ret: 0
+actual = {
+  ->mlvolts = 3289,
+  ->percent = 36,
+  ->mode    = 1,
+}
+BATT_VOLTAGE_PORT  : 6579
+BATT_STATUS_PORT   : 000 10000
+BATT_DISPLAY_PORT  : 111 11111 1111111 1111111 1111111 111
+index              :  29    24      17      10       3   0

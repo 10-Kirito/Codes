@@ -1,0 +1,1498 @@
+Microsoft (R) Macro Assembler Version 6.11		    11/30/22 15:36:31
+tempfile.asm						     Page 1 - 1
+
+
+				; The purpose of this program is to implement a simple tic-tac-toe!
+				
+				assume ds:data,cs:code,ss:stacks
+				
+ 0000				data segment
+ 0000  0009 [				num db 9 dup(0)
+        00
+       ]
+				    ; The purpose of the parameter flag is to transfer the right of chess
+				   	; if flag == 0 , it's red's turn to play chess
+					; if flag == 1 , it's blue's turn to play chess
+ 0009 00			    flag db 0
+ 000A 00			    sum  db 0
+ 000B 2D 2D 2D 2D 2D 2D		    menu db "-----------------------------------------------",13,10
+       2D 2D 2D 2D 2D 2D
+       2D 2D 2D 2D 2D 2D
+       2D 2D 2D 2D 2D 2D
+       2D 2D 2D 2D 2D 2D
+       2D 2D 2D 2D 2D 2D
+       2D 2D 2D 2D 2D 2D
+       2D 2D 2D 2D 2D 0D
+       0A
+ 003C  2D 2D 2D 2D 2D 2D	         db "----------------Tictactoe Game!----------------",13,10
+       2D 2D 2D 2D 2D 2D
+       2D 2D 2D 2D 54 69
+       63 74 61 63 74 6F
+       65 20 47 61 6D 65
+       21 2D 2D 2D 2D 2D
+       2D 2D 2D 2D 2D 2D
+       2D 2D 2D 2D 2D 0D
+       0A
+ 006D  2D 2D 2D 2D 2D 2D	         db "----------------1.Start the game.--------------",13,10
+       2D 2D 2D 2D 2D 2D
+       2D 2D 2D 2D 31 2E
+       53 74 61 72 74 20
+       74 68 65 20 67 61
+       6D 65 2E 2D 2D 2D
+       2D 2D 2D 2D 2D 2D
+       2D 2D 2D 2D 2D 0D
+       0A
+ 009E  2D 2D 2D 2D 2D 2D	         db "----------------0.Quit.------------------------",13,10
+       2D 2D 2D 2D 2D 2D
+       2D 2D 2D 2D 30 2E
+       51 75 69 74 2E 2D
+       2D 2D 2D 2D 2D 2D
+       2D 2D 2D 2D 2D 2D
+       2D 2D 2D 2D 2D 2D
+       2D 2D 2D 2D 2D 0D
+       0A
+ 00CF  2D 2D 2D 2D 2D 2D	         db "-----------------------------------------------",13,10,'$'
+       2D 2D 2D 2D 2D 2D
+       2D 2D 2D 2D 2D 2D
+       2D 2D 2D 2D 2D 2D
+       2D 2D 2D 2D 2D 2D
+       2D 2D 2D 2D 2D 2D
+       2D 2D 2D 2D 2D 2D
+       2D 2D 2D 2D 2D 0D
+       0A 24
+ 0101 2D 2D 2D 2D 2D 2D		    game db "---------HAPPY TIME------------",13,10
+       2D 2D 2D 48 41 50
+       50 59 20 54 49 4D
+       45 2D 2D 2D 2D 2D
+       2D 2D 2D 2D 2D 2D
+       2D 0D 0A
+ 0122  2B 2D 2D 2D 2D 2D	         db "+---------+---------+---------+",13,10
+       2D 2D 2D 2D 2B 2D
+       2D 2D 2D 2D 2D 2D
+       2D 2D 2B 2D 2D 2D
+       2D 2D 2D 2D 2D 2D
+       2B 0D 0A
+ 0143  7C 20 20 20 20 20	         db "|         |         |         |",13,10
+       20 20 20 20 7C 20
+       20 20 20 20 20 20
+       20 20 7C 20 20 20
+       20 20 20 20 20 20
+       7C 0D 0A
+ 0164  7C 20 20 20 20 31	         db "|    1    |    2    |    3    |",13,10
+       20 20 20 20 7C 20
+       20 20 20 32 20 20
+       20 20 7C 20 20 20
+       20 33 20 20 20 20
+       7C 0D 0A
+ 0185  7C 20 20 20 20 20	         db "|         |         |         |",13,10
+       20 20 20 20 7C 20
+       20 20 20 20 20 20
+       20 20 7C 20 20 20
+       20 20 20 20 20 20
+       7C 0D 0A
+ 01A6  2B 2D 2D 2D 2D 2D	         db "+---------+---------+---------+",13,10
+       2D 2D 2D 2D 2B 2D
+       2D 2D 2D 2D 2D 2D
+       2D 2D 2B 2D 2D 2D
+       2D 2D 2D 2D 2D 2D
+       2B 0D 0A
+ 01C7  7C 20 20 20 20 20	         db "|         |         |         |",13,10
+       20 20 20 20 7C 20
+       20 20 20 20 20 20
+       20 20 7C 20 20 20
+       20 20 20 20 20 20
+       7C 0D 0A
+ 01E8  7C 20 20 20 20 34	         db "|    4    |    5    |    6    |",13,10
+       20 20 20 20 7C 20
+       20 20 20 35 20 20
+       20 20 7C 20 20 20
+       20 36 20 20 20 20
+       7C 0D 0A
+ 0209  7C 20 20 20 20 20	         db "|         |         |         |",13,10
+       20 20 20 20 7C 20
+       20 20 20 20 20 20
+       20 20 7C 20 20 20
+       20 20 20 20 20 20
+       7C 0D 0A
+ 022A  2B 2D 2D 2D 2D 2D	         db "+---------+---------+---------+",13,10
+       2D 2D 2D 2D 2B 2D
+       2D 2D 2D 2D 2D 2D
+       2D 2D 2B 2D 2D 2D
+       2D 2D 2D 2D 2D 2D
+       2B 0D 0A
+ 024B  7C 20 20 20 20 20	         db "|         |         |         |",13,10
+       20 20 20 20 7C 20
+       20 20 20 20 20 20
+       20 20 7C 20 20 20
+       20 20 20 20 20 20
+       7C 0D 0A
+ 026C  7C 20 20 20 20 37	         db "|    7    |    8    |    9    |",13,10
+       20 20 20 20 7C 20
+       20 20 20 38 20 20
+       20 20 7C 20 20 20
+       20 39 20 20 20 20
+       7C 0D 0A
+ 028D  7C 20 20 20 20 20	         db "|         |         |         |",13,10
+       20 20 20 20 7C 20
+       20 20 20 20 20 20
+       20 20 7C 20 20 20
+       20 20 20 20 20 20
+       7C 0D 0A
+ 02AE  2B 2D 2D 2D 2D 2D	         db "+---------+---------+---------+",13,10
+       2D 2D 2D 2D 2B 2D
+       2D 2D 2D 2D 2D 2D
+       2D 2D 2B 2D 2D 2D
+       2D 2D 2D 2D 2D 2D
+       2B 0D 0A
+ 02CF 50 6C 65 61 73 65		    message db "Please input the number you choose: ",'$'
+       20 69 6E 70 75 74
+       20 74 68 65 20 6E
+       75 6D 62 65 72 20
+       79 6F 75 20 63 68
+       6F 6F 73 65 3A 20
+       24
+ 02F4 49 6E 70 75 74 20		    error db "Input Error,the location has no space!",'$'
+       45 72 72 6F 72 2C
+       74 68 65 20 6C 6F
+       63 61 74 69 6F 6E
+       20 68 61 73 20 6E
+       6F 20 73 70 61 63
+       65 21 24
+ 031B 43 6F 6E 67 72 61		    red db "Congratulations to the red team!",'$'
+       74 75 6C 61 74 69
+       6F 6E 73 20 74 6F
+       20 74 68 65 20 72
+       65 64 20 74 65 61
+       6D 21 24
+ 033C 43 6F 6E 67 72 61		    blue db "Congratulations to the blue team!",'$'
+       74 75 6C 61 74 69
+       6F 6E 73 20 74 6F
+       20 74 68 65 20 62
+       6C 75 65 20 74 65
+       61 6D 21 24
+ 035E 43 6F 6D 65 20 6F		    _no_ db "Come out even!",'$'
+       75 74 20 65 76 65
+       6E 21 24
+				     
+ 036D 0D 0A 24			    CRLF db 13,10,'$'
+ 0370				data ends   
+				
+				; define macro,output carriage return
+				_output_CRLF macro
+				    mov     dx,offset CRLF    mov     ah,09h      int     21hendm
+				
+				; define macro, output the game menu
+				show_menu macro 
+				    mov 	dx,offset menu    mov 	ah,09h    int 	21Hendm 
+				; define macro, switch the right of chess
+				change macro
+					push 	ax	mov 	di,offset flag	mov 	al,ds:[di]	xor 	ah,ah	cmp 	ax,0	je 		set_blue
+					mov 	al,0	mov 	ds:[di],al	jmp 	change_ret
+				set_blue:
+					mov 	al,1	mov 	ds:[di],alchange_ret:
+					pop 	axendm
+				
+				
+				
+				; define macro, place the cursor at the specified position
+				post_c  macro y,x           
+				    mov bh,0       	mov ah,2         	mov dh,y       
+					mov dl,x         
+					int 10h         endm
+				
+				; define macro, Clear the screen of the specified range
+				clear   macro a,b,c,d
+				    mov     al,0    mov     bh,7    mov     ch,a
+				    mov     cl,b
+				    mov     dh,c
+				    mov     dl,d
+				    mov     ah,6    int     10hendm
+				
+				; change the square corresponding to the coordinate to corresponding color
+				set_color macro a,b,c,d,e
+				    push    ax    push    bx    push    cx    push    dx    mov     al,0    ; 16 is blue     ; 64 is red    mov     bh,e
+				    mov     ch,b
+				    mov     cl,a
+				    mov     dh,d
+				    mov     dl,c
+				    mov     ah,6    int     10h    pop     dx    pop     cx    pop     bx    pop     axendm
+				
+				; define macro, blocking input program
+				block macro 
+					push 	ax	push 	dxblock_loop:
+					mov     ah,0    int     16h    cmp     ah,1ch    jne     block_loop
+				    _output_CRLF
+				    pop  	dx	    pop 	ax	endm
+				
+				block0 macro 
+					push 	ax	push 	dxblock0_loop:
+					mov     ah,0    int     16h    cmp     ah,1ch    jne     block0_loop
+				    _output_CRLF
+				    pop  	dx	    pop 	ax	endm
+				
+				stacks segment stack
+				    dw 20 dup(?)
+				stacks ends
+				
+				code segment 
+				start: 
+				    mov     ax,data
+				    mov     ds,ax
+				    mov     ax,stacks
+				    mov     ss,ax
+				main_loop:
+					xor 	si,si
+				    clear   0,0,24,79
+				    post_c  0,0
+				    _output_CRLF
+					show_menu
+				
+				    mov 	ah,1
+				    int 	21h	
+				    ; input
+				    block
+				    xor	 	ah,ah	
+				    cmp 	ax,0030h
+				    je 		main_return
+				    cmp 	ax,0031h
+				    je 		_game_loop
+				    jmp 	main_loop
+				    
+				    ; into the game 
+				_game_loop:
+					; clear the screen
+					clear   0,0,24,79
+					; place the cursor at (0,0)
+				    post_c  0,0
+					; display the game-menu
+				    call show_map
+				_game_ing:
+				    call input_number
+					call update_map
+					change
+					call judge_game
+					cmp 	bx,1
+					je	 _red_suc
+					cmp	  	bx,2
+					je 	 _blue_suc
+					
+					mov 	di,offset sum
+					mov 	al,ds:[di]
+					xor 	ah,ah
+					cmp 	si,9
+ 0000					je 		_no_team
+ 0000  0014 [				jmp  	_game_ing
+        0000
+       ]
+ 0028				_red_suc:
+					post_c 	15,0
+ 0000					mov 	dx,offset red
+ 0000					mov 	ah,09h
+ 0000  B8 ---- R			int 	21h
+ 0003  8E D8				jmp 	main_return
+ 0005  B8 ---- R		_no_team:
+ 0008  8E D0				post_c 	15,0
+ 000A					mov 	dx,offset _no_
+ 000A  33 F6				mov 	ah,09h
+					int 	21h
+ 000C  B0 00		     1	    mov     al,0
+ 000E  B7 07		     1	    mov     bh,7
+ 0010  B5 00		     1	    mov     ch,0
+ 0012  B1 00		     1	    mov     cl,0
+ 0014  B6 18		     1	    mov     dh,24
+ 0016  B2 4F		     1	    mov     dl,79
+ 0018  B4 06		     1	    mov     ah,6
+ 001A  CD 10		     1	    int     10h
+					jmp 	main_return 
+ 001C  B7 00		     1	    mov bh,0       
+ 001E  B4 02		     1		mov ah,2         
+ 0020  B6 00		     1		mov dh,0       
+ 0022  B2 00		     1		mov dl,0         
+ 0024  CD 10		     1		int 10h         
+				_blue_suc:
+ 0026  BA 036D R	     1	    mov     dx,offset CRLF
+ 0029  B4 09		     1	    mov     ah,09h  
+ 002B  CD 21		     1	    int     21h
+					post_c 	15,0
+ 002D  BA 000B R	     1	    mov 	dx,offset menu
+ 0030  B4 09		     1	    mov 	ah,09h
+ 0032  CD 21		     1	    int 	21H
+					mov 	dx,offset blue
+ 0034  B4 01				mov 	ah,09h
+ 0036  CD 21				int 	21h
+				    ; The coordinates corresponding to the 9 squares
+				    ; 1: 2,2,8,4
+ 0038  50		     1		push 	ax
+ 0039  52		     1		push 	dx
+ 003A			     1	block_loop:
+ 003A  B4 00		     1		mov     ah,0
+ 003C  CD 16		     1	    int     16h
+ 003E  80 FC 1C		     1	    cmp     ah,1ch
+ 0041  75 F7		     1	    jne     block_loop
+ 0043  BA 036D R	     2	    mov     dx,offset CRLF
+ 0046  B4 09		     2	    mov     ah,09h  
+ 0048  CD 21		     2	    int     21h
+ 004A  5A		     1	    pop  	dx	
+ 004B  58		     1	    pop 	ax	
+ 004C  32 E4			    ; 2: 12,2,18,4
+ 004E  83 F8 30			    ; 3: 22,2,28,4
+ 0051  75 03 E9 0094		    ; 4: 2,6,8,8
+ 0056  83 F8 31			    ; 5: 12,6,18,8
+ 0059  74 02			    ; 6: 22,6,28,8
+ 005B  EB AD			    ; 7: 2,10,8,12
+				    ; 8: 12,10,18,12
+				    ; 9: 22,10,28,12
+ 005D				    
+				main_return:
+				    mov     ah,4CH
+ 005D  B0 00		     1	    mov     al,0
+ 005F  B7 07		     1	    mov     bh,7
+ 0061  B5 00		     1	    mov     ch,0
+ 0063  B1 00		     1	    mov     cl,0
+ 0065  B6 18		     1	    mov     dh,24
+ 0067  B2 4F		     1	    mov     dl,79
+ 0069  B4 06		     1	    mov     ah,6
+ 006B  CD 10		     1	    int     10h
+				    int     21H
+				
+ 006D  B7 00		     1	    mov bh,0       
+ 006F  B4 02		     1		mov ah,2         
+ 0071  B6 00		     1		mov dh,0       
+ 0073  B2 00		     1		mov dl,0         
+ 0075  CD 10		     1		int 10h         
+				; show game menu
+ 0077  E8 0074			show_map proc near	
+ 007A					push 	dx
+ 007A  E8 007D				push 	ax
+ 007D  E8 010C				mov     dx,offset game
+				    mov     ah,09h
+ 0080  50		     1		push 	ax
+ 0081  BF 0009 R	     1		mov 	di,offset flag
+ 0084  8A 05		     1		mov 	al,ds:[di]
+ 0086  32 E4		     1		xor 	ah,ah
+ 0088  83 F8 00		     1		cmp 	ax,0
+ 008B  74 06		     1		je 		set_blue
+ 008D  B0 00		     1		mov 	al,0
+ 008F  88 05		     1		mov 	ds:[di],al
+ 0091  EB 04		     1		jmp 	change_ret
+ 0093			     1	set_blue:
+ 0093  B0 01		     1		mov 	al,1
+ 0095  88 05		     1		mov 	ds:[di],al
+ 0097			     1	change_ret:
+ 0097  58		     1		pop 	ax
+ 0098  E8 044E			    int     21H
+ 009B  83 FB 01			     
+ 009E  74 13			    pop 	ax	
+ 00A0  83 FB 02			    pop 	dx	
+ 00A3  74 34				ret
+				show_map endp	
+ 00A5  BF 000A R		
+ 00A8  8A 05			; flag : num db 9 dup(0)
+ 00AA  32 E4			; input characters and change the corresponding flag bit
+ 00AC  83 FE 09			; if the red side is playing chess,the flag position is 1
+ 00AF  74 15			; if the blue side is playing chess, the flag position is 2
+ 00B1  EB C7			; if there is nothing in the position, it will be 0
+ 00B3				; if the position is already occipied by someone else ,an error message will be displayed,and the input should be re-entered
+				input_number proc near
+ 00B3  B7 00		     1	    mov bh,0       
+ 00B5  B4 02		     1		mov ah,2         
+ 00B7  B6 0F		     1		mov dh,15       
+ 00B9  B2 00		     1		mov dl,0         
+ 00BB  CD 10		     1		int 10h         
+ 00BD  BA 031B R			push 	ax
+ 00C0  B4 09				push 	dx	
+ 00C2  CD 21			input:
+ 00C4  EB 24			    mov 	ah,01h
+ 00C6				    int 	21h
+					block0
+ 00C6  B7 00		     1	    mov bh,0       
+ 00C8  B4 02		     1		mov ah,2         
+ 00CA  B6 0F		     1		mov dh,15       
+ 00CC  B2 00		     1		mov dl,0         
+ 00CE  CD 10		     1		int 10h         
+ 00D0  BA 035E R		   	xor 	ah,ah
+ 00D3  B4 09			   	sub 	ax,48
+ 00D5  CD 21			   	cmp 	ax,0
+ 00D7  EB 11			   	je 		input_error
+ 00D9				   	
+				   	mov 	di,offset num
+ 00D9  B7 00		     1	    mov bh,0       
+ 00DB  B4 02		     1		mov ah,2         
+ 00DD  B6 0F		     1		mov dh,15       
+ 00DF  B2 00		     1		mov dl,0         
+ 00E1  CD 10		     1		int 10h         
+ 00E3  BA 033C R		   	sub 	ax,1
+ 00E6  B4 09			   	cmp 	ax,0
+ 00E8  CD 21			   	je 		find_ed ; Find the flag corresponding to the square
+				   	mov 	cx,ax
+				find_ing:
+					inc 	di
+					loop 	find_ing
+				find_ed:
+					
+					; check if the square has already been placed
+				   	mov 	al,ds:[di]
+				   	xor 	ah,ah
+				   	push 	di
+				   	cmp 	ax,0
+ 00EA				   	je 		set_ok
+ 00EA  B4 4C			   	jmp 	input_error
+ 00EC  CD 21			  	; this square is not played
+				set_ok:
+					inc 	si
+ 00EE					push 	di
+ 00EE  52				push 	ax
+ 00EF  50				
+ 00F0  BA 0101 R			mov 	di,offset sum
+ 00F3  B4 09				mov 	al,ds:[di]
+ 00F5  CD 21				inc 	al
+					mov 	ds:[di],al
+ 00F7  58				pop 	ax
+ 00F8  5A				pop 	di
+ 00F9  C3				mov 	di,offset flag
+ 00FA					mov 	al,ds:[di]
+					xor 	ah,ah
+					cmp 	ax,0
+					je 		input_red
+					pop 	di
+					mov 	al,2
+					mov 	ds:[di],al
+					jmp 	input_return
+ 00FA					
+ 00FA  50			input_red:
+ 00FB  52				pop 	di
+ 00FC					mov 	al,1
+ 00FC  B4 01				mov 	ds:[di],al
+ 00FE  CD 21				jmp 	input_return	
+				
+ 0100  50		     1		push 	ax
+ 0101  52		     1		push 	dx
+ 0102			     1	block0_loop:
+ 0102  B4 00		     1		mov     ah,0
+ 0104  CD 16		     1	    int     16h
+ 0106  80 FC 1C		     1	    cmp     ah,1ch
+ 0109  75 F7		     1	    jne     block0_loop
+ 010B  BA 036D R	     2	    mov     dx,offset CRLF
+ 010E  B4 09		     2	    mov     ah,09h  
+ 0110  CD 21		     2	    int     21h
+ 0112  5A		     1	    pop  	dx	
+ 0113  58		     1	    pop 	ax	
+ 0114  32 E4			input_error:
+ 0116  83 E8 30				mov 	dx,offset error
+ 0119  83 F8 00				mov 	ah,09h
+ 011C  74 44				int 	21h
+					call 	delay
+ 011E  BF 0000 R			jmp 	input
+ 0121  83 E8 01			
+ 0124  83 F8 00			input_return:
+ 0127  74 05				pop 	dx
+ 0129  8B C8				pop 	ax
+ 012B					ret
+ 012B  47			input_number endp
+ 012C  E2 FD			
+ 012E				; delay the program ,let the error message disappear after a while
+				delay proc near
+				    push ax
+ 012E  8A 05			    push dx 
+ 0130  32 E4			    mov dx,0012h
+ 0132  57			    mov ax,0
+ 0133  83 F8 00			s1:
+ 0136  74 02			    sub ax,1
+ 0138  EB 28			    sbb dx,0
+				    cmp ax,0
+ 013A				    jne s1
+ 013A  46			    cmp dx,0
+ 013B  57			    jne s1
+ 013C  50			    pop dx
+				    pop ax
+ 013D  BF 000A R		    ret
+ 0140  8A 05			delay endp
+ 0142  FE C0			
+ 0144  88 05			; update map
+ 0146  58			update_map proc near
+ 0147  5F			    push    ax
+ 0148  BF 0009 R		    push    dx
+ 014B  8A 05			    push    bx
+ 014D  32 E4			
+ 014F  83 F8 00			    clear   0,0,20,38
+ 0152  74 07			    post_c  0,0
+ 0154  5F			    mov     dx,offset game
+ 0155  B0 02			    mov     ah,09h
+ 0157  88 05			    int     21H
+ 0159  EB 13			    
+				    mov     di,offset num
+ 015B				    
+ 015B  5F				; update the first square
+ 015C  B0 01			set_color_1:
+ 015E  88 05			    mov 	al,ds:[di]
+ 0160  EB 0C			    xor 	ah,ah
+				    cmp 	ax,0
+ 0162				    je 		_white_1
+ 0162  BA 02F4 R		    cmp     ax,1
+ 0165  B4 09			    je      _red_1
+ 0167  CD 21			    set_color   2,2,8,4,16 ; blue
+ 0169  E8 0005			    jmp 	set_color_2
+ 016C  EB 8E			_white_1:
+				    set_color   2,2,8,4,0  ; white
+ 016E				    jmp 	set_color_2
+ 016E  5A			_red_1:
+ 016F  58				set_color   2,2,8,4,64 ; red
+ 0170  C3				
+ 0171					; update the second square
+				set_color_2:
+					inc 	di
+ 0171				    mov 	al,ds:[di]
+ 0171  50			    xor 	ah,ah
+ 0172  52			    cmp 	ax,0
+ 0173  BA 0012			    je 		_white_2
+ 0176  B8 0000			    cmp     ax,1
+ 0179				    je      _red_2
+ 0179  83 E8 01			    set_color   12,2,18,4,16 ; blue
+ 017C  83 DA 00			    jmp 	set_color_3
+ 017F  83 F8 00			_white_2:
+ 0182  75 F5			    set_color   12,2,18,4,0  ; white
+ 0184  83 FA 00			    jmp 	set_color_3
+ 0187  75 F0			_red_2:
+ 0189  5A				set_color   12,2,18,4,64 ; red
+ 018A  58				
+ 018B  C3				; update the third square
+ 018C				set_color_3:
+				inc 	di
+				    mov 	al,ds:[di]
+ 018C				    xor 	ah,ah   
+ 018C  50			    cmp 	ax,0
+ 018D  52			    je 		_white_3
+ 018E  53			    cmp     ax,1
+				    je      _red_3
+				    set_color   22,2,28,4,16 ; blue
+ 018F  B0 00		     1	    mov     al,0
+ 0191  B7 07		     1	    mov     bh,7
+ 0193  B5 00		     1	    mov     ch,0
+ 0195  B1 00		     1	    mov     cl,0
+ 0197  B6 14		     1	    mov     dh,20
+ 0199  B2 26		     1	    mov     dl,38
+ 019B  B4 06		     1	    mov     ah,6
+ 019D  CD 10		     1	    int     10h
+				    jmp 	set_color_4
+ 019F  B7 00		     1	    mov bh,0       
+ 01A1  B4 02		     1		mov ah,2         
+ 01A3  B6 00		     1		mov dh,0       
+ 01A5  B2 00		     1		mov dl,0         
+ 01A7  CD 10		     1		int 10h         
+ 01A9  BA 0101 R		_white_3:
+ 01AC  B4 09			    set_color   22,2,28,4,0  ; white
+ 01AE  CD 21			    jmp 	set_color_4
+				_red_3:
+ 01B0  BF 0000 R			set_color   22,2,28,4,64 ; red
+					
+					; update the forth square
+ 01B3				set_color_4:
+ 01B3  8A 05				inc 	di
+ 01B5  32 E4			    mov 	al,ds:[di]
+ 01B7  83 F8 00			    xor 	ah,ah
+ 01BA  74 1F			    cmp 	ax,0
+ 01BC  83 F8 01			    je 		_white_4
+ 01BF  74 34			    cmp     ax,1
+				    je      _red_4
+ 01C1  50		     1	    push    ax
+ 01C2  53		     1	    push    bx
+ 01C3  51		     1	    push    cx
+ 01C4  52		     1	    push    dx
+ 01C5  B0 00		     1	    mov     al,0
+ 01C7  B7 10		     1	    mov     bh,16
+ 01C9  B5 02		     1	    mov     ch,2
+ 01CB  B1 02		     1	    mov     cl,2
+ 01CD  B6 04		     1	    mov     dh,4
+ 01CF  B2 08		     1	    mov     dl,8
+ 01D1  B4 06		     1	    mov     ah,6
+ 01D3  CD 10		     1	    int     10h
+ 01D5  5A		     1	    pop     dx
+ 01D6  59		     1	    pop     cx
+ 01D7  5B		     1	    pop     bx
+ 01D8  58		     1	    pop     ax
+ 01D9  EB 32			    set_color   2,6,8,8,16 ; blue
+ 01DB				    jmp 	set_color_5
+				_white_4:
+ 01DB  50		     1	    push    ax
+ 01DC  53		     1	    push    bx
+ 01DD  51		     1	    push    cx
+ 01DE  52		     1	    push    dx
+ 01DF  B0 00		     1	    mov     al,0
+ 01E1  B7 00		     1	    mov     bh,0
+ 01E3  B5 02		     1	    mov     ch,2
+ 01E5  B1 02		     1	    mov     cl,2
+ 01E7  B6 04		     1	    mov     dh,4
+ 01E9  B2 08		     1	    mov     dl,8
+ 01EB  B4 06		     1	    mov     ah,6
+ 01ED  CD 10		     1	    int     10h
+ 01EF  5A		     1	    pop     dx
+ 01F0  59		     1	    pop     cx
+ 01F1  5B		     1	    pop     bx
+ 01F2  58		     1	    pop     ax
+ 01F3  EB 18			    set_color   2,6,8,8,0  ; white
+ 01F5				
+				    jmp 	set_color_5
+ 01F5  50		     1	    push    ax
+ 01F6  53		     1	    push    bx
+ 01F7  51		     1	    push    cx
+ 01F8  52		     1	    push    dx
+ 01F9  B0 00		     1	    mov     al,0
+ 01FB  B7 40		     1	    mov     bh,64
+ 01FD  B5 02		     1	    mov     ch,2
+ 01FF  B1 02		     1	    mov     cl,2
+ 0201  B6 04		     1	    mov     dh,4
+ 0203  B2 08		     1	    mov     dl,8
+ 0205  B4 06		     1	    mov     ah,6
+ 0207  CD 10		     1	    int     10h
+ 0209  5A		     1	    pop     dx
+ 020A  59		     1	    pop     cx
+ 020B  5B		     1	    pop     bx
+ 020C  58		     1	    pop     ax
+				_red_4:
+					set_color   2,6,8,8,64 ; red
+ 020D					
+ 020D  47				; set the fifth square
+ 020E  8A 05			set_color_5:
+ 0210  32 E4				inc 	di
+ 0212  83 F8 00			    mov 	al,ds:[di]
+ 0215  74 1F			    xor 	ah,ah
+ 0217  83 F8 01			    cmp 	ax,0
+ 021A  74 34			    je 		_white_5
+				    cmp     ax,1
+ 021C  50		     1	    push    ax
+ 021D  53		     1	    push    bx
+ 021E  51		     1	    push    cx
+ 021F  52		     1	    push    dx
+ 0220  B0 00		     1	    mov     al,0
+ 0222  B7 10		     1	    mov     bh,16
+ 0224  B5 02		     1	    mov     ch,2
+ 0226  B1 0C		     1	    mov     cl,12
+ 0228  B6 04		     1	    mov     dh,4
+ 022A  B2 12		     1	    mov     dl,18
+ 022C  B4 06		     1	    mov     ah,6
+ 022E  CD 10		     1	    int     10h
+ 0230  5A		     1	    pop     dx
+ 0231  59		     1	    pop     cx
+ 0232  5B		     1	    pop     bx
+ 0233  58		     1	    pop     ax
+ 0234  EB 32			    je      _red_5
+ 0236				    set_color   12,6,18,8,16 ; blue
+				    jmp 	set_color_6
+ 0236  50		     1	    push    ax
+ 0237  53		     1	    push    bx
+ 0238  51		     1	    push    cx
+ 0239  52		     1	    push    dx
+ 023A  B0 00		     1	    mov     al,0
+ 023C  B7 00		     1	    mov     bh,0
+ 023E  B5 02		     1	    mov     ch,2
+ 0240  B1 0C		     1	    mov     cl,12
+ 0242  B6 04		     1	    mov     dh,4
+ 0244  B2 12		     1	    mov     dl,18
+ 0246  B4 06		     1	    mov     ah,6
+ 0248  CD 10		     1	    int     10h
+ 024A  5A		     1	    pop     dx
+ 024B  59		     1	    pop     cx
+ 024C  5B		     1	    pop     bx
+ 024D  58		     1	    pop     ax
+ 024E  EB 18			_white_5:
+ 0250				    set_color   12,6,18,8,0  ; white
+				    jmp 	set_color_6
+ 0250  50		     1	    push    ax
+ 0251  53		     1	    push    bx
+ 0252  51		     1	    push    cx
+ 0253  52		     1	    push    dx
+ 0254  B0 00		     1	    mov     al,0
+ 0256  B7 40		     1	    mov     bh,64
+ 0258  B5 02		     1	    mov     ch,2
+ 025A  B1 0C		     1	    mov     cl,12
+ 025C  B6 04		     1	    mov     dh,4
+ 025E  B2 12		     1	    mov     dl,18
+ 0260  B4 06		     1	    mov     ah,6
+ 0262  CD 10		     1	    int     10h
+ 0264  5A		     1	    pop     dx
+ 0265  59		     1	    pop     cx
+ 0266  5B		     1	    pop     bx
+ 0267  58		     1	    pop     ax
+				_red_5:
+					set_color   12,6,18,8,64 ; red
+ 0268					
+ 0268  47				; set the sixth square
+ 0269  8A 05			set_color_6:
+ 026B  32 E4				inc 	di
+ 026D  83 F8 00			    mov 	al,ds:[di]
+ 0270  74 1F			    xor 	ah,ah
+ 0272  83 F8 01			    cmp 	ax,0
+ 0275  74 34			    je 		_white_6
+				    cmp     ax,1
+ 0277  50		     1	    push    ax
+ 0278  53		     1	    push    bx
+ 0279  51		     1	    push    cx
+ 027A  52		     1	    push    dx
+ 027B  B0 00		     1	    mov     al,0
+ 027D  B7 10		     1	    mov     bh,16
+ 027F  B5 02		     1	    mov     ch,2
+ 0281  B1 16		     1	    mov     cl,22
+ 0283  B6 04		     1	    mov     dh,4
+ 0285  B2 1C		     1	    mov     dl,28
+ 0287  B4 06		     1	    mov     ah,6
+ 0289  CD 10		     1	    int     10h
+ 028B  5A		     1	    pop     dx
+ 028C  59		     1	    pop     cx
+ 028D  5B		     1	    pop     bx
+ 028E  58		     1	    pop     ax
+ 028F  EB 32			    je      _red_6
+ 0291				    set_color   22,6,28,8,16 ; blue
+				    jmp 	set_color_7
+ 0291  50		     1	    push    ax
+ 0292  53		     1	    push    bx
+ 0293  51		     1	    push    cx
+ 0294  52		     1	    push    dx
+ 0295  B0 00		     1	    mov     al,0
+ 0297  B7 00		     1	    mov     bh,0
+ 0299  B5 02		     1	    mov     ch,2
+ 029B  B1 16		     1	    mov     cl,22
+ 029D  B6 04		     1	    mov     dh,4
+ 029F  B2 1C		     1	    mov     dl,28
+ 02A1  B4 06		     1	    mov     ah,6
+ 02A3  CD 10		     1	    int     10h
+ 02A5  5A		     1	    pop     dx
+ 02A6  59		     1	    pop     cx
+ 02A7  5B		     1	    pop     bx
+ 02A8  58		     1	    pop     ax
+ 02A9  EB 18			_white_6:
+ 02AB				    set_color   22,6,28,8,0  ; white
+				    jmp 	set_color_7
+ 02AB  50		     1	    push    ax
+ 02AC  53		     1	    push    bx
+ 02AD  51		     1	    push    cx
+ 02AE  52		     1	    push    dx
+ 02AF  B0 00		     1	    mov     al,0
+ 02B1  B7 40		     1	    mov     bh,64
+ 02B3  B5 02		     1	    mov     ch,2
+ 02B5  B1 16		     1	    mov     cl,22
+ 02B7  B6 04		     1	    mov     dh,4
+ 02B9  B2 1C		     1	    mov     dl,28
+ 02BB  B4 06		     1	    mov     ah,6
+ 02BD  CD 10		     1	    int     10h
+ 02BF  5A		     1	    pop     dx
+ 02C0  59		     1	    pop     cx
+ 02C1  5B		     1	    pop     bx
+ 02C2  58		     1	    pop     ax
+				_red_6:
+					set_color   22,6,28,8,64 ; red
+ 02C3					
+ 02C3  47				; set the seventh square
+ 02C4  8A 05			set_color_7:
+ 02C6  32 E4				inc 	di
+ 02C8  83 F8 00			    mov 	al,ds:[di]
+ 02CB  74 1F			    xor 	ah,ah
+ 02CD  83 F8 01			    cmp 	ax,0
+ 02D0  74 34			    je 		_white_7
+				    cmp     ax,1
+ 02D2  50		     1	    push    ax
+ 02D3  53		     1	    push    bx
+ 02D4  51		     1	    push    cx
+ 02D5  52		     1	    push    dx
+ 02D6  B0 00		     1	    mov     al,0
+ 02D8  B7 10		     1	    mov     bh,16
+ 02DA  B5 06		     1	    mov     ch,6
+ 02DC  B1 02		     1	    mov     cl,2
+ 02DE  B6 08		     1	    mov     dh,8
+ 02E0  B2 08		     1	    mov     dl,8
+ 02E2  B4 06		     1	    mov     ah,6
+ 02E4  CD 10		     1	    int     10h
+ 02E6  5A		     1	    pop     dx
+ 02E7  59		     1	    pop     cx
+ 02E8  5B		     1	    pop     bx
+ 02E9  58		     1	    pop     ax
+ 02EA  EB 32			    je      _red_7
+ 02EC				    set_color   2,10,8,12,16 ; blue
+				    jmp 	set_color_8
+ 02EC  50		     1	    push    ax
+ 02ED  53		     1	    push    bx
+ 02EE  51		     1	    push    cx
+ 02EF  52		     1	    push    dx
+ 02F0  B0 00		     1	    mov     al,0
+ 02F2  B7 00		     1	    mov     bh,0
+ 02F4  B5 06		     1	    mov     ch,6
+ 02F6  B1 02		     1	    mov     cl,2
+ 02F8  B6 08		     1	    mov     dh,8
+ 02FA  B2 08		     1	    mov     dl,8
+ 02FC  B4 06		     1	    mov     ah,6
+ 02FE  CD 10		     1	    int     10h
+ 0300  5A		     1	    pop     dx
+ 0301  59		     1	    pop     cx
+ 0302  5B		     1	    pop     bx
+ 0303  58		     1	    pop     ax
+				_white_7:
+ 0304  EB 18			    set_color   2,10,8,12,0  ; white
+ 0306				    jmp 	set_color_8
+				_red_7:
+ 0306  50		     1	    push    ax
+ 0307  53		     1	    push    bx
+ 0308  51		     1	    push    cx
+ 0309  52		     1	    push    dx
+ 030A  B0 00		     1	    mov     al,0
+ 030C  B7 40		     1	    mov     bh,64
+ 030E  B5 06		     1	    mov     ch,6
+ 0310  B1 02		     1	    mov     cl,2
+ 0312  B6 08		     1	    mov     dh,8
+ 0314  B2 08		     1	    mov     dl,8
+ 0316  B4 06		     1	    mov     ah,6
+ 0318  CD 10		     1	    int     10h
+ 031A  5A		     1	    pop     dx
+ 031B  59		     1	    pop     cx
+ 031C  5B		     1	    pop     bx
+ 031D  58		     1	    pop     ax
+					set_color   2,10,8,12,64 ; red
+					
+ 031E					; set the eighth square
+ 031E  47			set_color_8:
+ 031F  8A 05				inc 	di
+ 0321  32 E4			    mov 	al,ds:[di]
+ 0323  83 F8 00			    xor 	ah,ah
+ 0326  74 1F			    cmp 	ax,0
+ 0328  83 F8 01			    je 		_white_8
+ 032B  74 34			    cmp     ax,1
+				    je      _red_8
+ 032D  50		     1	    push    ax
+ 032E  53		     1	    push    bx
+ 032F  51		     1	    push    cx
+ 0330  52		     1	    push    dx
+ 0331  B0 00		     1	    mov     al,0
+ 0333  B7 10		     1	    mov     bh,16
+ 0335  B5 06		     1	    mov     ch,6
+ 0337  B1 0C		     1	    mov     cl,12
+ 0339  B6 08		     1	    mov     dh,8
+ 033B  B2 12		     1	    mov     dl,18
+ 033D  B4 06		     1	    mov     ah,6
+ 033F  CD 10		     1	    int     10h
+ 0341  5A		     1	    pop     dx
+ 0342  59		     1	    pop     cx
+ 0343  5B		     1	    pop     bx
+ 0344  58		     1	    pop     ax
+ 0345  EB 32			    set_color   12,10,18,12,16 ; blue
+ 0347				    jmp 	set_color_9
+				_white_8:
+ 0347  50		     1	    push    ax
+ 0348  53		     1	    push    bx
+ 0349  51		     1	    push    cx
+ 034A  52		     1	    push    dx
+ 034B  B0 00		     1	    mov     al,0
+ 034D  B7 00		     1	    mov     bh,0
+ 034F  B5 06		     1	    mov     ch,6
+ 0351  B1 0C		     1	    mov     cl,12
+ 0353  B6 08		     1	    mov     dh,8
+ 0355  B2 12		     1	    mov     dl,18
+ 0357  B4 06		     1	    mov     ah,6
+ 0359  CD 10		     1	    int     10h
+ 035B  5A		     1	    pop     dx
+ 035C  59		     1	    pop     cx
+ 035D  5B		     1	    pop     bx
+ 035E  58		     1	    pop     ax
+ 035F  EB 18			    set_color   12,10,18,12,0  ; white
+ 0361				    jmp 	set_color_9
+				_red_8:
+ 0361  50		     1	    push    ax
+ 0362  53		     1	    push    bx
+ 0363  51		     1	    push    cx
+ 0364  52		     1	    push    dx
+ 0365  B0 00		     1	    mov     al,0
+ 0367  B7 40		     1	    mov     bh,64
+ 0369  B5 06		     1	    mov     ch,6
+ 036B  B1 0C		     1	    mov     cl,12
+ 036D  B6 08		     1	    mov     dh,8
+ 036F  B2 12		     1	    mov     dl,18
+ 0371  B4 06		     1	    mov     ah,6
+ 0373  CD 10		     1	    int     10h
+ 0375  5A		     1	    pop     dx
+ 0376  59		     1	    pop     cx
+ 0377  5B		     1	    pop     bx
+ 0378  58		     1	    pop     ax
+					set_color   12,10,18,12,64 ; red
+					
+ 0379					; set the ninth square
+ 0379  47			set_color_9:
+ 037A  8A 05				inc 	di
+ 037C  32 E4			    mov 	al,ds:[di]
+ 037E  83 F8 00			    xor 	ah,ah
+ 0381  74 1F			    cmp 	ax,0
+ 0383  83 F8 01			    je 		_white_9
+ 0386  74 34			    cmp     ax,1
+				    je      _red_9
+ 0388  50		     1	    push    ax
+ 0389  53		     1	    push    bx
+ 038A  51		     1	    push    cx
+ 038B  52		     1	    push    dx
+ 038C  B0 00		     1	    mov     al,0
+ 038E  B7 10		     1	    mov     bh,16
+ 0390  B5 06		     1	    mov     ch,6
+ 0392  B1 16		     1	    mov     cl,22
+ 0394  B6 08		     1	    mov     dh,8
+ 0396  B2 1C		     1	    mov     dl,28
+ 0398  B4 06		     1	    mov     ah,6
+ 039A  CD 10		     1	    int     10h
+ 039C  5A		     1	    pop     dx
+ 039D  59		     1	    pop     cx
+ 039E  5B		     1	    pop     bx
+ 039F  58		     1	    pop     ax
+ 03A0  EB 32			    set_color   22,10,28,12,16 ; blue
+ 03A2				    jmp 	update_return
+				_white_9:
+ 03A2  50		     1	    push    ax
+ 03A3  53		     1	    push    bx
+ 03A4  51		     1	    push    cx
+ 03A5  52		     1	    push    dx
+ 03A6  B0 00		     1	    mov     al,0
+ 03A8  B7 00		     1	    mov     bh,0
+ 03AA  B5 06		     1	    mov     ch,6
+ 03AC  B1 16		     1	    mov     cl,22
+ 03AE  B6 08		     1	    mov     dh,8
+ 03B0  B2 1C		     1	    mov     dl,28
+ 03B2  B4 06		     1	    mov     ah,6
+ 03B4  CD 10		     1	    int     10h
+ 03B6  5A		     1	    pop     dx
+ 03B7  59		     1	    pop     cx
+ 03B8  5B		     1	    pop     bx
+ 03B9  58		     1	    pop     ax
+ 03BA  EB 18			    set_color   22,10,28,12,0  ; white
+ 03BC				    jmp 	update_return
+				_red_9:
+ 03BC  50		     1	    push    ax
+ 03BD  53		     1	    push    bx
+ 03BE  51		     1	    push    cx
+ 03BF  52		     1	    push    dx
+ 03C0  B0 00		     1	    mov     al,0
+ 03C2  B7 40		     1	    mov     bh,64
+ 03C4  B5 06		     1	    mov     ch,6
+ 03C6  B1 16		     1	    mov     cl,22
+ 03C8  B6 08		     1	    mov     dh,8
+ 03CA  B2 1C		     1	    mov     dl,28
+ 03CC  B4 06		     1	    mov     ah,6
+ 03CE  CD 10		     1	    int     10h
+ 03D0  5A		     1	    pop     dx
+ 03D1  59		     1	    pop     cx
+ 03D2  5B		     1	    pop     bx
+ 03D3  58		     1	    pop     ax
+					set_color   22,10,28,12,64 ; red
+					
+ 03D4				update_return:
+ 03D4  47				pop 	bx	
+ 03D5  8A 05				pop 	dx	
+ 03D7  32 E4				pop 	ax	
+ 03D9  83 F8 00				
+ 03DC  74 1F			    ret
+ 03DE  83 F8 01			update_map endp
+ 03E1  74 34			
+				; determine if the game is over
+ 03E3  50		     1	    push    ax
+ 03E4  53		     1	    push    bx
+ 03E5  51		     1	    push    cx
+ 03E6  52		     1	    push    dx
+ 03E7  B0 00		     1	    mov     al,0
+ 03E9  B7 10		     1	    mov     bh,16
+ 03EB  B5 0A		     1	    mov     ch,10
+ 03ED  B1 02		     1	    mov     cl,2
+ 03EF  B6 0C		     1	    mov     dh,12
+ 03F1  B2 08		     1	    mov     dl,8
+ 03F3  B4 06		     1	    mov     ah,6
+ 03F5  CD 10		     1	    int     10h
+ 03F7  5A		     1	    pop     dx
+ 03F8  59		     1	    pop     cx
+ 03F9  5B		     1	    pop     bx
+ 03FA  58		     1	    pop     ax
+ 03FB  EB 32			; the return value is stored in register BX and SI
+ 03FD				; if si == 9, draw
+				; if bx == 1, red side wins
+ 03FD  50		     1	    push    ax
+ 03FE  53		     1	    push    bx
+ 03FF  51		     1	    push    cx
+ 0400  52		     1	    push    dx
+ 0401  B0 00		     1	    mov     al,0
+ 0403  B7 00		     1	    mov     bh,0
+ 0405  B5 0A		     1	    mov     ch,10
+ 0407  B1 02		     1	    mov     cl,2
+ 0409  B6 0C		     1	    mov     dh,12
+ 040B  B2 08		     1	    mov     dl,8
+ 040D  B4 06		     1	    mov     ah,6
+ 040F  CD 10		     1	    int     10h
+ 0411  5A		     1	    pop     dx
+ 0412  59		     1	    pop     cx
+ 0413  5B		     1	    pop     bx
+ 0414  58		     1	    pop     ax
+ 0415  EB 18			; if bx == 2, blue side wins
+ 0417				judge_game proc near
+				
+ 0417  50		     1	    push    ax
+ 0418  53		     1	    push    bx
+ 0419  51		     1	    push    cx
+ 041A  52		     1	    push    dx
+ 041B  B0 00		     1	    mov     al,0
+ 041D  B7 40		     1	    mov     bh,64
+ 041F  B5 0A		     1	    mov     ch,10
+ 0421  B1 02		     1	    mov     cl,2
+ 0423  B6 0C		     1	    mov     dh,12
+ 0425  B2 08		     1	    mov     dl,8
+ 0427  B4 06		     1	    mov     ah,6
+ 0429  CD 10		     1	    int     10h
+ 042B  5A		     1	    pop     dx
+ 042C  59		     1	    pop     cx
+ 042D  5B		     1	    pop     bx
+ 042E  58		     1	    pop     ax
+				judge_0:
+				    ; take the first row of three numbers for comparison
+ 042F				    mov 	di,offset num
+ 042F  47			    mov 	al,ds:[di]
+ 0430  8A 05			    xor 	ah,ah
+ 0432  32 E4			   	inc 	di
+ 0434  83 F8 00			   	mov 	bl,ds:[di]
+ 0437  74 1F			   	xor 	bh,bh
+ 0439  83 F8 01			   	inc 	di
+ 043C  74 34			   	mov 	cl,ds:[di]
+				   	xor 	ch,ch
+ 043E  50		     1	    push    ax
+ 043F  53		     1	    push    bx
+ 0440  51		     1	    push    cx
+ 0441  52		     1	    push    dx
+ 0442  B0 00		     1	    mov     al,0
+ 0444  B7 10		     1	    mov     bh,16
+ 0446  B5 0A		     1	    mov     ch,10
+ 0448  B1 0C		     1	    mov     cl,12
+ 044A  B6 0C		     1	    mov     dh,12
+ 044C  B2 12		     1	    mov     dl,18
+ 044E  B4 06		     1	    mov     ah,6
+ 0450  CD 10		     1	    int     10h
+ 0452  5A		     1	    pop     dx
+ 0453  59		     1	    pop     cx
+ 0454  5B		     1	    pop     bx
+ 0455  58		     1	    pop     ax
+ 0456  EB 32			   	cmp 	ax,bx
+ 0458				   	jne 	judge_1
+				   	cmp 	bx,cx
+ 0458  50		     1	    push    ax
+ 0459  53		     1	    push    bx
+ 045A  51		     1	    push    cx
+ 045B  52		     1	    push    dx
+ 045C  B0 00		     1	    mov     al,0
+ 045E  B7 00		     1	    mov     bh,0
+ 0460  B5 0A		     1	    mov     ch,10
+ 0462  B1 0C		     1	    mov     cl,12
+ 0464  B6 0C		     1	    mov     dh,12
+ 0466  B2 12		     1	    mov     dl,18
+ 0468  B4 06		     1	    mov     ah,6
+ 046A  CD 10		     1	    int     10h
+ 046C  5A		     1	    pop     dx
+ 046D  59		     1	    pop     cx
+ 046E  5B		     1	    pop     bx
+ 046F  58		     1	    pop     ax
+ 0470  EB 18			   	jne 	judge_1
+ 0472				   	; the three numbers are the same, indicating that one side may wins
+				   	cmp 	ax,0
+ 0472  50		     1	    push    ax
+ 0473  53		     1	    push    bx
+ 0474  51		     1	    push    cx
+ 0475  52		     1	    push    dx
+ 0476  B0 00		     1	    mov     al,0
+ 0478  B7 40		     1	    mov     bh,64
+ 047A  B5 0A		     1	    mov     ch,10
+ 047C  B1 0C		     1	    mov     cl,12
+ 047E  B6 0C		     1	    mov     dh,12
+ 0480  B2 12		     1	    mov     dl,18
+ 0482  B4 06		     1	    mov     ah,6
+ 0484  CD 10		     1	    int     10h
+ 0486  5A		     1	    pop     dx
+ 0487  59		     1	    pop     cx
+ 0488  5B		     1	    pop     bx
+ 0489  58		     1	    pop     ax
+				   	je		judge_1
+				   	cmp 	ax,1
+ 048A				   	je		judge_red
+ 048A  47			   	jmp	 	judge_blue
+ 048B  8A 05			judge_1:
+ 048D  32 E4			   	; take the second row of three numbers for comparison
+ 048F  83 F8 00			   	inc 	di
+ 0492  74 1F			   	mov 	al,ds:[di]
+ 0494  83 F8 01			    xor 	ah,ah
+ 0497  74 34			    inc 	di
+				   	mov 	bl,ds:[di]
+ 0499  50		     1	    push    ax
+ 049A  53		     1	    push    bx
+ 049B  51		     1	    push    cx
+ 049C  52		     1	    push    dx
+ 049D  B0 00		     1	    mov     al,0
+ 049F  B7 10		     1	    mov     bh,16
+ 04A1  B5 0A		     1	    mov     ch,10
+ 04A3  B1 16		     1	    mov     cl,22
+ 04A5  B6 0C		     1	    mov     dh,12
+ 04A7  B2 1C		     1	    mov     dl,28
+ 04A9  B4 06		     1	    mov     ah,6
+ 04AB  CD 10		     1	    int     10h
+ 04AD  5A		     1	    pop     dx
+ 04AE  59		     1	    pop     cx
+ 04AF  5B		     1	    pop     bx
+ 04B0  58		     1	    pop     ax
+ 04B1  EB 32			   	xor 	bh,bh
+ 04B3				   	inc 	di
+				   	mov 	cl,ds:[di]
+ 04B3  50		     1	    push    ax
+ 04B4  53		     1	    push    bx
+ 04B5  51		     1	    push    cx
+ 04B6  52		     1	    push    dx
+ 04B7  B0 00		     1	    mov     al,0
+ 04B9  B7 00		     1	    mov     bh,0
+ 04BB  B5 0A		     1	    mov     ch,10
+ 04BD  B1 16		     1	    mov     cl,22
+ 04BF  B6 0C		     1	    mov     dh,12
+ 04C1  B2 1C		     1	    mov     dl,28
+ 04C3  B4 06		     1	    mov     ah,6
+ 04C5  CD 10		     1	    int     10h
+ 04C7  5A		     1	    pop     dx
+ 04C8  59		     1	    pop     cx
+ 04C9  5B		     1	    pop     bx
+ 04CA  58		     1	    pop     ax
+ 04CB  EB 18			   	xor 	ch,ch
+ 04CD				   	cmp 	ax,bx
+				   	jne 	judge_2
+ 04CD  50		     1	    push    ax
+ 04CE  53		     1	    push    bx
+ 04CF  51		     1	    push    cx
+ 04D0  52		     1	    push    dx
+ 04D1  B0 00		     1	    mov     al,0
+ 04D3  B7 40		     1	    mov     bh,64
+ 04D5  B5 0A		     1	    mov     ch,10
+ 04D7  B1 16		     1	    mov     cl,22
+ 04D9  B6 0C		     1	    mov     dh,12
+ 04DB  B2 1C		     1	    mov     dl,28
+ 04DD  B4 06		     1	    mov     ah,6
+ 04DF  CD 10		     1	    int     10h
+ 04E1  5A		     1	    pop     dx
+ 04E2  59		     1	    pop     cx
+ 04E3  5B		     1	    pop     bx
+ 04E4  58		     1	    pop     ax
+				   	cmp 	bx,cx
+ 04E5				   	jne 	judge_2
+ 04E5  5B			   	; the three numbers are the same, indicating that one side may wins
+ 04E6  5A			   	cmp 	ax,0
+ 04E7  58			   	je		judge_2
+				   	cmp 	ax,1
+ 04E8  C3			   	je		judge_red
+ 04E9				   	jmp	 	judge_blue
+				judge_2:
+				   	; take the third row of three numbers for comparison
+				   	inc 	di
+				   	mov 	al,ds:[di]
+				    xor 	ah,ah
+				    inc 	di
+ 04E9				   	mov 	bl,ds:[di]
+				   	xor 	bh,bh
+ 04E9				   	inc 	di
+				   	mov 	cl,ds:[di]
+ 04E9  BF 0000 R		   	xor 	ch,ch
+ 04EC  8A 05			   	cmp 	ax,bx
+ 04EE  32 E4			   	jne 	judge_3
+ 04F0  47			   	cmp 	bx,cx
+ 04F1  8A 1D			   	jne 	judge_3
+ 04F3  32 FF			   	; the three numbers are the same, indicating that one side may wins
+ 04F5  47			   	cmp 	ax,0
+ 04F6  8A 0D			   	je		judge_3
+ 04F8  32 ED			   	cmp 	ax,1
+ 04FA  3B C3			   	je		judge_red
+ 04FC  75 14			   	jmp	 	judge_blue
+ 04FE  3B D9			judge_3:
+ 0500  75 10			   	; get the three numbers in the first column
+				   	mov 	di,offset num
+ 0502  83 F8 00			   	mov 	al,ds:[di]
+ 0505  74 0B			   	xor 	ah,ah
+ 0507  83 F8 01			   	
+ 050A  75 03 E9 0134		   	add 	di,3
+ 050F  E9 0138			   	mov 	bl,ds:[di]
+ 0512				   	xor 	bh,bh
+				   	
+ 0512  47			   	add 	di,3
+ 0513  8A 05			   	mov 	cl,ds:[di]
+ 0515  32 E4			   	xor 	ch,ch
+ 0517  47			   	cmp 	ax,bx
+ 0518  8A 1D			   	jne 	judge_4
+ 051A  32 FF			   	cmp 	bx,cx
+ 051C  47			   	jne 	judge_4
+ 051D  8A 0D			   	; the three numbers are the same, indicating that one side may wins
+ 051F  32 ED			   	cmp 	ax,0
+ 0521  3B C3			   	je		judge_4
+ 0523  75 14			   	cmp 	ax,1
+ 0525  3B D9			   	je		judge_red
+ 0527  75 10			   	jmp	 	judge_blue
+				judge_4:
+ 0529  83 F8 00			   	; get the three numbers in the second column
+ 052C  74 0B			   	mov 	di,offset num
+ 052E  83 F8 01			   	inc 	di
+ 0531  75 03 E9 010D		   	mov 	al,ds:[di]
+ 0536  E9 0111			   	xor 	ah,ah
+ 0539				   	
+				   	add 	di,3
+ 0539  47			   	mov 	bl,ds:[di]
+ 053A  8A 05			   	xor 	bh,bh
+ 053C  32 E4			   	
+ 053E  47			   	add 	di,3
+ 053F  8A 1D			   	mov 	cl,ds:[di]
+ 0541  32 FF			   	xor 	ch,ch
+ 0543  47			   	cmp 	ax,bx
+ 0544  8A 0D			   	jne 	judge_5
+ 0546  32 ED			   	cmp 	bx,cx
+ 0548  3B C3			   	jne 	judge_5
+ 054A  75 14			   	; the three numbers are the same, indicating that one side may wins
+ 054C  3B D9			   	cmp 	ax,0
+ 054E  75 10			   	je		judge_5
+				   	cmp 	ax,1
+ 0550  83 F8 00			   	je		judge_red
+ 0553  74 0B			   	jmp	 	judge_blue
+ 0555  83 F8 01			   	
+ 0558  75 03 E9 00E6		judge_5:
+ 055D  E9 00EA			   	; get the three numbers in the third column
+ 0560				   	mov 	di,offset num
+				   	add 	di,2
+ 0560  BF 0000 R		   	mov 	al,ds:[di]
+ 0563  8A 05			   	xor 	ah,ah
+ 0565  32 E4			   	
+				   	add 	di,3
+ 0567  83 C7 03			   	mov 	bl,ds:[di]
+ 056A  8A 1D			   	xor 	bh,bh
+ 056C  32 FF			   	
+				   	add 	di,3
+ 056E  83 C7 03			   	mov 	cl,ds:[di]
+ 0571  8A 0D			   	xor 	ch,ch
+ 0573  32 ED			   	cmp 	ax,bx
+ 0575  3B C3			   	jne 	judge_6
+ 0577  75 14			   	cmp 	bx,cx
+ 0579  3B D9			   	jne 	judge_6
+ 057B  75 10			   	; the three numbers are the same, indicating that one side may wins
+				   	cmp 	ax,0
+ 057D  83 F8 00			   	je		judge_6
+ 0580  74 0B			   	cmp 	ax,1
+ 0582  83 F8 01			   	je		judge_red
+ 0585  75 03 E9 00B9		   	jmp	 	judge_blue 	
+ 058A  E9 00BD			judge_6:
+ 058D				   	; take out the three diagonal numbers
+				   	mov 	di,offset num
+ 058D  BF 0000 R		   	mov 	al,ds:[di]
+ 0590  47			   	xor 	ah,ah
+ 0591  8A 05			   	
+ 0593  32 E4			   	add 	di,4
+				   	mov 	bl,ds:[di]
+ 0595  83 C7 03			   	xor 	bh,bh
+ 0598  8A 1D			   	
+ 059A  32 FF			   	add 	di,4
+				   	mov 	cl,ds:[di]
+ 059C  83 C7 03			   	xor 	ch,ch
+ 059F  8A 0D			   	cmp 	ax,bx
+ 05A1  32 ED			   	jne 	judge_7
+ 05A3  3B C3			   	cmp 	bx,cx
+ 05A5  75 14			   	jne 	judge_7
+ 05A7  3B D9			   	; the three numbers are the same, indicating that one side may wins
+ 05A9  75 10			   	cmp 	ax,0
+				   	je		judge_7
+ 05AB  83 F8 00			   	cmp 	ax,1
+ 05AE  74 0B			   	je		judge_red
+ 05B0  83 F8 01			   	jmp	 	judge_blue
+ 05B3  75 03 E9 008B		   	
+ 05B8  E9 008F			judge_7:
+				   	; take out the three diagonal numbers
+ 05BB					mov 	di,offset num
+					add 	di,2
+ 05BB  BF 0000 R			mov 	al,ds:[di]
+ 05BE  83 C7 02				xor 	ah,ah
+ 05C1  8A 05				
+ 05C3  32 E4				add 	di,2
+					mov 	bl,ds:[di]
+ 05C5  83 C7 03				xor 	bh,bh
+ 05C8  8A 1D				
+ 05CA  32 FF				add 	di,2
+					mov 	cl,ds:[di]
+ 05CC  83 C7 03				xor 	ch,ch
+ 05CF  8A 0D				cmp 	ax,bx
+ 05D1  32 ED			   	jne 	judge_no
+ 05D3  3B C3			   	cmp 	bx,cx
+ 05D5  75 10			   	jne 	judge_no
+ 05D7  3B D9			   	; the three numbers are the same, indicating that one side may wins
+ 05D9  75 0C			   	cmp 	ax,0
+				   	je		judge_no
+ 05DB  83 F8 00			   	cmp 	ax,1
+ 05DE  74 07			   	je		judge_red
+ 05E0  83 F8 01			   	jmp	 	judge_blue
+ 05E3  74 5E				   	
+ 05E5  EB 63			judge_no:
+ 05E7					xor 	bx,bx
+					mov 	bx,0
+ 05E7  BF 0000 R			jmp		judge_game_return
+ 05EA  8A 05			judge_red:
+ 05EC  32 E4				xor		bx,bx	
+					mov 	bx,1
+ 05EE  83 C7 04				jmp		judge_game_return
+ 05F1  8A 1D			judge_blue:
+ 05F3  32 FF			    xor	 	bx,bx
+				    mov 	bx,2
+ 05F5  83 C7 04			judge_game_return:
+ 05F8  8A 0D			    ret
+ 05FA  32 ED			judge_game endp
+ 05FC  3B C3			
+ 05FE  75 10			code ends
+ 0600  3B D9			end start
+ 0602  75 0C			
+
+ 0604  83 F8 00
+ 0607  74 07
+ 0609  83 F8 01
+ 060C  74 35
+ 060E  EB 3A
+ 0610
+ 0610  BF 0000 R
+ 0613  83 C7 02
+ 0616  8A 05
+ 0618  32 E4
+ 061A  83 C7 02
+ 061D  8A 1D
+ 061F  32 FF
+ 0621  83 C7 02
+ 0624  8A 0D
+ 0626  32 ED
+ 0628  3B C3
+ 062A  75 10
+ 062C  3B D9
+ 062E  75 0C
+ 0630  83 F8 00
+ 0633  74 07
+ 0635  83 F8 01
+ 0638  74 09
+ 063A  EB 0E
+ 063C
+ 063C  33 DB
+ 063E  BB 0000
+ 0641  EB 0C
+ 0643
+ 0643  33 DB
+ 0645  BB 0001
+ 0648  EB 05
+ 064A
+ 064A  33 DB
+ 064C  BB 0002
+ 064F
+ 064F  C3
+ 0650
+ 0650
+Microsoft (R) Macro Assembler Version 6.11		    11/30/22 15:36:31
+tempfile.asm						     Symbols 2 - 1
+
+
+
+
+Macros:
+
+                N a m e                 Type
+
+_output_CRLF . . . . . . . . . .	Proc
+block0 . . . . . . . . . . . . .	Proc
+block  . . . . . . . . . . . . .	Proc
+change . . . . . . . . . . . . .	Proc
+clear  . . . . . . . . . . . . .	Proc
+post_c . . . . . . . . . . . . .	Proc
+set_color  . . . . . . . . . . .	Proc
+show_menu  . . . . . . . . . . .	Proc
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+code . . . . . . . . . . . . . .	16 Bit	 0650	  Para	  Private 
+data . . . . . . . . . . . . . .	16 Bit	 0370	  Para	  Private 
+stacks . . . . . . . . . . . . .	16 Bit	 0028	  Para	  Stack	  
+
+
+Procedures,  parameters and locals:
+
+                N a m e                 Type     Value    Attr
+
+delay  . . . . . . . . . . . . .	P Near	 0171	  code	Length= 001B Public
+  s1 . . . . . . . . . . . . . .	L Near	 0179	  code	
+input_number . . . . . . . . . .	P Near	 00FA	  code	Length= 00F1 Public
+  input  . . . . . . . . . . . .	L Near	 00FC	  code	
+  block0_loop  . . . . . . . . .	L Near	 0102	  code	
+  find_ing . . . . . . . . . . .	L Near	 012B	  code	
+  find_ed  . . . . . . . . . . .	L Near	 012E	  code	
+  set_ok . . . . . . . . . . . .	L Near	 013A	  code	
+  input_red  . . . . . . . . . .	L Near	 015B	  code	
+  input_error  . . . . . . . . .	L Near	 0162	  code	
+  input_return . . . . . . . . .	L Near	 016E	  code	
+judge_game . . . . . . . . . . .	P Near	 04E9	  code	Length= 0167 Public
+  judge_0  . . . . . . . . . . .	L Near	 04E9	  code	
+  judge_1  . . . . . . . . . . .	L Near	 0512	  code	
+  judge_2  . . . . . . . . . . .	L Near	 0539	  code	
+  judge_3  . . . . . . . . . . .	L Near	 0560	  code	
+  judge_4  . . . . . . . . . . .	L Near	 058D	  code	
+  judge_5  . . . . . . . . . . .	L Near	 05BB	  code	
+  judge_6  . . . . . . . . . . .	L Near	 05E7	  code	
+  judge_7  . . . . . . . . . . .	L Near	 0610	  code	
+  judge_no . . . . . . . . . . .	L Near	 063C	  code	
+  judge_red  . . . . . . . . . .	L Near	 0643	  code	
+  judge_blue . . . . . . . . . .	L Near	 064A	  code	
+  judge_game_return  . . . . . .	L Near	 064F	  code	
+show_map . . . . . . . . . . . .	P Near	 00EE	  code	Length= 000C Public
+update_map . . . . . . . . . . .	P Near	 018C	  code	Length= 035D Public
+  set_color_1  . . . . . . . . .	L Near	 01B3	  code	
+  _white_1 . . . . . . . . . . .	L Near	 01DB	  code	
+  _red_1 . . . . . . . . . . . .	L Near	 01F5	  code	
+  set_color_2  . . . . . . . . .	L Near	 020D	  code	
+  _white_2 . . . . . . . . . . .	L Near	 0236	  code	
+  _red_2 . . . . . . . . . . . .	L Near	 0250	  code	
+  set_color_3  . . . . . . . . .	L Near	 0268	  code	
+  _white_3 . . . . . . . . . . .	L Near	 0291	  code	
+  _red_3 . . . . . . . . . . . .	L Near	 02AB	  code	
+  set_color_4  . . . . . . . . .	L Near	 02C3	  code	
+  _white_4 . . . . . . . . . . .	L Near	 02EC	  code	
+  _red_4 . . . . . . . . . . . .	L Near	 0306	  code	
+  set_color_5  . . . . . . . . .	L Near	 031E	  code	
+  _white_5 . . . . . . . . . . .	L Near	 0347	  code	
+  _red_5 . . . . . . . . . . . .	L Near	 0361	  code	
+  set_color_6  . . . . . . . . .	L Near	 0379	  code	
+  _white_6 . . . . . . . . . . .	L Near	 03A2	  code	
+  _red_6 . . . . . . . . . . . .	L Near	 03BC	  code	
+  set_color_7  . . . . . . . . .	L Near	 03D4	  code	
+  _white_7 . . . . . . . . . . .	L Near	 03FD	  code	
+  _red_7 . . . . . . . . . . . .	L Near	 0417	  code	
+  set_color_8  . . . . . . . . .	L Near	 042F	  code	
+  _white_8 . . . . . . . . . . .	L Near	 0458	  code	
+  _red_8 . . . . . . . . . . . .	L Near	 0472	  code	
+  set_color_9  . . . . . . . . .	L Near	 048A	  code	
+  _white_9 . . . . . . . . . . .	L Near	 04B3	  code	
+  _red_9 . . . . . . . . . . . .	L Near	 04CD	  code	
+  update_return  . . . . . . . .	L Near	 04E5	  code	
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+CRLF . . . . . . . . . . . . . .	Byte	 036D	  data	
+_blue_suc  . . . . . . . . . . .	L Near	 00D9	  code	
+_game_ing  . . . . . . . . . . .	L Near	 007A	  code	
+_game_loop . . . . . . . . . . .	L Near	 005D	  code	
+_no_team . . . . . . . . . . . .	L Near	 00C6	  code	
+_no_ . . . . . . . . . . . . . .	Byte	 035E	  data	
+_red_suc . . . . . . . . . . . .	L Near	 00B3	  code	
+block_loop . . . . . . . . . . .	L Near	 003A	  code	
+blue . . . . . . . . . . . . . .	Byte	 033C	  data	
+change_ret . . . . . . . . . . .	L Near	 0097	  code	
+error  . . . . . . . . . . . . .	Byte	 02F4	  data	
+flag . . . . . . . . . . . . . .	Byte	 0009	  data	
+game . . . . . . . . . . . . . .	Byte	 0101	  data	
+main_loop  . . . . . . . . . . .	L Near	 000A	  code	
+main_return  . . . . . . . . . .	L Near	 00EA	  code	
+menu . . . . . . . . . . . . . .	Byte	 000B	  data	
+message  . . . . . . . . . . . .	Byte	 02CF	  data	
+num  . . . . . . . . . . . . . .	Byte	 0000	  data	
+red  . . . . . . . . . . . . . .	Byte	 031B	  data	
+set_blue . . . . . . . . . . . .	L Near	 0093	  code	
+start  . . . . . . . . . . . . .	L Near	 0000	  code	
+sum  . . . . . . . . . . . . . .	Byte	 000A	  data	
+
+	   0 Warnings
+	   0 Errors
