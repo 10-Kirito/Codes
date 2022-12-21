@@ -1,3 +1,101 @@
+    .global p_bin
+	.global v_bin 
+    .data
+
+    # p_bin struct
+    #          min,  max,   bin_str
+    p_bin:
+		.long 	0,    4, 	0b00000000
+		.long 	5,    29, 	0b00000001
+		.long 	30,   49, 	0b00000011
+		.long 	50,   69, 	0b00000111
+		.long 	70,   89, 	0b00001111
+		.long 	90,   100, 	0b00011111
+    
+    # v_bin struct
+    #          num,     bin_str
+    v_bin:
+		.long 	0, 		0b0111111
+		.long 	1, 		0b0000110	
+		.long 	2, 		0b1011011	
+		.long 	3, 		0b1001111	
+		.long 	4, 		0b1100110	
+		.long 	5, 		0b1101101	
+		.long 	6, 		0b1111101	
+		.long 	7, 		0b0000111	
+		.long 	8, 		0b1111111	
+		.long 	9, 		0b1101111	
+		.long 	10, 	0b1000000   
+    .text
+    .global  find_p_bin_str
+find_p_bin_str:
+	pushq	%rbp
+	movq	%rsp, %rbp
+    # Mov the value of parameter 1 edi to stack
+	movl	%edi, -20(%rbp)
+    # Mov the value of 0 into stack
+	movl	$0, -4(%rbp)
+	jmp	.find_p_bin_str_not_6
+.find_p_bin_str_test:
+    # Mov the value of i to %eax
+    # ones in p
+	movl	-4(%rbp), %eax
+	movslq	%eax, %rdx          ## extend eax to rax and then move it to rdx
+	movq	%rdx, %rax
+	addq	%rax, %rax
+	addq	%rdx, %rax
+	salq	$2, %rax
+	movq	%rax, %rdx          ## calculate coresponding address and stored in rdx
+    # retrieves the first address of the array p_bin
+	leaq	p_bin(%rip), %rax
+    # Put the data stored at the corresponding address into %rax
+	movl	(%rdx,%rax), %eax
+    # compare the values of p and %eax
+	cmpl	%eax, -20(%rbp)
+    # if p < p_bin[i].min,enter the next cycle
+	jl	.find_p_bin_str_loop
+    # same thing,take out the value of p_bin[i].max into %eax
+    # tens in p
+	movl	-4(%rbp), %eax
+	movslq	%eax, %rdx          ## extend eax to rax and then move it to rdx
+	movq	%rdx, %rax
+	addq	%rax, %rax
+	addq	%rdx, %rax
+	salq	$2, %rax
+	movq	%rax, %rdx
+	leaq	4+p_bin(%rip), %rax
+	movl	(%rdx,%rax), %eax
+    # if p <= p_bin[i].max,enter the next cycle
+	cmpl	%eax, -20(%rbp)
+	jg	.find_p_bin_str_loop
+    # return p_bin[i].bin_str
+    # hundred in p
+	movl	-4(%rbp), %eax
+	movslq	%eax, %rdx          ## extend eax to rax and then move it to rdx
+	movq	%rdx, %rax
+	addq	%rax, %rax
+	addq	%rdx, %rax
+	salq	$2, %rax
+	movq	%rax, %rdx
+	leaq	8+p_bin(%rip), %rax
+	movl	(%rdx,%rax), %eax
+    # return 
+	jmp	.find_p_bin_str_ret
+
+    # looping index of find_p_bin_str_test
+.find_p_bin_str_loop:
+	addl	$1, -4(%rbp)
+    # looping index of p_bin
+.find_p_bin_str_not_6:
+	cmpl	$5, -4(%rbp)
+	jle	.find_p_bin_str_test
+	movl	$0, %eax
+
+    # return function
+.find_p_bin_str_ret:
+	popq	%rbp
+	ret
+    
     .text
     .globl	batt_update
 batt_update:
@@ -56,10 +154,10 @@ set_batt_from_ports:
     subq    $24,%rsp            ## the stack is 24 bytes
     movq    %rdi,-24(%rbp)      ## move the pointer into memory,the size is 8 Bytes
     movl    $0,-4(%rbp)         ## move param 1 to the stack
-    movzbl  BATT_STATUS_PORT(%rip),%eax
+    movzbl  BATT_STATUS_PORT(%rip),%eax     ## zero extension
     movzbl  %al,%eax
-    andl    $16,%eax
-    cmpl   $0,%eax
+    andl    $16,%eax            ## take the 5th bit with a mask 0b10000
+    cmpl    $0,%eax              
     jle      .setV
 
 .setP: # set the mode to 1
@@ -117,6 +215,7 @@ set_batt_from_ports:
     jmp .setfull
 .setfull:
     # modified
+    # full battery
     movq -24(%rbp),%rax
     movb 2(%rax),%al
     cmpb $100,%al

@@ -1,16 +1,16 @@
-==24362== Memcheck, a memory error detector
-==24362== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==24362== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
-==24362== Command: ./test_hybrid_batt_update set_display_from_batt()\ level\ 1
-==24362== Parent PID: 24361
-==24362== 
-==24362== error calling PR_SET_PTRACER, vgdb might block
-==24362== 
-==24362== HEAP SUMMARY:
-==24362==     in use at exit: 0 bytes in 0 blocks
-==24362==   total heap usage: 2 allocs, 2 frees, 8 bytes allocated
-==24362== 
-==24362== All heap blocks were freed -- no leaks are possible
-==24362== 
-==24362== For lists of detected and suppressed errors, rerun with: -s
-==24362== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==5880== Memcheck, a memory error detector
+==5880== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==5880== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==5880== Command: ./test_batt_update set_display_from_batt()\ level\ 1
+==5880== Parent PID: 5879
+==5880== 
+==5880== error calling PR_SET_PTRACER, vgdb might block
+==5880== 
+==5880== HEAP SUMMARY:
+==5880==     in use at exit: 0 bytes in 0 blocks
+==5880==   total heap usage: 2 allocs, 2 frees, 8 bytes allocated
+==5880== 
+==5880== All heap blocks were freed -- no leaks are possible
+==5880== 
+==5880== For lists of detected and suppressed errors, rerun with: -s
+==5880== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

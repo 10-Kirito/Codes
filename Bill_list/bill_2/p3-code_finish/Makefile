@@ -85,11 +85,11 @@ batt_main : batt_main.o batt_sim.o batt_update_asm.o
 
 # batt_update functions testing program
 test_batt_update : test_batt_update.o batt_sim.o batt_update_asm.o
-	$(CC) -o -g $@ $^
+	$(CC) -o $@ $^
 
 # uses both assmebly and C update functions for incremental testing
 hybrid_main : batt_main.o batt_sim.o batt_update_asm.o batt_update.o
-	$(CC) -g -o $@ $^
+	$(CC) -o $@ $^
 
 # hybrid test program
 test_hybrid_batt_update : test_batt_update.o batt_sim.o batt_update_asm.o batt_update.o

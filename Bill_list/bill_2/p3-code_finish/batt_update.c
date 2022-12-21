@@ -3,7 +3,7 @@
 #include <string.h>
 #include "batt.h"
 
-struct p_bin_num {
+/*struct p_bin_num {
     int min, max;
     int bin_str;
 } p_bin[6] = {
@@ -30,8 +30,8 @@ struct v_bin_num {
     {8, 0b1111111},
     {9, 0b1101111},
     {10, 0b1000000},
-};
-
+};*/
+/*
 int find_p_bin_str(int p)
 {
     int i;
@@ -44,7 +44,7 @@ int find_p_bin_str(int p)
 
     return 0;
 }
-
+*/
 // int set_batt_from_ports(batt_t *batt)
 // {
 //     //printf("BATT_STATUS_PORT 0x%x\n", BATT_STATUS_PORT);

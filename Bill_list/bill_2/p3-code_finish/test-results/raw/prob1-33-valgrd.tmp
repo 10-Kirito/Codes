@@ -1,16 +1,16 @@
-==24730== Memcheck, a memory error detector
-==24730== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==24730== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
-==24730== Command: ./hybrid_main 6949 V
-==24730== Parent PID: 24729
-==24730== 
-==24730== error calling PR_SET_PTRACER, vgdb might block
-==24730== 
-==24730== HEAP SUMMARY:
-==24730==     in use at exit: 0 bytes in 0 blocks
-==24730==   total heap usage: 0 allocs, 0 frees, 0 bytes allocated
-==24730== 
-==24730== All heap blocks were freed -- no leaks are possible
-==24730== 
-==24730== For lists of detected and suppressed errors, rerun with: -s
-==24730== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==6248== Memcheck, a memory error detector
+==6248== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==6248== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==6248== Command: ./batt_main 6949 V
+==6248== Parent PID: 6247
+==6248== 
+==6248== error calling PR_SET_PTRACER, vgdb might block
+==6248== 
+==6248== HEAP SUMMARY:
+==6248==     in use at exit: 0 bytes in 0 blocks
+==6248==   total heap usage: 0 allocs, 0 frees, 0 bytes allocated
+==6248== 
+==6248== All heap blocks were freed -- no leaks are possible
+==6248== 
+==6248== For lists of detected and suppressed errors, rerun with: -s
+==6248== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
