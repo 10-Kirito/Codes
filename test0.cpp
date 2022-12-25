@@ -17,7 +17,6 @@ int main()
 	{
 		m[i] = to_string(i);
 	}
-
 	vector<string> vec_copy;
 	vector<string> vec_move;
 
