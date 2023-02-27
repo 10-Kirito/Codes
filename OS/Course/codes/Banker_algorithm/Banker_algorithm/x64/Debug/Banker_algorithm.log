@@ -1,0 +1,6 @@
+﻿  Banker.cpp
+D:\Z_Disktop\Codes\OS\Course\codes\Banker_algorithm\Banker_algorithm\Banker.h(25,41): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+D:\Z_Disktop\Codes\OS\Course\codes\Banker_algorithm\Banker_algorithm\Banker.h(26,41): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+D:\Z_Disktop\Codes\OS\Course\codes\Banker_algorithm\Banker_algorithm\Banker.h(55,41): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+D:\Z_Disktop\Codes\OS\Course\codes\Banker_algorithm\Banker_algorithm\Banker.h(76,41): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+  Banker_algorithm.vcxproj -> D:\Z_Disktop\Codes\OS\Course\codes\Banker_algorithm\x64\Debug\Banker_algorithm.exe
