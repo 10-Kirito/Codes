@@ -1,0 +1,110 @@
+Microsoft (R) Macro Assembler Version 6.11		    11/26/22 23:32:27
+tempfile.asm						     Page 1 - 1
+
+
+ 0000				dseg segment
+ 0000 0096			      center_x dw 150             ;原点坐标_x
+ 0002 005A			      center_y dw 90              ;原点坐标_y
+ 0004 0032			      radius   dw 50              ;半径_r
+ 0006 0000			      label_x  dw ?               ;外接正方形右边界
+ 0008 0000			      label_y  dw ?               ;外接正方形下边界
+ 000A 0000			      distance dw ?
+ 000C				dseg ends
+ 0000				cseg segment
+				      assume cs:cseg , ds:dseg
+ 0000				start:
+ 0000  B8 ---- R		      mov ax , dseg               ;装载ds段
+ 0003  8E D8			      mov ds , ax
+				
+ 0005  B4 00			      mov ah , 0                  ;设置图形显示模式4
+ 0007  B0 04			      mov al , 04h
+ 0009  CD 10			      int 10h
+				
+ 000B  A1 0000 R		      mov ax , center_x
+ 000E  03 06 0004 R		      add ax , radius
+ 0012  A3 0006 R		      mov label_x , ax
+ 0015  A1 0002 R		      mov ax , center_y
+ 0018  03 06 0004 R		      add ax , radius
+ 001C  A3 0008 R		      mov label_y , ax
+ 001F  A1 0004 R		      mov ax , radius
+ 0022  F7 E0			      mul ax
+ 0024  A3 000A R		      mov distance , ax
+				
+ 0027  8B 16 0002 R		      mov dx , center_y        ;mov dx , [0002]
+ 002B  2B 16 0004 R		      sub dx , radius
+ 002F  4A			      dec dx                   ;增加一行余量
+				
+ 0030				row:
+ 0030  42			      inc dx
+ 0031  3B 16 0008 R		      cmp dx , label_y
+ 0035  77 33			      ja  exit
+ 0037  8B 0E 0000 R		      mov cx , center_x
+ 003B  2B 0E 0004 R		      sub cx , radius
+ 003F				column:
+ 003F  3B 0E 0006 R		      cmp cx , label_x
+ 0043  77 EB			      ja  row
+				
+ 0045  52			      push dx
+ 0046  8B C2			      mov ax , dx
+ 0048  2B 06 0002 R		      sub ax , center_y
+ 004C  F7 E8			      imul ax
+				
+ 004E  8B D8			      mov bx , ax
+				
+ 0050  8B C1			      mov ax , cx
+ 0052  2B 06 0000 R		      sub ax , center_x
+ 0056  F7 E8			      imul ax
+				
+ 0058  5A			      pop dx
+ 0059  03 C3			      add ax , bx
+ 005B  3B 06 000A R		      cmp ax , distance
+ 005F  77 06			      ja  next
+ 0061  B0 02			      mov al , 02              ;color
+ 0063  B4 0C			      mov ah , 0ch             ;0c号子功能
+ 0065  CD 10			      int 10h
+ 0067				next:
+ 0067  41			      inc cx
+ 0068  EB D5			      jmp column
+				
+ 006A				exit:
+						
+ 006A  B4 00				  mov ah , 0                  ;设置图形显示模式4
+ 006C  B0 03			      mov al , 03h
+ 006E  CD 10			      int 10h
+ 0070  B8 4C00			      mov ax , 4c00h
+ 0073  CD 21			      int 21h
+				
+ 0075				cseg ends
+				end  start
+Microsoft (R) Macro Assembler Version 6.11		    11/26/22 23:32:27
+tempfile.asm						     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+cseg . . . . . . . . . . . . . .	16 Bit	 0075	  Para	  Private 
+dseg . . . . . . . . . . . . . .	16 Bit	 000C	  Para	  Private 
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+center_x . . . . . . . . . . . .	Word	 0000	  dseg	
+center_y . . . . . . . . . . . .	Word	 0002	  dseg	
+column . . . . . . . . . . . . .	L Near	 003F	  cseg	
+distance . . . . . . . . . . . .	Word	 000A	  dseg	
+exit . . . . . . . . . . . . . .	L Near	 006A	  cseg	
+label_x  . . . . . . . . . . . .	Word	 0006	  dseg	
+label_y  . . . . . . . . . . . .	Word	 0008	  dseg	
+next . . . . . . . . . . . . . .	L Near	 0067	  cseg	
+radius . . . . . . . . . . . . .	Word	 0004	  dseg	
+row  . . . . . . . . . . . . . .	L Near	 0030	  cseg	
+start  . . . . . . . . . . . . .	L Near	 0000	  cseg	
+
+	   0 Warnings
+	   0 Errors

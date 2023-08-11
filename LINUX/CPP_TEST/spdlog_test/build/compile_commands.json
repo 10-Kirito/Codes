@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/home/kirito/3.Codes/CPP_TEST/spdlog_test/build",
+  "command": "/usr/bin/c++ -DFMT_LOCALE -DFMT_SHARED -DSPDLOG_FMT_EXTERNAL   -o CMakeFiles/spdlog_examples.dir/hello.cpp.o -c /home/kirito/3.Codes/CPP_TEST/spdlog_test/hello.cpp",
+  "file": "/home/kirito/3.Codes/CPP_TEST/spdlog_test/hello.cpp"
+}
+]

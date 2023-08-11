@@ -1,0 +1,12 @@
+[
+{
+  "directory": "/home/kirito/Codes/DATA_STRUCTURES_ALGORITHMS/LINEAR_TABLE/build",
+  "command": "/usr/bin/c++   -g -DGTEST_HAS_PTHREAD=1 -o CMakeFiles/sequence_list_list.dir/sequence_list_test.cpp.o -c /home/kirito/Codes/DATA_STRUCTURES_ALGORITHMS/LINEAR_TABLE/sequence_list_test.cpp",
+  "file": "/home/kirito/Codes/DATA_STRUCTURES_ALGORITHMS/LINEAR_TABLE/sequence_list_test.cpp"
+},
+{
+  "directory": "/home/kirito/Codes/DATA_STRUCTURES_ALGORITHMS/LINEAR_TABLE/build",
+  "command": "/usr/bin/c++   -g -DGTEST_HAS_PTHREAD=1 -o CMakeFiles/sequence_list_list.dir/sequence_list.cpp.o -c /home/kirito/Codes/DATA_STRUCTURES_ALGORITHMS/LINEAR_TABLE/sequence_list.cpp",
+  "file": "/home/kirito/Codes/DATA_STRUCTURES_ALGORITHMS/LINEAR_TABLE/sequence_list.cpp"
+}
+]

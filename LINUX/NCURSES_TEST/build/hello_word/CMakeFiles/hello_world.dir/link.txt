@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/hello_world.dir/main.cpp.o -o hello_world  -lcurses /usr/lib/x86_64-linux-gnu/libform.so 

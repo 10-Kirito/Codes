@@ -1,0 +1,3 @@
+/home/kirito/Codes/DATA_STRUCTURES_ALGORITHMS/LINEAR_TABLE/build/CMakeFiles/sequence_list_list.dir
+/home/kirito/Codes/DATA_STRUCTURES_ALGORITHMS/LINEAR_TABLE/build/CMakeFiles/edit_cache.dir
+/home/kirito/Codes/DATA_STRUCTURES_ALGORITHMS/LINEAR_TABLE/build/CMakeFiles/rebuild_cache.dir

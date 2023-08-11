@@ -1,0 +1,16 @@
+==5694== Memcheck, a memory error detector
+==5694== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==5694== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==5694== Command: ./test_batt_update set_display_from_batt()\ 3.50\ V
+==5694== Parent PID: 5693
+==5694== 
+==5694== error calling PR_SET_PTRACER, vgdb might block
+==5694== 
+==5694== HEAP SUMMARY:
+==5694==     in use at exit: 0 bytes in 0 blocks
+==5694==   total heap usage: 2 allocs, 2 frees, 8 bytes allocated
+==5694== 
+==5694== All heap blocks were freed -- no leaks are possible
+==5694== 
+==5694== For lists of detected and suppressed errors, rerun with: -s
+==5694== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

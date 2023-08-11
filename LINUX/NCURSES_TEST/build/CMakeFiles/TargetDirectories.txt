@@ -1,0 +1,11 @@
+/home/kirito/Desktop/ncurses_test/build/CMakeFiles/edit_cache.dir
+/home/kirito/Desktop/ncurses_test/build/CMakeFiles/rebuild_cache.dir
+/home/kirito/Desktop/ncurses_test/build/hello_word/CMakeFiles/hello_world.dir
+/home/kirito/Desktop/ncurses_test/build/hello_word/CMakeFiles/edit_cache.dir
+/home/kirito/Desktop/ncurses_test/build/hello_word/CMakeFiles/rebuild_cache.dir
+/home/kirito/Desktop/ncurses_test/build/first_example/CMakeFiles/first_test.dir
+/home/kirito/Desktop/ncurses_test/build/first_example/CMakeFiles/edit_cache.dir
+/home/kirito/Desktop/ncurses_test/build/first_example/CMakeFiles/rebuild_cache.dir
+/home/kirito/Desktop/ncurses_test/build/second_example/CMakeFiles/second_test.dir
+/home/kirito/Desktop/ncurses_test/build/second_example/CMakeFiles/edit_cache.dir
+/home/kirito/Desktop/ncurses_test/build/second_example/CMakeFiles/rebuild_cache.dir

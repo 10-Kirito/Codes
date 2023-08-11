@@ -1,0 +1,3 @@
+/home/kirito/3.Codes/CPP_TEST/spdlog_test/build/CMakeFiles/spdlog_examples.dir
+/home/kirito/3.Codes/CPP_TEST/spdlog_test/build/CMakeFiles/edit_cache.dir
+/home/kirito/3.Codes/CPP_TEST/spdlog_test/build/CMakeFiles/rebuild_cache.dir

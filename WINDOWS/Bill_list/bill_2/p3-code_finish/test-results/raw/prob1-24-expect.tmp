@@ -1,0 +1,38 @@
+{
+    // 89% is highest percentage at which 4 bars will be shown
+    BATT_VOLTAGE_PORT = -1;
+    BATT_STATUS_PORT  = -1;
+    BATT_DISPLAY_PORT = -1;
+    batt_t batt = {
+      .mlvolts = 3713,
+      .percent = 89,
+      .mode = 2,
+    };
+    int ret = set_display_from_batt(batt, dispint);
+    printf("ret: %d\n",ret);
+    printf("%-18s : %s\n%-18s : %s\n",
+           "dispint bits", bitstr(*dispint, INT_BITS),
+           "index", bitstr_index(INT_BITS));
+    printf("\n");  print_ports();  printf("\n");
+    BATT_DISPLAY_PORT = *dispint;
+    printf("Display based on dispint:\n");
+    print_batt_display();
+}
+---OUTPUT---
+ret: 0
+dispint bits       : 000 01111 1001111 0000111 0000110 110
+index              :  29    24      17      10       3   0
+
+BATT_VOLTAGE_PORT  : -1
+BATT_STATUS_PORT   : 111 11111
+BATT_DISPLAY_PORT  : 111 11111 1111111 1111111 1111111 111
+index              :  29    24      17      10       3   0
+
+Display based on dispint:
++-^^^-+  ####   ####     #     
+|     |     #      #     #     
+|#####|     #      #     #     
+|#####|  ####      #     #  V  
+|#####|     #      #     #     
+|#####|     #      #     #     
++-----+  #### o    #     #     

@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/second_test.dir/main.cpp.o -o second_test  -lcurses /usr/lib/x86_64-linux-gnu/libform.so 

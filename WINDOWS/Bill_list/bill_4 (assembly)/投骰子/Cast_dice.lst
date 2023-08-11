@@ -1,0 +1,311 @@
+Microsoft (R) Macro Assembler Version 6.11		    11/26/22 17:13:13
+tempfile.asm						     Page 1 - 1
+
+
+				; throw the dice three times,and sort by the number of the dice
+
+				assume ds:data,cs:code,ss:stacks
+
+ 0000				data segment
+ 0000 0000				sum dw 0
+ 0002 50 6C 65 61 73 65			message0 db "Please input the number of people :" ,'$'
+       20 69 6E 70 75 74
+       20 74 68 65 20 6E
+       75 6D 62 65 72 20
+       6F 66 20 70 65 6F
+       70 6C 65 20 3A 24
+ 0026 54 68 65 20 66 69			message1 db "The first people throw the dice, the number is:",'$'
+       72 73 74 20 70 65
+       6F 70 6C 65 20 74
+       68 72 6F 77 20 74
+       68 65 20 64 69 63
+       65 2C 20 74 68 65
+       20 6E 75 6D 62 65
+       72 20 69 73 3A 24
+ 0056 54 68 65 20 73 65			message2 db "The second people throw the dice, the number is:",'$'
+       63 6F 6E 64 20 70
+       65 6F 70 6C 65 20
+       74 68 72 6F 77 20
+       74 68 65 20 64 69
+       63 65 2C 20 74 68
+       65 20 6E 75 6D 62
+       65 72 20 69 73 3A
+       24
+ 0087 54 68 65 20 74 68			message3 db "The third people throw the dice, the number is:",'$'
+       69 72 64 20 70 65
+       6F 70 6C 65 20 74
+       68 72 6F 77 20 74
+       68 65 20 64 69 63
+       65 2C 20 74 68 65
+       20 6E 75 6D 62 65
+       72 20 69 73 3A 24
+ 00B7 0D 0A 24				CRLF db 13,10,'$'
+ 00BA				data ends
+
+ 0000				stacks segment stack
+ 0000  0014 [				dw 20 dup(?)
+        0000
+       ]
+ 0028				stacks ends
+
+				; define macro : enter
+				CF macro
+				    mov 	dx,offset CRLF
+				    mov 	ah,09h
+				    int 	21H
+				endm
+
+				randget macro
+					mov 	ah,00h
+					int 	1ah
+					
+					mov 	ax,dx	
+					and 	ah,3
+					mov 	dl,6
+					div 	dl
+					
+					mov 	al,ah
+					xor 	ah,ah
+					inc 	ax
+					add 	ax,'0'
+					mov 	dl,al
+					mov 	ah,2
+					int 	21h
+				endm
+
+ 0000				code segment
+ 0000				start:
+ 0000  B8 ---- R			mov 	ax,data
+ 0003  8E D8				mov 	ds,ax
+ 0005  B8 ---- R			mov 	ax,stacks
+ 0008  8E D0				mov 	ss,ax
+ 000A				main:
+ 000A  BA 0002 R			mov 	dx,offset message0
+ 000D  B4 09				mov 	ah,09h
+ 000F  CD 21				int 	21H
+					; input the number of the people
+ 0011  33 DB				xor 	bx,bx
+ 0013  E8 00A6				call 	input
+					; store the num into the member
+ 0016  BE 0000 R			mov 	si,offset sum
+ 0019  89 1C				mov 	ds:[si],bx
+ 001B  8B CB			    mov 	cx,bx
+				    
+ 001D  BA 0026 R		    mov 	dx,offset message1
+ 0020  B4 09			    mov 	ah,09h
+ 0022  CD 21			    int 	21h
+				    randget
+ 0024  B4 00		     1		mov 	ah,00h
+ 0026  CD 1A		     1		int 	1ah
+ 0028  8B C2		     1		mov 	ax,dx	
+ 002A  80 E4 03		     1		and 	ah,3
+ 002D  B2 06		     1		mov 	dl,6
+ 002F  F6 F2		     1		div 	dl
+ 0031  8A C4		     1		mov 	al,ah
+ 0033  32 E4		     1		xor 	ah,ah
+ 0035  40		     1		inc 	ax
+ 0036  83 C0 30		     1		add 	ax,'0'
+ 0039  8A D0		     1		mov 	dl,al
+ 003B  B4 02		     1		mov 	ah,2
+ 003D  CD 21		     1		int 	21h
+ 003F  E8 0063			    call delay
+				    CF
+ 0042  BA 00B7 R	     1	    mov 	dx,offset CRLF
+ 0045  B4 09		     1	    mov 	ah,09h
+ 0047  CD 21		     1	    int 	21H
+				    
+ 0049  BA 0056 R		    mov 	dx,offset message2
+ 004C  B4 09			    mov 	ah,09h
+ 004E  CD 21			    int 	21h
+				    randget
+ 0050  B4 00		     1		mov 	ah,00h
+ 0052  CD 1A		     1		int 	1ah
+ 0054  8B C2		     1		mov 	ax,dx	
+ 0056  80 E4 03		     1		and 	ah,3
+ 0059  B2 06		     1		mov 	dl,6
+ 005B  F6 F2		     1		div 	dl
+ 005D  8A C4		     1		mov 	al,ah
+ 005F  32 E4		     1		xor 	ah,ah
+ 0061  40		     1		inc 	ax
+ 0062  83 C0 30		     1		add 	ax,'0'
+ 0065  8A D0		     1		mov 	dl,al
+ 0067  B4 02		     1		mov 	ah,2
+ 0069  CD 21		     1		int 	21h
+ 006B  E8 0037			    call delay
+				    CF
+ 006E  BA 00B7 R	     1	    mov 	dx,offset CRLF
+ 0071  B4 09		     1	    mov 	ah,09h
+ 0073  CD 21		     1	    int 	21H
+				    
+ 0075  BA 0087 R		    mov 	dx,offset message3
+ 0078  B4 09			    mov 	ah,09h
+ 007A  CD 21			    int 	21h
+				    randget
+ 007C  B4 00		     1		mov 	ah,00h
+ 007E  CD 1A		     1		int 	1ah
+ 0080  8B C2		     1		mov 	ax,dx	
+ 0082  80 E4 03		     1		and 	ah,3
+ 0085  B2 06		     1		mov 	dl,6
+ 0087  F6 F2		     1		div 	dl
+ 0089  8A C4		     1		mov 	al,ah
+ 008B  32 E4		     1		xor 	ah,ah
+ 008D  40		     1		inc 	ax
+ 008E  83 C0 30		     1		add 	ax,'0'
+ 0091  8A D0		     1		mov 	dl,al
+ 0093  B4 02		     1		mov 	ah,2
+ 0095  CD 21		     1		int 	21h
+ 0097  E8 000B			    call delay
+				    CF
+ 009A  BA 00B7 R	     1	    mov 	dx,offset CRLF
+ 009D  B4 09		     1	    mov 	ah,09h
+ 009F  CD 21		     1	    int 	21H
+				    
+				    
+ 00A1  B4 4C				mov 	ah,4ch
+ 00A3  CD 15				int 	21
+
+
+
+
+				; delay the time 
+ 00A5				delay proc near 
+ 00A5  BA 0010			    mov 	dx,0010h
+ 00A8  B8 0000			    mov 	ax,0
+ 00AB				s1:
+ 00AB  83 E8 01			    sub 	ax,1
+ 00AE  83 DA 00			    sbb 	dx,0
+ 00B1  83 F8 00			    cmp 	ax,0
+ 00B4  75 F5			    jne 	s1
+ 00B6  83 FA 00			    cmp 	dx,0
+ 00B9  75 F0			    jne 	s1
+ 00BB  C3			    ret
+ 00BC				delay endp
+					
+
+				;输入子程序，bx为出口参数
+ 00BC				input proc
+ 00BC  50			    push 	ax;入栈
+ 00BD  51			    push 	cx
+ 00BE  52			    push	dx
+ 00BF  33 C9			    xor 	cx,cx
+ 00C1  BB 0000			    mov 	bx,0
+ 00C4				L2:
+ 00C4  B4 01			    mov 	ah,01h
+ 00C6  CD 21			    int 	21h
+ 00C8  3C 30			    cmp 	al,30h	; judge the number if belong 0~9
+ 00CA  72 14			    jb 	L1
+ 00CC  3C 39			    cmp 	al,39h
+ 00CE  77 10			    ja 	L1
+ 00D0  2C 30			    sub 	al,48	; convert to base 10
+ 00D2  8A C8			    mov 	cl,al	
+ 00D4  8A C3			    mov 	al,bl	
+ 00D6  B6 0A			    mov 	dh,10
+ 00D8  F6 E6			    mul 	dh
+ 00DA  03 C1			    add 	ax,cx
+ 00DC  8B D8			    mov 	bx,ax	; bx store the input number 
+ 00DE  EB E4			    jmp L2
+ 00E0				L1:
+ 00E0  5A			    pop 	dx
+ 00E1  59			    pop 	cx
+ 00E2  58			    pop 	ax    
+ 00E3  C3			    ret
+ 00E4				input endp
+
+				;out put the num (base 10)
+ 00E4				output proc
+					; preserve the scence
+ 00E4  50				push 	ax
+ 00E5  51				push 	cx
+ 00E6  52				push 	dx
+						
+					; init
+ 00E7  8B C3				mov 	ax,bx
+ 00E9  B1 0A				mov 	cl,10
+ 00EB  B5 00				mov 	ch,0
+					
+ 00ED				divagain:
+ 00ED  83 F8 00				cmp 	ax,0
+ 00F0  74 09				je 	divover
+ 00F2  FE C5				inc 	ch 		; count++
+ 00F4  F6 F1				div 	cl
+ 00F6  50				push 	ax 		; stack protection,use al when using the data
+ 00F7  B4 00				mov 	ah,0	; init ax 
+ 00F9  EB F2				jmp divagain;再次除法剥离数字
+						
+ 00FB				divover:
+ 00FB  80 FD 00				cmp 	ch,0
+ 00FE  74 0E				je 	outputover
+ 0100  58				pop 	ax
+ 0101  8A D4				mov 	dl,ah
+ 0103  80 C2 30				add 	dl,48
+ 0106  B4 02				mov 	ah,2
+ 0108  CD 21				int 	21h
+ 010A  FE CD				dec 	ch
+ 010C  EB ED				jmp divover 
+						
+						
+ 010E				outputover:
+ 010E  5A				pop 	dx
+ 010F  59				pop 	cx
+ 0110  58				pop 	ax
+ 0111  C3				ret
+ 0112				output endp
+
+ 0112				code ends
+				end start
+
+
+
+Microsoft (R) Macro Assembler Version 6.11		    11/26/22 17:13:13
+tempfile.asm						     Symbols 2 - 1
+
+
+
+
+Macros:
+
+                N a m e                 Type
+
+CF . . . . . . . . . . . . . . .	Proc
+randget  . . . . . . . . . . . .	Proc
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+code . . . . . . . . . . . . . .	16 Bit	 0112	  Para	  Private 
+data . . . . . . . . . . . . . .	16 Bit	 00BA	  Para	  Private 
+stacks . . . . . . . . . . . . .	16 Bit	 0028	  Para	  Stack	  
+
+
+Procedures,  parameters and locals:
+
+                N a m e                 Type     Value    Attr
+
+delay  . . . . . . . . . . . . .	P Near	 00A5	  code	Length= 0017 Public
+  s1 . . . . . . . . . . . . . .	L Near	 00AB	  code	
+input  . . . . . . . . . . . . .	P Near	 00BC	  code	Length= 0028 Public
+  L2 . . . . . . . . . . . . . .	L Near	 00C4	  code	
+  L1 . . . . . . . . . . . . . .	L Near	 00E0	  code	
+output . . . . . . . . . . . . .	P Near	 00E4	  code	Length= 002E Public
+  divagain . . . . . . . . . . .	L Near	 00ED	  code	
+  divover  . . . . . . . . . . .	L Near	 00FB	  code	
+  outputover . . . . . . . . . .	L Near	 010E	  code	
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+CRLF . . . . . . . . . . . . . .	Byte	 00B7	  data	
+main . . . . . . . . . . . . . .	L Near	 000A	  code	
+message0 . . . . . . . . . . . .	Byte	 0002	  data	
+message1 . . . . . . . . . . . .	Byte	 0026	  data	
+message2 . . . . . . . . . . . .	Byte	 0056	  data	
+message3 . . . . . . . . . . . .	Byte	 0087	  data	
+start  . . . . . . . . . . . . .	L Near	 0000	  code	
+sum  . . . . . . . . . . . . . .	Word	 0000	  data	
+
+	   0 Warnings
+	   0 Errors
