@@ -1,8 +1,0 @@
-﻿  main.cpp
-main.obj : error LNK2019: 无法解析的外部符号 "enum EXEC_RST __cdecl BTree_insert(struct TreeNode * *,struct TreeNode *,unsigned int,int)" (?BTree_insert@@YA?AW4EXEC_RST@@PAPAUTreeNode@@PAU2@IH@Z)，函数 _main 中引用了该符号
-    已定义且可能匹配的符号上的提示:
-      _BTree_insert
-main.obj : error LNK2019: 无法解析的外部符号 "enum EXEC_RST __cdecl BTree_search(struct TreeNode *,int,struct BTreeSearch *)" (?BTree_search@@YA?AW4EXEC_RST@@PAUTreeNode@@HPAUBTreeSearch@@@Z)，函数 _main 中引用了该符号
-    已定义且可能匹配的符号上的提示:
-      _BTree_search
-D:\a_Desktop\codes\Database\Debug\Database.exe : fatal error LNK1120: 2 个无法解析的外部命令

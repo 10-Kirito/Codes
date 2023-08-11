@@ -1,3 +1,0 @@
-"D:\Program Files\JetBrains\CLion 2022.2.4\bin\cmake\win\bin\cmake.exe" -E rm -f CMakeFiles\textadv.dir/objects.a
-D:\PROGRA~1\JETBRA~1\CLION2~1.4\bin\mingw\bin\ar.exe qc CMakeFiles\textadv.dir/objects.a @CMakeFiles\textadv.dir\objects1.rsp
-D:\PROGRA~1\JETBRA~1\CLION2~1.4\bin\mingw\bin\G__~1.EXE -g -Wl,--whole-archive CMakeFiles\textadv.dir/objects.a -Wl,--no-whole-archive -o textadv.exe -Wl,--out-implib,libtextadv.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\textadv.dir\linklibs.rsp

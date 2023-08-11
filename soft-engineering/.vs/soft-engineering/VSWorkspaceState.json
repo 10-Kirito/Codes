@@ -1,8 +1,0 @@
-{
-  "OutputFoldersPerTargetSystem": {
-    "本地计算机": [
-      "soft-engineering\\out\\build\\x64-Debug",
-      "soft-engineering\\out\\install\\x64-Debug"
-    ]
-  }
-}
