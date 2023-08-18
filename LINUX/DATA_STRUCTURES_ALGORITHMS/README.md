@@ -448,9 +448,9 @@ Status PostOrderTraverse(BiTree T, Status (* Visit)(TElemType e));
 Status LevelOrderTraverse(BiTree T, Status (* Visit)(TElemType e));
 ```
 
-## 6.3 遍历二叉树和线索二叉树
+## 6.3 遍历二叉树
 
-### 6.3.1 遍历二叉树
+### 6.3.1 递归遍历二叉树（先序、中序、后序）
 
 - 先序遍历二叉树；
 - 中序遍历二叉树；
@@ -491,30 +491,6 @@ void BInaryTree<ElemType>::InOrder(BinTreeNode<ElemType> *r,
 // 访问根节点；
 // 中序遍历右子树；
 
-// 中序遍历的非递归实现
-template<typename ElemType>
-void BInaryTree<ElemType>::InOrderWithStack(
-void (*Visit)(const ElemType &)) {
-    stack<BinTreeNode<ElemType> *> _stack;
-    BinTreeNode<ElemType> * p = root;
-    // 除非栈为空或者二叉树为空
-    while(p != nullptr || !_stack.empty()) {
-        // 将根节点以及根节点所有的右边的子孙入栈
-        while(p != nullptr) {
-            _stack.push(p);
-            p = p->leftchild;
-        }
-        
-        // 访问栈中栈顶元素，并重新赋值p为右孩子结点
-        if(!_stack.empty()) {
-            p = _stack.top();
-            (*Visit)(p -> data);
-            _stack.pop(p);
-            p = p->rightchild;
-        }
-    }
-}
-
 // 后序遍历以r为根的二叉树
 template<typename ElemType>
 void BinaryTree<ElemType>::PostOrder(BinTreeNode<ElemType> * r,
@@ -526,6 +502,248 @@ void BinaryTree<ElemType>::PostOrder(BinTreeNode<ElemType> * r,
     }
 }
 ```
+
+### 6.3.2 非递归遍历二叉树（迭代法）
+
+> 阅读自《代码随想录》，这是一本很好的基于C++以及LeetCode上的习题对各种算法进行讲解的书籍，非常值得阅读！
+
+#### 6.3.2.1 标记法（***优先选择该种方法***）<img src="assets/image-20230818113030924.png" alt="image-20230818113030924" style="zoom:50%;" />
+
+该种方法的主要思想是将结点按照某一种特定的顺序进栈（注意此处的顺序是和当前遍历顺序相反的）：
+
+比如说： 
+
+***中序遍历：*** ${midnode \Rightarrow leftnode \Rightarrow rightnode}$
+
+我们入栈的时候需要将其顺序反过来：${rightnode \Rightarrow midnode \Rightarrow leftnode}$
+
+并且我们的入栈的时候如果遇到中间的节点的话，我们此时需要入栈一个`nulptr`结点， ***作一个标记，为了后面访问的时候如果遇到一个空节点的话，说明下一个结点就是我们的要访问的节点。***
+
+```C++
+template <typename T>
+void BinaryTree<T>::inorderTarversal(void (*visit)(const T &), bool,
+                                     bool) const {
+  std::stack<TreeNode<T> *> _stack;
+
+  if (!empty()) {
+    _stack.push(root);
+  }
+  // begin: rightnode -> midnode -> leftnode
+  // later: leftnode ->midnode -> rightnode
+  while (!_stack.empty()) {
+    TreeNode<T> *node = _stack.top();
+    if (node) {
+      _stack.pop();
+        
+      // add the right node if not nullptr:
+      if (node->rchild)   _stack.push(node->rchild);
+      _stack.push(node);
+      // the key of this methods, we add a flag to the end of the visited node
+      _stack.push(nullptr);
+      if (node->lchild)   _stack.push(node->lchild);
+        
+    } else {
+      // if the top node of stack is nullptr, we are about to visit the
+      // corresponding node
+      _stack.pop();
+      node = _stack.top();
+      _stack.pop();
+      visit(node->data);
+    }
+  }
+};
+```
+
+其余的两种方法类似一样的道理，只需交换${leftnode、 midnode、rightnode}$s的交换次序即可。
+
+***后序遍历算法***
+
+```C++
+template <typename T>
+void BinaryTree<T>::postorderTarversal(void (*visit)(const T &), bool,
+                                       bool) const {
+  std::stack<TreeNode<T> *> _stack;
+
+  if (!empty()) {
+    _stack.push(root);
+  }
+
+  // begin: midnode -> rightnode -> leftnode
+  // later: leftnode ->rightnode -> midnode
+
+  while (!_stack.empty()) {
+    TreeNode<T> *node = _stack.top();
+
+    if (node) {
+      _stack.pop();
+
+      _stack.push(node);
+      // the key of this methods, we add a flag to the end of the visited node
+      _stack.push(nullptr);
+
+      // add the right node if not nullptr:
+      if (node->rchild)
+        _stack.push(node->rchild);
+
+      if (node->lchild) {
+        _stack.push(node->lchild);
+      }
+    } else {
+      // if the top node of stack is nullptr, we are about to visit the
+      // corresponding node
+      _stack.pop();
+      node = _stack.top();
+      _stack.pop();
+      visit(node->data);
+    }
+  }
+};
+```
+
+***先序遍历算法：***
+
+```C++
+template <typename T>
+void BinaryTree<T>::preorderTarversal(void (*visit)(const T &), bool,
+                                      bool) const {
+  std::stack<TreeNode<T> *> _stack;
+
+  if (!empty()) {
+    _stack.push(root);
+  }
+
+  // begin:  rightnode ->  leftnode -> mid node
+  // later:  mid node -> leftnode -> rightnode
+
+  while (!_stack.empty()) {
+    TreeNode<T> *node = _stack.top();
+
+    if (node) {
+      _stack.pop();
+      // add the right node if not nullptr:
+      if (node->rchild)
+        _stack.push(node->rchild);
+
+      if (node->lchild) {
+        _stack.push(node->lchild);
+      }
+      _stack.push(node);
+      // the key of this methods, we add a flag to the end of the visited node
+      _stack.push(nullptr);
+
+    } else {
+      // if the top node of stack is nullptr, we are about to visit the
+      // corresponding node
+      _stack.pop();
+      node = _stack.top();
+      _stack.pop();
+      visit(node->data);
+    }
+  }
+};
+```
+
+> 此种方法，我们只需要掌握该种标记方法的关键然后就可以记住其余的两种遍历算法。
+
+#### 6.3.2.2 普通非递归方法
+
+***先序遍历：***
+
+```C++
+template <typename T>
+void BinaryTree<T>::preorderTarversal(void (*visit)(const T &), bool) const {
+  std::stack<TreeNode<T> *> _stack;
+
+  if (empty()) {
+    return;
+  }
+
+  _stack.push(root);
+
+  while (!_stack.empty()) {
+    TreeNode<T> *node = _stack.top();
+    _stack.pop();
+
+    visit(node->data);
+
+    // attention the order of instack
+    if (node->rchild)
+      _stack.push(node->rchild);
+    if (node->lchild)
+      _stack.push(node->lchild);
+  }
+}
+```
+
+***中序遍历：***
+
+```C++
+template <typename T>
+void BinaryTree<T>::inorderTarversal(void (*visit)(const T &), bool) const {
+  std::stack<TreeNode<T> *> _stack;
+  TreeNode<T> *node = root;
+
+  while (node || !_stack.empty()) {
+    if (node) {
+      _stack.push(node);
+      node = node->lchild;
+    } else {
+      node = _stack.top();
+      _stack.pop();
+      visit(node->data);
+      node = node->rchild;
+    }
+  }
+}
+```
+
+***后序遍历算法：***
+
+```C++
+// Important:
+// preorder: mid -> left -> right
+// We exchange the instack order of (node->lchild) and (node->rchild),
+// there will be mid -> right -> left
+// and we reverse the order,
+// there will be left -> right -> mid.
+// Thus we get the result.
+template <typename T>
+void BinaryTree<T>::postorderTarversal(void (*visit)(const T &), bool) const {
+  std::stack<TreeNode<T> *> _stack;
+  TreeNode<T> *node = root;
+  std::vector<T> result;
+  if (empty()) {
+    return;
+  }
+
+  _stack.push(node);
+
+  while (!_stack.empty()) {
+    node = _stack.top();
+    _stack.pop();
+    result.push_back(node->data);
+
+    if (node->lchild)
+      _stack.push(node->lchild);
+    if (node->rchild)
+      _stack.push(node->rchild);
+  }
+
+  // we reserse the order, then we will get the result.
+  std::reverse(result.begin(), result.end());
+  for (const T &element : result) {
+    visit(element);
+  }
+}
+```
+
+
+
+
+
+
+
+
 
 - 层序遍历
 
@@ -551,7 +769,7 @@ void BinaryTree<ElemType>::LevelOrder(void (*Visit)(const ElemType &)) const {
 }
 ```
 
-### 6.3.2 以先序序列建立二叉树
+### 6.3.3 以先序序列建立二叉树
 
 > 注意，之前自己认为的是建立一棵完整的二叉树需要至少两个遍历序列，这样才可以彼此参考建立一个二叉链表，注意那是我们人算的并不是计算的，那种情况是根据两种序列来建立二叉树。
 >
@@ -579,7 +797,7 @@ void CreateBinaryTreePre(std::string &str, BinTreeNode<T> *&root) {
   }
 ```
 
-### 6.3.3 线索二叉树
+## 6.4 线索二叉树
 
 > 注意，之后提到的“前驱”和“后继”均指的是以某种次序遍历多得序列中的前驱和后继。
 
@@ -603,7 +821,7 @@ typedef struct BiThrNode {
 }BinThrNode, * BiThrTree
 ```
 
-#### 6.3.3.1 中序遍历转化为线索二叉树
+### 6.4.1 中序遍历转化为线索二叉树
 
 > 这里的代码逻辑有点难以理解，我们可以这么想，从最基本的开始思考，最简单的二叉树：无非就三个结点，完全满足相应的设定。
 >
@@ -647,7 +865,7 @@ void to_thread_tree(ThreadTreeNode<T> *&root, ThreadTreeNode<T> *&pre) {
 }
 ```
 
-#### 6.3.3.2 遍历线索二叉树
+### 6.4.2 遍历线索二叉树
 
 ***上面的线索二叉树是由中序遍历建立而来，所以说我们遍历的时候也是按照中序遍历来！！***
 
