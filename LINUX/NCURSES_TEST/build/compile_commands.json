@@ -1,17 +1,22 @@
 [
 {
-  "directory": "/home/kirito/Desktop/ncurses_test/build/hello_word",
-  "command": "/usr/bin/c++    -o CMakeFiles/hello_world.dir/main.cpp.o -c /home/kirito/Desktop/ncurses_test/hello_word/main.cpp",
-  "file": "/home/kirito/Desktop/ncurses_test/hello_word/main.cpp"
+  "directory": "/home/kirito/3.Codes/LINUX/NCURSES_TEST/build/hello_word",
+  "command": "/usr/bin/c++    -o CMakeFiles/hello_world.dir/main.cpp.o -c /home/kirito/3.Codes/LINUX/NCURSES_TEST/hello_word/main.cpp",
+  "file": "/home/kirito/3.Codes/LINUX/NCURSES_TEST/hello_word/main.cpp"
 },
 {
-  "directory": "/home/kirito/Desktop/ncurses_test/build/first_example",
-  "command": "/usr/bin/c++    -o CMakeFiles/first_test.dir/main.cpp.o -c /home/kirito/Desktop/ncurses_test/first_example/main.cpp",
-  "file": "/home/kirito/Desktop/ncurses_test/first_example/main.cpp"
+  "directory": "/home/kirito/3.Codes/LINUX/NCURSES_TEST/build/first_example",
+  "command": "/usr/bin/c++    -o CMakeFiles/first_test.dir/main.cpp.o -c /home/kirito/3.Codes/LINUX/NCURSES_TEST/first_example/main.cpp",
+  "file": "/home/kirito/3.Codes/LINUX/NCURSES_TEST/first_example/main.cpp"
 },
 {
-  "directory": "/home/kirito/Desktop/ncurses_test/build/second_example",
-  "command": "/usr/bin/c++    -o CMakeFiles/second_test.dir/main.cpp.o -c /home/kirito/Desktop/ncurses_test/second_example/main.cpp",
-  "file": "/home/kirito/Desktop/ncurses_test/second_example/main.cpp"
+  "directory": "/home/kirito/3.Codes/LINUX/NCURSES_TEST/build/second_example",
+  "command": "/usr/bin/c++    -o CMakeFiles/second_test.dir/main.cpp.o -c /home/kirito/3.Codes/LINUX/NCURSES_TEST/second_example/main.cpp",
+  "file": "/home/kirito/3.Codes/LINUX/NCURSES_TEST/second_example/main.cpp"
+},
+{
+  "directory": "/home/kirito/3.Codes/LINUX/NCURSES_TEST/build/test_example",
+  "command": "/usr/bin/c++    -o CMakeFiles/test_example.dir/test.cpp.o -c /home/kirito/3.Codes/LINUX/NCURSES_TEST/test_example/test.cpp",
+  "file": "/home/kirito/3.Codes/LINUX/NCURSES_TEST/test_example/test.cpp"
 }
 ]

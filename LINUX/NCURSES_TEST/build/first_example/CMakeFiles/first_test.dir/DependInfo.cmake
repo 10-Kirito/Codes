@@ -8,7 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/kirito/Desktop/ncurses_test/first_example/main.cpp" "first_example/CMakeFiles/first_test.dir/main.cpp.o" "gcc" "first_example/CMakeFiles/first_test.dir/main.cpp.o.d"
+  "/home/kirito/3.Codes/LINUX/NCURSES_TEST/first_example/main.cpp" "first_example/CMakeFiles/first_test.dir/main.cpp.o" "gcc" "first_example/CMakeFiles/first_test.dir/main.cpp.o.d"
   )
 
 # Targets to which this target links.

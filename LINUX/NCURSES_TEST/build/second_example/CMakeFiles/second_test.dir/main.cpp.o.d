@@ -1,5 +1,5 @@
 second_example/CMakeFiles/second_test.dir/main.cpp.o: \
- /home/kirito/Desktop/ncurses_test/second_example/main.cpp \
+ /home/kirito/3.Codes/LINUX/NCURSES_TEST/second_example/main.cpp \
  /usr/include/stdc-predef.h /usr/include/curses.h \
  /usr/include/ncurses_dll.h \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/stdint.h /usr/include/stdint.h \

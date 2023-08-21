@@ -1,4 +1,4 @@
-# Install script for directory: /home/kirito/Desktop/ncurses_test/first_example
+# Install script for directory: /home/kirito/3.Codes/LINUX/NCURSES_TEST/first_example
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

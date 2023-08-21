@@ -57,10 +57,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/kirito/Desktop/ncurses_test
+CMAKE_SOURCE_DIR = /home/kirito/3.Codes/LINUX/NCURSES_TEST
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/kirito/Desktop/ncurses_test/build
+CMAKE_BINARY_DIR = /home/kirito/3.Codes/LINUX/NCURSES_TEST/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -87,14 +87,14 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	cd /home/kirito/Desktop/ncurses_test/build && $(CMAKE_COMMAND) -E cmake_progress_start /home/kirito/Desktop/ncurses_test/build/CMakeFiles /home/kirito/Desktop/ncurses_test/build/second_example//CMakeFiles/progress.marks
-	cd /home/kirito/Desktop/ncurses_test/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 second_example/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/kirito/Desktop/ncurses_test/build/CMakeFiles 0
+	cd /home/kirito/3.Codes/LINUX/NCURSES_TEST/build && $(CMAKE_COMMAND) -E cmake_progress_start /home/kirito/3.Codes/LINUX/NCURSES_TEST/build/CMakeFiles /home/kirito/3.Codes/LINUX/NCURSES_TEST/build/second_example//CMakeFiles/progress.marks
+	cd /home/kirito/3.Codes/LINUX/NCURSES_TEST/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 second_example/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/kirito/3.Codes/LINUX/NCURSES_TEST/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /home/kirito/Desktop/ncurses_test/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 second_example/clean
+	cd /home/kirito/3.Codes/LINUX/NCURSES_TEST/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 second_example/clean
 .PHONY : clean
 
 # The main clean target
@@ -103,22 +103,22 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /home/kirito/Desktop/ncurses_test/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 second_example/preinstall
+	cd /home/kirito/3.Codes/LINUX/NCURSES_TEST/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 second_example/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /home/kirito/Desktop/ncurses_test/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 second_example/preinstall
+	cd /home/kirito/3.Codes/LINUX/NCURSES_TEST/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 second_example/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd /home/kirito/Desktop/ncurses_test/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /home/kirito/3.Codes/LINUX/NCURSES_TEST/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
 # Convenience name for target.
 second_example/CMakeFiles/second_test.dir/rule:
-	cd /home/kirito/Desktop/ncurses_test/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 second_example/CMakeFiles/second_test.dir/rule
+	cd /home/kirito/3.Codes/LINUX/NCURSES_TEST/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 second_example/CMakeFiles/second_test.dir/rule
 .PHONY : second_example/CMakeFiles/second_test.dir/rule
 
 # Convenience name for target.
@@ -127,7 +127,7 @@ second_test: second_example/CMakeFiles/second_test.dir/rule
 
 # fast build rule for target.
 second_test/fast:
-	cd /home/kirito/Desktop/ncurses_test/build && $(MAKE) $(MAKESILENT) -f second_example/CMakeFiles/second_test.dir/build.make second_example/CMakeFiles/second_test.dir/build
+	cd /home/kirito/3.Codes/LINUX/NCURSES_TEST/build && $(MAKE) $(MAKESILENT) -f second_example/CMakeFiles/second_test.dir/build.make second_example/CMakeFiles/second_test.dir/build
 .PHONY : second_test/fast
 
 main.o: main.cpp.o
@@ -135,7 +135,7 @@ main.o: main.cpp.o
 
 # target to build an object file
 main.cpp.o:
-	cd /home/kirito/Desktop/ncurses_test/build && $(MAKE) $(MAKESILENT) -f second_example/CMakeFiles/second_test.dir/build.make second_example/CMakeFiles/second_test.dir/main.cpp.o
+	cd /home/kirito/3.Codes/LINUX/NCURSES_TEST/build && $(MAKE) $(MAKESILENT) -f second_example/CMakeFiles/second_test.dir/build.make second_example/CMakeFiles/second_test.dir/main.cpp.o
 .PHONY : main.cpp.o
 
 main.i: main.cpp.i
@@ -143,7 +143,7 @@ main.i: main.cpp.i
 
 # target to preprocess a source file
 main.cpp.i:
-	cd /home/kirito/Desktop/ncurses_test/build && $(MAKE) $(MAKESILENT) -f second_example/CMakeFiles/second_test.dir/build.make second_example/CMakeFiles/second_test.dir/main.cpp.i
+	cd /home/kirito/3.Codes/LINUX/NCURSES_TEST/build && $(MAKE) $(MAKESILENT) -f second_example/CMakeFiles/second_test.dir/build.make second_example/CMakeFiles/second_test.dir/main.cpp.i
 .PHONY : main.cpp.i
 
 main.s: main.cpp.s
@@ -151,7 +151,7 @@ main.s: main.cpp.s
 
 # target to generate assembly for a file
 main.cpp.s:
-	cd /home/kirito/Desktop/ncurses_test/build && $(MAKE) $(MAKESILENT) -f second_example/CMakeFiles/second_test.dir/build.make second_example/CMakeFiles/second_test.dir/main.cpp.s
+	cd /home/kirito/3.Codes/LINUX/NCURSES_TEST/build && $(MAKE) $(MAKESILENT) -f second_example/CMakeFiles/second_test.dir/build.make second_example/CMakeFiles/second_test.dir/main.cpp.s
 .PHONY : main.cpp.s
 
 # Help Target
@@ -177,6 +177,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd /home/kirito/Desktop/ncurses_test/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /home/kirito/3.Codes/LINUX/NCURSES_TEST/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 

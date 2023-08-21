@@ -1,4 +1,4 @@
-# Install script for directory: /home/kirito/Desktop/ncurses_test
+# Install script for directory: /home/kirito/3.Codes/LINUX/NCURSES_TEST
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -44,17 +44,22 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("/home/kirito/Desktop/ncurses_test/build/hello_word/cmake_install.cmake")
+  include("/home/kirito/3.Codes/LINUX/NCURSES_TEST/build/hello_word/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("/home/kirito/Desktop/ncurses_test/build/first_example/cmake_install.cmake")
+  include("/home/kirito/3.Codes/LINUX/NCURSES_TEST/build/first_example/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("/home/kirito/Desktop/ncurses_test/build/second_example/cmake_install.cmake")
+  include("/home/kirito/3.Codes/LINUX/NCURSES_TEST/build/second_example/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("/home/kirito/3.Codes/LINUX/NCURSES_TEST/build/test_example/cmake_install.cmake")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT)
@@ -65,5 +70,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/kirito/Desktop/ncurses_test/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/kirito/3.Codes/LINUX/NCURSES_TEST/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

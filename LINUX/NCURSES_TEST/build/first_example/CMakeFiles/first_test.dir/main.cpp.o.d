@@ -1,5 +1,5 @@
 first_example/CMakeFiles/first_test.dir/main.cpp.o: \
- /home/kirito/Desktop/ncurses_test/first_example/main.cpp \
+ /home/kirito/3.Codes/LINUX/NCURSES_TEST/first_example/main.cpp \
  /usr/include/stdc-predef.h /usr/include/c++/11/cstdlib \
  /usr/include/x86_64-linux-gnu/c++/11/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/11/bits/os_defines.h \

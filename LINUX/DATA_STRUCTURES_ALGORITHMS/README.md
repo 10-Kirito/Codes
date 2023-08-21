@@ -769,7 +769,41 @@ void BinaryTree<ElemType>::LevelOrder(void (*Visit)(const ElemType &)) const {
 }
 ```
 
-### 6.3.3 以先序序列建立二叉树
+### 6.3.3 层序遍历
+
+***层序遍历很简单，我们需要利用到队列来进行实现！即我们现将根节点入队，之后每一次出队一个结点的时候，将这个结点的左右结点入队（前提是相应的结点不为`nullptr`），然后就这样一直循环直到队列为空！***
+
+```C++
+template <typename T>
+void BinaryTree<T>::levelorderTarversal(void (*visit)(const T &)) const {
+  std::queue<TreeNode<T> *> _queue;
+
+  if (!empty()) {
+    _queue.push(root);
+  }
+
+  while (!_queue.empty()) {
+    TreeNode<T> *node = _queue.front();
+
+    // push the children of the front node:
+    if (node->lchild) {
+      _queue.push(node->lchild);
+    }
+    if (node->rchild) {
+      _queue.push(node->rchild);
+    }
+
+    visit(node->data);
+    _queue.pop();
+  }
+}
+```
+
+## 6.4 二叉树的建立
+
+
+
+### 6.4.1 以先序序列建立二叉树
 
 > 注意，之前自己认为的是建立一棵完整的二叉树需要至少两个遍历序列，这样才可以彼此参考建立一个二叉链表，注意那是我们人算的并不是计算的，那种情况是根据两种序列来建立二叉树。
 >
@@ -797,7 +831,7 @@ void CreateBinaryTreePre(std::string &str, BinTreeNode<T> *&root) {
   }
 ```
 
-## 6.4 线索二叉树
+## 6.5 线索二叉树
 
 > 注意，之后提到的“前驱”和“后继”均指的是以某种次序遍历多得序列中的前驱和后继。
 
@@ -821,7 +855,7 @@ typedef struct BiThrNode {
 }BinThrNode, * BiThrTree
 ```
 
-### 6.4.1 中序遍历转化为线索二叉树
+### 6.5.1 中序遍历转化为线索二叉树
 
 > 这里的代码逻辑有点难以理解，我们可以这么想，从最基本的开始思考，最简单的二叉树：无非就三个结点，完全满足相应的设定。
 >
@@ -865,7 +899,7 @@ void to_thread_tree(ThreadTreeNode<T> *&root, ThreadTreeNode<T> *&pre) {
 }
 ```
 
-### 6.4.2 遍历线索二叉树
+### 6.5.2 遍历线索二叉树
 
 ***上面的线索二叉树是由中序遍历建立而来，所以说我们遍历的时候也是按照中序遍历来！！***
 

@@ -57,10 +57,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/kirito/Desktop/ncurses_test
+CMAKE_SOURCE_DIR = /home/kirito/3.Codes/LINUX/NCURSES_TEST
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/kirito/Desktop/ncurses_test/build
+CMAKE_BINARY_DIR = /home/kirito/3.Codes/LINUX/NCURSES_TEST/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -87,9 +87,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/kirito/Desktop/ncurses_test/build/CMakeFiles /home/kirito/Desktop/ncurses_test/build//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/kirito/3.Codes/LINUX/NCURSES_TEST/build/CMakeFiles /home/kirito/3.Codes/LINUX/NCURSES_TEST/build//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/kirito/Desktop/ncurses_test/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/kirito/3.Codes/LINUX/NCURSES_TEST/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -155,6 +155,19 @@ second_test/fast:
 	$(MAKE) $(MAKESILENT) -f second_example/CMakeFiles/second_test.dir/build.make second_example/CMakeFiles/second_test.dir/build
 .PHONY : second_test/fast
 
+#=============================================================================
+# Target rules for targets named test_example
+
+# Build rule for target.
+test_example: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test_example
+.PHONY : test_example
+
+# fast build rule for target.
+test_example/fast:
+	$(MAKE) $(MAKESILENT) -f test_example/CMakeFiles/test_example.dir/build.make test_example/CMakeFiles/test_example.dir/build
+.PHONY : test_example/fast
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -166,6 +179,7 @@ help:
 	@echo "... first_test"
 	@echo "... hello_world"
 	@echo "... second_test"
+	@echo "... test_example"
 .PHONY : help
 
 
