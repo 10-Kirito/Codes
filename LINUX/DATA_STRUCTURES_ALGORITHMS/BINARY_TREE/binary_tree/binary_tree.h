@@ -104,6 +104,13 @@ public:
   // Binary tree level order traversal:
   void levelorderTarversal(void (*visit)(const T &)) const;
 
+  // invertTree(recursive)
+  void invertTree(TreeNode<T> *);
+  // invertTree(non-recursive)
+  void invertTree();
+  // determine whether a binary tree is centrally symmetric:
+  bool compare() const;
+
 private:
   // helper functions:
   // deep copy the entire binary tree:
@@ -512,5 +519,53 @@ void BinaryTree<T>::levelorderTarversal(void (*visit)(const T &)) const {
     _queue.pop();
   }
 }
+
+// use preorder tarversal to invert every node's children:
+template <typename T> void BinaryTree<T>::invertTree(TreeNode<T> *node) {
+  if (node == nullptr) {
+    return;
+  }
+  TreeNode<T> *temp = node->lchild;
+  node->lchild = node->rchild;
+  node->rchild = temp;
+  invertTree(node->lchild);
+  invertTree(node->rchild);
+}
+
+// invertTree(non-recursive)
+template <typename T> void BinaryTree<T>::invertTree() {
+  std::stack<TreeNode<T> *> _stack;
+
+  if (!empty()) {
+    _stack.push(root);
+  }
+
+  while (!_stack.empty()) {
+    TreeNode<T> *node = _stack.top();
+    if (node) {
+      _stack.pop();
+
+      _stack.push(node);
+      _stack.push(nullptr);
+
+      if (node->lchild) {
+        _stack.push(node->lchild);
+      }
+      if (node->rchild) {
+        _stack.push(node->rchild);
+      }
+    } else {
+      _stack.pop();
+      node = _stack.top();
+      TreeNode<T> *temp = node->lchild;
+      node->lchild = node->rchild;
+      node->rchild = temp;
+      _stack.pop();
+    }
+  }
+}
+
+// determine whether a binary tree is centrally symmetric:
+template <typename T> bool BinaryTree<T>::compare() const {}
 
 #endif // !BINARY_TREE_H

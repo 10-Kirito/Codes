@@ -1,8 +1,8 @@
 # Algorithm
 
-## 1. Array
+# 1. Array
 
-### 1.1 Two Sum
+## 1.Two Sum
 
 > Question: https://leetcode.com/problems/two-sum/description/
 >
@@ -101,6 +101,8 @@ public:
 };
 ```
 
+### (1. key of question)
+
 As you can see, there are four solutions. 
 
 - The first one is Bruce Force, we can loop through.
@@ -108,7 +110,7 @@ As you can see, there are four solutions.
 - The third one is just want to know the difference between unordered_map and map. It turns out that unordered_map is more efficient than map. The realization principle of map is Red-black tree that keep elements in order.
 - The key to the fourth method is that we search while inserting! 
 
-### 1.2 Add The Two Big Numbers
+## 2. Add The Two Big Numbers
 
 > Question: https://leetcode.com/problems/add-two-numbers/description/
 >
@@ -214,6 +216,8 @@ public:
 };
 ```
 
+### (2. Key of question)
+
 As you can see, there are two solutions:
 
 - The first one is wrong, because I didn't consider the size of number.
@@ -225,9 +229,113 @@ The key to this topic is that we need to be clear that this number may be very l
 
 There are the example code: [example.cpp](./Array/AddTwoNums.cpp)
 
-## 2. BinaryTree
+# 2. BinaryTree
 
 > In the preliminary work, a binary tree class is implemented here, and its member functions include traversal algorithms, pre-order, in-order, post-order and layer-order traversal. And a recursive version as well as a non-recursive version (iterative version) are implemented.
 >
 > There are the example codes: [example codes](./BinaryTree/main.cpp) . You can see the resource codes in `./BinaryTree/include/`.
 
+## 106.Construct_Binary_Tree_from_Inorder_and_Postorder_Traversal
+
+> Question: https://leetcode.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal/description/
+>
+> Given two integer arrays `inorder` and `postorder` where `inorder` is the inorder traversal of a binary tree and `postorder` is the postorder traversal of the same tree, construct and return *the binary tree*.
+
+```C++
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* buildTree(vector<int>& inorder, vector<int>& postorder) {
+      if (inorder.size() == 0 || postorder.size() == 0) {
+      return nullptr;
+    }
+
+    unordered_map<int, int> number_map;
+
+    for (int i = 0; i < inorder.size(); ++i) {
+      number_map[inorder[i]] = i;
+    }
+
+    return buildHelper(inorder, postorder, 0, inorder.size(), 0,
+                       postorder.size(), number_map);
+  }
+
+private:
+  static TreeNode*buildHelper(vector<int> &inorder,
+                                    vector<int> &postorder, int instart,
+                                    int inend, int poststart, int postend, unordered_map<int, int>& number_map) {
+    // nullptr node:
+    if (poststart == postend) {
+      return nullptr;
+    }
+
+    int rootValue = postorder[postend - 1];
+    TreeNode *root = new TreeNode(rootValue);
+    // leaf node:
+    if (instart == (inend - 1) && poststart == (postend - 1)) {
+      return root;
+    }
+
+    // find the cut point in the inorder:
+    int delemiterIndex = number_map[rootValue];
+    // for (delemiterIndex = instart; delemiterIndex < inend; delemiterIndex++) {
+    //   if (inorder[delemiterIndex] == rootValue) {
+    //     break;
+    //   }
+    // }
+
+
+    // construct the left children:
+    // inorder:
+    int left_inorder_begin = instart;
+    int left_inorder_end = delemiterIndex;
+
+    int right_inorder_begin = delemiterIndex + 1;
+    int right_inorder_end = inend;
+
+    // postorder:
+    int left_post_begin = poststart;
+    int left_post_end = poststart + delemiterIndex - instart;
+
+    int right_post_begin = poststart + delemiterIndex - instart;
+    int right_post_end = postend - 1;
+
+    root->left =
+        buildHelper(inorder, postorder, left_inorder_begin, left_inorder_end,
+                    left_post_begin, left_post_end, number_map);
+
+    // construct the right children:
+    root->right =
+        buildHelper(inorder, postorder, right_inorder_begin, right_inorder_end,
+                    right_post_begin, right_post_end, number_map);
+
+    return root;
+  }
+};
+```
+
+### (106.Key of question)
+
+The key to solving this problem is to understand the post-order traversal and in-order traversal of the binary tree.
+
+After you understand it, we can split the question into these steps:
+
+- if the size of array is zero, return nullptr;
+- if the array is not NULL, let the last node of postorder the node element;
+- use the node element to split the inorder-array into two children inorder-arrays;
+- use the two children inorder-arrays to split the postorder-array into other two children postorder-arrays;
+- handle with left children and right children recursively;
+
+PS: You can use hash-table to improve performance.
+
+There are the example codes :[example.cpp](./BinaryTree/106.Construct_Binary_Tree_from_Inorder_and_Postorder_Traversal/main.cpp). You can see the header codes in `./BinaryTree/include/`.

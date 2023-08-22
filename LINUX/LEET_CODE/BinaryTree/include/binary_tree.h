@@ -46,6 +46,7 @@ public:
   BinaryTree();
   BinaryTree(const BinaryTree &rhs);
   BinaryTree(BinaryTree &&rhs);
+  BinaryTree(TreeNode<T>* _root):root(_root) {};
   BinaryTree &operator=(const BinaryTree &rhs);
   BinaryTree &operator=(BinaryTree &&rhs);
   ~BinaryTree();
