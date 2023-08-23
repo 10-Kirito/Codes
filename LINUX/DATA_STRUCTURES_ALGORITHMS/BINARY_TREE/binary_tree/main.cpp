@@ -54,12 +54,19 @@ void test1() {
   binary_tree.levelorderTarversal(&visit);
 }
 
-
 int main(int argc, char *argv[]) {
   BinaryTree<int> tree;
-  tree.insert(23,45,12,56,20,60,6);
+  tree.insert(23, 45, 12, 56, 20, 60, 6);
   Dump(tree);
   tree.invertTree();
   Dump(tree);
+
+  // construct the binary tree use a inorder and postorder:
+  BinaryTree<int> tree_test_1({9, 3, 15, 20, 7}, {9, 15, 7, 20, 3});
+  Dump(tree_test_1);
+  // construct the binary tree use a inorder and preorder:
+  BinaryTree<int> tree_test_2({9, 3, 15, 20, 7}, {3, 9, 20, 15, 7}, true);
+  Dump(tree_test_2);
+
   return 0;
 }

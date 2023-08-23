@@ -13,6 +13,7 @@
 #include <ostream>
 #include <queue>
 #include <stack>
+#include <unordered_map>
 #include <vector>
 // the binary tree node:
 template <typename T> struct TreeNode {
@@ -46,6 +47,15 @@ public:
   BinaryTree();
   BinaryTree(const BinaryTree &rhs);
   BinaryTree(BinaryTree &&rhs);
+  // use inorder and postorder to construct the binary tree:
+  BinaryTree(const std::vector<T> &inorder, const std::vector<T> &postorder) {
+    root = buildTree(inorder, postorder);
+  }
+  // use inorder and preorder to construct the binary tree:
+  BinaryTree(const std::vector<T> &inorder, const std::vector<T> &preorder,
+             bool) {
+    root = buildTree(inorder, preorder, true);
+  }
   BinaryTree &operator=(const BinaryTree &rhs);
   BinaryTree &operator=(BinaryTree &&rhs);
   ~BinaryTree();
@@ -130,6 +140,22 @@ private:
   void _preorderTarversal(TreeNode<T> *node, void (*visit)(const T &)) const;
   void _inorderTarversal(TreeNode<T> *node, void (*visit)(const T &)) const;
   void _postorderTarversal(TreeNode<T> *node, void (*visit)(const T &)) const;
+
+  // Construct a binary tree using inorder and postorder:
+  TreeNode<T> *buildTree(const std::vector<T> &inorder,
+                         const std::vector<T> &postorder);
+  TreeNode<int> *buildHelper(const std::vector<T> &inorder,
+                             const std::vector<T> &postorder, int instart,
+                             int inend, int poststart, int postend,
+                             std::unordered_map<T, int> &number_map);
+
+  // Construct a binary tree using inorder and preorder:
+  TreeNode<T> *buildTree(const std::vector<T> &inorder,
+                         const std::vector<T> &preorder, bool);
+  TreeNode<int> *buildHelper(const std::vector<T> &inorder,
+                             const std::vector<T> &preorder, int instart,
+                             int inend, int prestart, int preend,
+                             std::unordered_map<T, int> &number_map, bool);
 
   TreeNode<T> *root;
 };
@@ -257,6 +283,134 @@ void BinaryTree<T>::_insert(TreeNode<T> *&node, T &&value) {
     }
   }
 }
+
+// Construct a binary tree using inorder and postorder:
+template <typename T>
+TreeNode<T> *BinaryTree<T>::buildTree(const std::vector<T> &inorder,
+                                      const std::vector<T> &postorder) {
+  if (inorder.size() == 0 || postorder.size() == 0) {
+    return nullptr;
+  }
+  std::unordered_map<T, int> number_map;
+  for (int i = 0; i < inorder.size(); ++i) {
+    number_map[inorder[i]] = i;
+  }
+  return buildHelper(inorder, postorder, 0, inorder.size(), 0, postorder.size(),
+                     number_map);
+}
+
+template <typename T>
+TreeNode<int> *
+BinaryTree<T>::buildHelper(const std::vector<T> &inorder,
+                           const std::vector<T> &postorder, int instart,
+                           int inend, int poststart, int postend,
+                           std::unordered_map<T, int> &number_map) {
+  // nullptr node:
+  if (poststart == postend) {
+    return nullptr;
+  }
+
+  int rootValue = postorder[postend - 1];
+  TreeNode<T> *root = new TreeNode<T>(rootValue);
+  // leaf node:
+  if (instart == (inend - 1) && poststart == (postend - 1)) {
+    return root;
+  }
+
+  // find the cut point in the inorder:
+  int delemiterIndex = number_map[rootValue];
+  // for (delemiterIndex = instart; delemiterIndex < inend; delemiterIndex++)
+  // {
+  //   if (inorder[delemiterIndex] == rootValue) {
+  //     break;
+  //   }
+  // }
+
+  // construct the left children:
+  // inorder:
+  int left_inorder_begin = instart;
+  int left_inorder_end = delemiterIndex;
+
+  int right_inorder_begin = delemiterIndex + 1;
+  int right_inorder_end = inend;
+
+  // postorder:
+  int left_post_begin = poststart;
+  int left_post_end = poststart + delemiterIndex - instart;
+
+  int right_post_begin = poststart + delemiterIndex - instart;
+  int right_post_end = postend - 1;
+
+  root->lchild =
+      buildHelper(inorder, postorder, left_inorder_begin, left_inorder_end,
+                  left_post_begin, left_post_end, number_map);
+
+  // construct the right children:
+  root->rchild =
+      buildHelper(inorder, postorder, right_inorder_begin, right_inorder_end,
+                  right_post_begin, right_post_end, number_map);
+
+  return root;
+}
+
+// Construct a binary tree using inorder and preorder:
+template <typename T>
+TreeNode<T> *BinaryTree<T>::buildTree(const std::vector<T> &inorder,
+                                      const std::vector<T> &preorder, bool) {
+  if (inorder.size() == 0 || preorder.size() == 0) {
+    return nullptr;
+  }
+
+  std::unordered_map<int, int> number_map;
+
+  for (int i = 0; i < inorder.size(); ++i) {
+    number_map[inorder[i]] = i;
+  }
+
+  return buildHelper(inorder, preorder, 0, inorder.size(), 0, preorder.size(),
+                     number_map, true);
+};
+template <typename T>
+TreeNode<int> *
+BinaryTree<T>::buildHelper(const std::vector<T> &inorder,
+                           const std::vector<T> &preorder, int instart,
+                           int inend, int prestart, int preend,
+                           std::unordered_map<T, int> &number_map, bool) {
+  if (prestart == preend) {
+    return nullptr;
+  }
+
+  int rootValue = preorder[prestart];
+  TreeNode<T> *root = new TreeNode<T>(rootValue);
+  // leaf node:
+  if ((prestart - preend) == 1) {
+    return root;
+  }
+
+  int splitIndex = number_map[rootValue];
+
+  int left_inorder_begin = instart;
+  int left_inorder_end = splitIndex;
+
+  int right_inorder_begin = splitIndex + 1;
+  int right_inorder_end = inend;
+
+  int left_preorder_begin = prestart + 1;
+  int left_preorder_end = left_preorder_begin + splitIndex - instart;
+
+  int right_preorder_begin = left_preorder_end;
+  int right_preorder_end = preend;
+
+  root->lchild =
+      buildHelper(inorder, preorder, left_inorder_begin, left_inorder_end,
+                   left_preorder_begin, left_preorder_end, number_map, true);
+  root->rchild =
+      buildHelper(inorder, preorder, right_inorder_begin, right_inorder_end,
+                   right_preorder_begin, right_preorder_end, number_map, true);
+
+  return root;
+};
+
 // tarversal:
 // 1. preorder tarversal;
 // 2. inorder tarversal;
@@ -566,6 +720,6 @@ template <typename T> void BinaryTree<T>::invertTree() {
 }
 
 // determine whether a binary tree is centrally symmetric:
-template <typename T> bool BinaryTree<T>::compare() const {}
+template <typename T> bool BinaryTree<T>::compare() const { return true; }
 
 #endif // !BINARY_TREE_H
