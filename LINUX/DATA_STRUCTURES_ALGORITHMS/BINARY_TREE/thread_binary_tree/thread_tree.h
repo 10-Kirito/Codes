@@ -4,6 +4,9 @@
 #include <string>
 // Link == 0, pointer, Thread == 1, thread;
 enum Tag { Link, Thread };
+struct INORDER {};
+struct POSTORDER {};
+struct PREORDER {};
 
 template <typename T> struct ThreadTreeNode {
   T data;
@@ -32,25 +35,25 @@ public:
 template <typename T>
 void create_binary_tree_pre(std::string &str, ThreadTreeNode<T> *&root);
 
-
 template<typename T>
-void to_thread_tree(ThreadTreeNode<T> *&root, ThreadTreeNode<T> *&pre) {
-    
+void to_thread_tree(ThreadTreeNode<T> *&root, ThreadTreeNode<T> *&pre, PREORDER) {}
+
+template <typename T>
+void to_thread_tree(ThreadTreeNode<T> *&root, ThreadTreeNode<T> *&pre, INORDER) {
   // Attention!!
   //-------O----
   //------/-\---
   //-----O--O---
   // we can think from the easist one!
 
-
-  if(root == nullptr)
+  if (root == nullptr)
     return;
 
   // 1. process the left child tree
-  to_thread_tree(root->lchild, pre);
+  to_thread_tree(root->lchild, pre, INORDER());
 
   // 2. process the current node
-  if(root->lchild == nullptr) {
+  if (root->lchild == nullptr) {
     root->lchild = pre;
     root->ltag = Thread;
   }
@@ -64,7 +67,7 @@ void to_thread_tree(ThreadTreeNode<T> *&root, ThreadTreeNode<T> *&pre) {
   pre = root;
 
   // 3. process the right child tree
-  to_thread_tree(root->rchild, pre);
+  to_thread_tree(root->rchild, pre, INORDER());
 }
 
 template <typename T> ThreadTree<T>::ThreadTree(std::string str) {
@@ -84,7 +87,7 @@ void ThreadTree<T>::preorder_traversal(void (*visit)(const T &)) {
 
 template <typename T>
 void ThreadTree<T>::inorder_traversal_tool(ThreadTreeNode<T> *p,
-                                          void (*visit)(const T &)) {
+                                           void (*visit)(const T &)) {
   if (p != nullptr) {
     inorder_traversal_tool(p->lchild, visit);
     (*visit)(p->data);
@@ -94,7 +97,7 @@ void ThreadTree<T>::inorder_traversal_tool(ThreadTreeNode<T> *p,
 
 template <typename T>
 void ThreadTree<T>::preorder_traversal_tool(ThreadTreeNode<T> *p,
-                                           void (*visit)(const T &)) {
+                                            void (*visit)(const T &)) {
   if (p != nullptr) {
     (*visit)(p->data);
     preorder_traversal_tool(p->lchild, visit);
@@ -102,19 +105,23 @@ void ThreadTree<T>::preorder_traversal_tool(ThreadTreeNode<T> *p,
   }
 }
 
-template<typename T>
-void ThreadTree<T>::inorder_thread_tree(void (*visit)(const T &)){
+template <typename T>
+void ThreadTree<T>::inorder_thread_tree(void (*visit)(const T &)) {
   ThreadTreeNode<T> *p = _root;
   while (p != nullptr) {
+    // find the first node in inorder_traversal
     while (p->ltag == 0) {
       p = p->lchild;
     }
+    // visit the node
     (*visit)(p->data);
 
+    // if the right-children is thread node, visit it...
     while (p->rtag == Thread) {
       p = p->rchild;
       (*visit)(p->data);
     }
+    // until the right-children isn't Thread, move p toward...
     p = p->rchild;
   }
 }

@@ -739,12 +739,6 @@ void BinaryTree<T>::postorderTarversal(void (*visit)(const T &), bool) const {
 
 
 
-
-
-
-
-
-
 - 层序遍历
 
 层序遍历需要借助数据结构队列来实现：
@@ -801,7 +795,11 @@ void BinaryTree<T>::levelorderTarversal(void (*visit)(const T &)) const {
 
 ## 6.4 二叉树的建立
 
+- 由二叉树的先序序列和中序序列可以唯一的确定一棵二叉树；
+- 由二叉树的后序序列和中序序列可以唯一的确定一棵二叉树；
+- 由二叉树的层序序列也可以唯一的确定一棵二叉树；
 
+***PS： 二叉树的前序序列和后序序列不可以唯一的确定一棵二叉树！！***
 
 ### 6.4.1 以先序序列建立二叉树
 
@@ -829,6 +827,50 @@ void CreateBinaryTreePre(std::string &str, BinTreeNode<T> *&root) {
     CreateBinaryTreePre(str, root->leftChild);
     CreateBinaryTreePre(str, root->rightChild);
   }
+```
+
+### 6.4.2 以先序序列以及中序序列建立二叉树
+
+> 现有先序序列和中序序列：`std::vector<int> inorder` `std::vector<int> preorder`
+
+要求构建一棵二叉树：
+
+Step1: 如果数组的长度为0的话，则说明为空节点；
+
+Step2: 如果数组不为空，那么将先序序列的第一个元素作为节点元素；
+
+Step3: 找到前序序列的第一个元素在中序序列中的位置作为切割点；
+
+Step4: 切割中序序列， 切成 ***左子树的中序序列*** 以及 ***右子树的中序序列***；（***注意，一定是对中序序列进行切割，原因很简单，因为我们第五步需要利用该步骤得到的左子树的中序序列的长度来对先序序列进行切割！***）
+
+Step5: 切割先序序列，切成 ***左子树的先序序列*** 以及 ***右子树的先序序列；***
+
+Step6: 递归的处理左子树和右子树，也就是左区间和右区间；
+
+其中的关键是求得每一次递归中， 切割后的左子树和右子树的开始和终止位置。
+
+[binary_tree.h](./BINARY_TREE/binary_tree/binary_tree.h)
+
+你可以在`main.cpp`中这样去构建一棵二叉树， 并且利用辅助函数`Dump`进行打印:
+
+```C++
+  // construct the binary tree use a inorder and preorder:
+  BinaryTree<int> tree_test_2({9, 3, 15, 20, 7}, {3, 9, 20, 15, 7}, true);
+  Dump(tree_test_2);
+```
+
+### 6.4.3 以后序序列以及中序序列建立二叉树
+
+> 其道理和以先序序列和中序序列构建二叉树一样，不再进行阐述。
+
+[binary_tree.h](./BINARY_TREE/binary_tree/binary_tree.h)
+
+你可以在`main.cpp`中这样去构建一棵二叉树， 并且利用辅助函数`Dump`进行打印:
+
+```C++
+// construct the binary tree use a inorder and postorder:
+  BinaryTree<int> tree_test_1({9, 3, 15, 20, 7}, {9, 15, 7, 20, 3});
+  Dump(tree_test_1);
 ```
 
 ## 6.5 线索二叉树

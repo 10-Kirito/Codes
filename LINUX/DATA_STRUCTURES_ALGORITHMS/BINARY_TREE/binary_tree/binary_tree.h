@@ -32,8 +32,11 @@ template <typename T> struct TreeNode {
       : data{std::move(d)}, lchild(leftchild), rchild(rightchild){};
 
   int height() const {
+    // if lchild is not nullptr, its height is defined as 0:
     const int left_height = lchild ? lchild->height() : 0;
+    // if rchild is not nullptr, its height is defined as 0:
     const int right_child = rchild ? rchild->height() : 0;
+    // return (the maximum between the lchild and rchild) + 1
     return ((left_height > right_child) ? left_height : right_child) + 1;
   }
 };
