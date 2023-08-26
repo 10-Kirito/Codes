@@ -346,7 +346,7 @@ There are the example codes :[example.cpp](./BinaryTree/106.Construct_Binary_Tre
 
 > Question: Given a string containing digits from `2-9` inclusive, return all possible letter combinations that the number could represent. Return the answer in **any order**.
 >
-> A mapping of digits to letters (just like on the telephone buttons) is given below. Note that 1 does not map to any letters
+> A mapping of digitscl to letters (just like on the telephone buttons) is given below. Note that 1 does not map to any letters
 >
 > <img src="assets/image-20230824120333793.png" alt="image-20230824120333793" style="zoom:50%;" />
 >
@@ -411,6 +411,200 @@ public:
 Because of the loop, we can't list all the situations. So we use the backtracking algorithm( actually recursion) , but it should be noted that this topic does not require us to preform pruning operations, because we need all situaitions.
 
 
+
+## 39.CombinationSum
+
+> Question: https://leetcode.com/problems/combination-sum/description/
+>
+> Given an array of **distinct** integers `candidates` and a target integer `target`, return *a list of all **unique combinations** of* `candidates` *where the chosen numbers sum to* `target`*.* You may return the combinations in **any order**.
+>
+> The **same** number may be chosen from `candidates` an **unlimited number of times**. Two combinations are unique if the 
+>
+> frequency
+>
+>  of at least one of the chosen numbers is different.
+>
+> 
+>
+> The test cases are generated such that the number of unique combinations that sum up to `target` is less than `150` combinations for the given input.
+>
+>  
+>
+> **Example 1:**
+>
+> ```
+> Input: candidates = [2,3,6,7], target = 7
+> Output: [[2,2,3],[7]]
+> Explanation:
+> 2 and 3 are candidates, and 2 + 2 + 3 = 7. Note that 2 can be used multiple times.
+> 7 is a candidate, and 7 = 7.
+> These are the only two combinations.
+> ```
+>
+> **Example 2:**
+>
+> ```
+> Input: candidates = [2,3,5], target = 8
+> Output: [[2,2,2,2],[2,3,3],[3,5]]
+> ```
+>
+> **Example 3:**
+>
+> ```
+> Input: candidates = [2], target = 1
+> Output: []
+> ```
+
+```C++
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+#include <vector>
+
+using std::vector;
+
+class Solution {
+  vector<vector<int>> result;
+  vector<int> path;
+
+  int sum_of_vector() {
+    int sum = 0;
+    for (const auto &elem : path) {
+      sum += elem;
+    }
+    return sum;
+  }
+
+  // check out if the path already exist in result:
+  bool check() {
+    for (auto &elem : result) {
+      if (check_exist(elem)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  bool check_exist(vector<int> vector1) {
+    vector<int>::iterator iter;
+    for (auto &elem : path) {
+      if ((iter = std::find(vector1.begin(), vector1.end(), elem)) ==
+          vector1.end()) {
+        return false;
+      }
+      vector1.erase(iter);
+    }
+    return true;
+  }
+
+  // BackTracing Algorithm
+  // The method is very slow: because we consider too much useless situations
+  // Runtime: 1479ms;
+  // Memory: 257.6MB;
+  void get_combination(vector<int> &candidates, int target) {
+    if (sum_of_vector() == target) {
+      if (check()) {
+        return;
+      }
+      result.push_back(path);
+      return;
+    } else if (sum_of_vector() > target) {
+      return;
+    }
+
+    for (auto iter = candidates.begin(); iter != candidates.end(); iter++) {
+      if (sum_of_vector() > target) {
+        break;
+      }
+      path.push_back(*iter);
+      get_combination(candidates, target);
+      path.pop_back();
+    }
+  }
+
+  void get_combination(vector<int> &candidates, int target, int startIndex,
+                       bool) {
+    if (sum_of_vector() > target) {
+      return;
+    }
+    if (sum_of_vector() == target) {
+      result.push_back(path);
+      return;
+    }
+
+    for (int i = startIndex; i < candidates.size(); i++) {
+      path.push_back(candidates[i]);
+      // it means we can put the same element into path
+      get_combination(candidates, target, i, true);
+      path.pop_back();
+    }
+  }
+
+public:
+  // BackTracing Algorithm
+  // The method is very slow: because we consider too much useless situations
+  // Runtime: 1479ms;
+  // Memory: 257.6MB;
+
+  vector<vector<int>> combinationSum(vector<int> &candidates, int target) {
+    path.clear();
+    result.clear();
+    get_combination(candidates, target);
+    std::cout << "The size of result is " << result.size() << std::endl;
+    return result;
+  }
+
+  // BackTracing Algorithm
+  // Runtime: 9ms;
+  // Memory: 10.9MB;
+
+  vector<vector<int>> combinationSum(vector<int> &candidates, int target,
+                                     bool) {
+    path.clear();
+    result.clear();
+    get_combination(candidates, target, 0, true);
+    return result;
+  }
+};
+
+template <typename T> void output(const vector<vector<T>> &sets, int index) {
+  std::cout << "case" << index << ":";
+  std::cout << "[";
+  for (int i = 0; i < sets.size(); i++) {
+    std::cout << "[";
+    for (int j = 0; j < sets[i].size(); j++) {
+      std::cout << sets[i][j];
+      if (j != (sets[i].size() - 1)) {
+        std::cout << ",";
+      }
+    }
+    std::cout << "]";
+    if (i != (sets.size() - 1)) {
+      std::cout << ",";
+    }
+  }
+  std::cout << "]" << std::endl;
+}
+
+int main(int argc, char **argv) {
+  Solution solution;
+
+  vector<int> candidates_1{2, 3, 6, 7};
+  vector<int> candidates_2{7, 3, 2};
+  output(solution.combinationSum(candidates_1, 7, true), 1);
+  output(solution.combinationSum(candidates_2, 18, true), 2);
+
+  return 0;
+}
+```
+
+### (39.Key of question)
+
+The key to solving this problem is that we need to consider the situation of repeated numbers, and what we need to do if this situation is realized. If we choose to traverse all candidate numbers for each recursion, this will eventually lead to the need to remove those duplicates (these duplicates are just that the order of the numbers is not the same). The correct approach is to sequentially reduce the scope of traversal.
+
+Then you need to consider the case of repeated addition of numbers.
+
+There are the example codes :[example.cpp](./BackTracking/39.CombinationSum/main.cpp). 
 
 
 

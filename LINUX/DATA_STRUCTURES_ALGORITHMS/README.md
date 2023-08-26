@@ -1164,3 +1164,116 @@ typedef struct {
 typedef char ** HuffmanCode; // 动态分配输出存储哈弗曼编码表
 ```
 
+## 6.8 回溯法与树的遍历
+
+回溯算法是递归的副产品，只要有递归的过程就会有对应的回溯的过程。回溯法其实就是递归法，指的是同一种函数。
+
+关于回溯法的性能，回溯的本质其实就是穷举，我们通过抽象的构建一棵树形结构来穷举出来各种情况，***任何可以使用回溯算法解决的问题都是可以抽象为树形结构的，因为回溯法解决的问题就是在集合中递归查找子集，集合的大小就构成了树的宽度，递归的深度构成了树的深度。***
+
+***示例1:***
+
+Problem: 求出一个数集的幂集，例如：给定${S = \{1,2,3\}}$, 则其幂集为：${\{\{1,2,3\},\{1,2\},\{1,3\},\{2,3\},\{1\},\{2\},\{3\},\{\}\}}$
+
+```C++
+#include <iostream>
+#include <vector>
+
+class Solution {
+private:
+  std::vector<std::vector<int>> result{};
+  std::vector<int> path{};
+
+  void get_powerset(const std::vector<int> &elements, int height) {
+    if (height == elements.size()) {
+      result.push_back(path);
+      return;
+    }
+
+    path.push_back(elements[height]);
+    get_powerset(elements, height + 1);
+
+    path.pop_back();
+    get_powerset(elements, height + 1);
+  }
+
+public:
+  std::vector<std::vector<int>>
+  get_the_powerset(const std::vector<int> &elements) {
+    get_powerset(elements, 0);
+    return result;
+  }
+};
+
+template <typename T> void output(const std::vector<std::vector<T>> &sets, int index) {
+  std::cout << "case" << index << ":";
+  std::cout << "{";
+  for (int i = 0; i < sets.size(); i++) {
+    std::cout << "{";
+    for (int j = 0; j < sets[i].size(); j++) {
+      std::cout << sets[i][j];
+      if (j != (sets[i].size() - 1)) {
+        std::cout << ",";
+      }
+    }
+    std::cout << "}";
+    if (i != (sets.size() - 1)) {
+      std::cout << ",";
+    }
+  }
+  std::cout << "}" << std::endl;
+}
+
+int main(int argc, char *argv[]) {
+  std::vector<int> elements{1, 2, 3, 4, 5, 6, 7, 8, 9};
+  Solution solution;
+  output(solution.get_the_powerset(elements), 1);
+  return 0;
+}
+```
+
+# 第七章  图
+
+## 7.1 图的基本概念和术语
+
+
+
+## 7.2 图的存储结构
+
+### 7.2.1 邻接矩阵
+
+
+
+### 7.2.2 邻接表
+
+
+
+### 7.2.3 逆邻接表
+
+
+
+## 7.3 遍历算法
+
+### 7.3.1 深度优先搜索算法
+
+
+
+### 7.3.2 广度优先搜索算法
+
+
+
+## 7.4 应用
+
+### 7.4.1 最小生成树
+
+
+
+### 7.4.2 最短路径
+
+
+
+### 7.4.3 拓扑排序
+
+
+
+### 7.4.4 关键路径
+
