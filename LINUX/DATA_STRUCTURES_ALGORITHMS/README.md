@@ -1231,17 +1231,112 @@ int main(int argc, char *argv[]) {
 }
 ```
 
-# 第七章  图
+# 第七章  图ADT(Abstract Data Type)
 
 ## 7.1 图的基本概念和术语
 
+${G = (V,E)}$, ***集合V中的元素称为顶点***；***集合E中的元素称为边***；
 
+(1) 无向图、有向图和混合图；
+
+
+
+(2) 度；
+
+对于***无向图***来讲，与顶点v关联的边数称为v的度数；
+
+对于***有向图***，度又分为***出度***和***入度***；
+
+
+
+(3) ***简单图***；
+
+联接于同一顶点的边，称为自环(self-loop)。***不含任何自环的图称之为简单图，我们之后主要讨论的就是简单图。***
+
+### 7.1.1 通路与环路
+
+(4) 通路与环路；
+
+路径或者通路，就是由m+1个顶点与m条边交替而成的一个序列：
+
+${\pi =\{v_{0},v_{1},v_{2},v_{3},\cdots,v_{m}\}}$
+
+<img src="assets/image-20230828090040522.png" alt="image-20230828090040522" style="zoom: 67%;" />
+
+比如上图所示中，(a) 中的${C,A,B,A,D}$就是一条从C到D的通路，其长度为4，可见，***虽然通路上的边必须互异，但是顶点却可能重复。***沿途顶点互异的通路，称之为***777dz***。
+
+例如(b) 中的顶点C到B的一条简单通路：${C,A,D,B}$就是一条C到B的简单通路，长度为3。
+
+
+
+如果对于长度${m\ge 1}$的通路${\pi}$，如果起止地点相同，则我们称其为***环路***，长度为沿途边的总数。不含任何环路的有向图，称之为有向无环图(directed acyclic graph, DAG)。
+
+如果环路中***顶点互不相等***，则称其为***简单环路***。
+
+***欧拉环路，如果经过图中所有的边有且仅有依次，则称其为欧拉环路。注意是所有的边！！！***
+
+<img src="assets/image-20230828091108797.png" alt="image-20230828091108797" style="zoom:67%;" />
+
+上图(a) 中的${\{C,A,B,A,D,C,D,B,C\}}$就是一条欧拉环路，其长度为8。
+
+***对偶的，如果经过图中各顶点有且只有一次的环路，称其为哈密顿环路，其长度等于顶点的个数，也等于构成环路的边数。***
+
+上图(b) 中的${\{C,A,D,B,C\}}$就是一条长度为4的哈密顿环路。
+
+### 7.1.2 带权网络
+
+(5) 带权网络
+
+为每一条边分配一个权值(weight), 然后各边均带有权重的图，称之为***带权图(weighted graph)***或者***带权网络(weighted network)***，又是也简称为***网络(network)***，记作${G(V,E,wt())}$。
 
 ## 7.2 图的存储结构
 
 ### 7.2.1 邻接矩阵
 
+使用二维数组来保存图中的信息！
 
+```C++
+// The type of graph:
+// --DG: directed graph,
+// --DN: directed network,
+// --UDG: undirected graph,
+// --UDN: undirected network
+typedef enum { DG, DN, UDG, UDN } GraphKind;
+
+// The status of vertex:
+typedef enum { UNVISITED, PROCESSING, VISITED, COMPLETED, PENDING } VStatus;
+
+// the struct of vertex:
+struct Vertex {
+  int data;
+  int indegree, outdegree;
+  VStatus status;
+
+  Vertex(const int &d)
+      : data(d), indegree(0), outdegree(0), status(UNVISITED) {}
+  Vertex(const Vertex &rhs)
+      : data(rhs.data), indegree(rhs.indegree), outdegree(rhs.outdegree),
+        status(rhs.status) {}
+};
+
+// the struct of edge:
+struct Edge {
+  int _weight;
+  // judge the edge between _begin and _end:
+  bool _exist;
+
+  Edge(const int &weight) : _weight(weight), _exist(false) {}
+};
+// the graph implemented in matrix:
+class Graph_Matrix {
+private:
+  std::vector<Vertex> vertexes; // the set of vertex
+  std::vector<std::vector<Edge>> edges;
+
+  int vexnum, edgenum; // the number of vertex and edge
+public:
+}
+```
 
 ### 7.2.2 邻接表
 
