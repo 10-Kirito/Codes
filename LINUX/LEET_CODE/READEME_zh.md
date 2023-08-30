@@ -1,8 +1,8 @@
 # Algorithm
 
-[![](https://camo.githubusercontent.com/15a53d5ec5d896319068168a27da0203156bbdb9/68747470733a2f2f6a617977636a6c6f76652e6769746875622e696f2f73622f6c616e672f656e676c6973682e737667)](README.md)[![](https://camo.githubusercontent.com/cb8cb80af654f3dae14a4aa62e44bf62f16953d6/68747470733a2f2f6a617977636a6c6f76652e6769746875622e696f2f73622f6c616e672f6368696e6573652e737667)](README-zh.md)
+[![](https://camo.githubusercontent.com/15a53d5ec5d896319068168a27da0203156bbdb9/68747470733a2f2f6a617977636a6c6f76652e6769746875622e696f2f73622f6c616e672f656e676c6973682e737667)](README.md)[![](https://camo.githubusercontent.com/cb8cb80af654f3dae14a4aa62e44bf62f16953d6/68747470733a2f2f6a617977636a6c6f76652e6769746875622e696f2f73622f6c616e672f6368696e6573652e737667)](README_zh.md)
 
-# 1. Array
+# 1. 数组
 
 ## 1.Two Sum
 
@@ -103,14 +103,14 @@ public:
 };
 ```
 
-### (1. key of question)
+### (1. 解题关键)
 
-As you can see, there are four solutions. 
+如您所见，有四种解决方案。
 
-- The first one is Bruce Force, we can loop through.
-- The second one uses a hash table to use fast lookup and thus shorten the lookup time. Our most critical factor is to use the mapping to solve this problem. The realization principle of unordered_map is a hash table.
-- The third one is just want to know the difference between unordered_map and map. It turns out that unordered_map is more efficient than map. The realization principle of map is Red-black tree that keep elements in order.
-- The key to the fourth method is that we search while inserting! 
+- 第一个是暴力破解方法，我们可以通过循环来完成。
+- 第二种使用哈希表来使用快速查找，从而缩短查找时间。 我们最关键的因素是利用映射来解决这个问题。 unordered_map的实现原理是一个哈希表。
+- 第三个只是想知道unordered_map和map之间的区别。 事实证明unordered_map比map更高效。 Map的实现原理是红黑树，保持元素有序。
+- 第四种方法的关键是我们边插入边搜索！
 
 ## 2. Add The Two Big Numbers
 
@@ -218,24 +218,24 @@ public:
 };
 ```
 
-### (2. Key of question)
+### (2. 解题关键)
 
-As you can see, there are two solutions:
+如您所见，有两种解决方案：
 
-- The first one is wrong, because I didn't consider the size of number.
-- The second one is right! The logic is easy!  
+- 第一个是错误的，因为我没有考虑数字的大小。
+- 第二个是对的！ 逻辑很简单！
 
-The key to this topic is that we need to be clear that this number may be very large, and we may not be able to store the number using the existing type, so we need to insert while calculating.
+这个话题的关键是我们需要清楚这个数字可能非常大，我们可能无法使用现有的类型来存储这个数字，所以我们需要边计算边插入。
 
-***Supplement:*** Added test code to the sample program, you can run it directly in your environment without using LeetCode for debugging!
+***补充：*** 示例程序中添加了测试代码，您可以直接在您的环境中运行它，而无需使用LeetCode官网提供的环境进行调试！
 
-There are the example code: [example.cpp](./Array/AddTwoNums.cpp)
+有示例代码：[example.cpp](./Array/AddTwoNums.cpp)
 
-# 2. BinaryTree
+# 2. 二叉树
 
-> In the preliminary work, a binary tree class is implemented here, and its member functions include traversal algorithms, pre-order, in-order, post-order and layer-order traversal. And a recursive version as well as a non-recursive version (iterative version) are implemented.
+> 我们在学习这一章节之前，这里实现了一个二叉树类，其成员函数包括遍历算法、前序、中序、后序和层序遍历。 并实现了递归版本和非递归版本（迭代版本）。
 >
-> There are the example codes: [example codes](./BinaryTree/main.cpp) . You can see the resource codes in `./BinaryTree/include/`.
+> 示例代码： [example.cpp](./BinaryTree/main.cpp) 。 您可以在`./BinaryTree/include/`中找到源代码。
 
 ## 106.Construct_Binary_Tree_from_Inorder_and_Postorder_Traversal
 
@@ -326,23 +326,187 @@ private:
 };
 ```
 
-### (106.Key of question)
+### (106.解题关键)
 
-The key to solving this problem is to understand the post-order traversal and in-order traversal of the binary tree.
+解决这个问题的关键是理解二叉树的后序遍历和中序遍历。
 
-After you understand it, we can split the question into these steps:
+理解之后，我们可以将问题分为以下步骤：
 
-- if the size of array is zero, return nullptr;
-- if the array is not NULL, let the last node of postorder the node element;
-- use the node element to split the inorder-array into two children inorder-arrays;
-- use the two children inorder-arrays to split the postorder-array into other two children postorder-arrays;
-- handle with left children and right children recursively;
+- 如果数组大小为零，则返回 nullptr；
+- 如果数组不为NULL，则让后序的最后一个节点为节点元素；
+- 使用节点元素将中序数组拆分为两个子中序数组；
+- 使用两个子中序数组将后序数组拆分为另外两个子后序数组；
+- 递归处理左子节点和右子节点；
 
-PS: You can use hash-table to improve performance.
+PS：您可以使用哈希表来提高性能。
 
-There are the example codes :[example.cpp](./BinaryTree/106.Construct_Binary_Tree_from_Inorder_and_Postorder_Traversal/main.cpp). You can see the header codes in `./BinaryTree/include/`.
+示例代码：[example.cpp](./BinaryTree/106.Construct_Binary_Tree_from_Inorder_and_Postorder_Traversal/main.cpp)。 您可以在`./BinaryTree/include/`中看到头文件相关的代码。
 
-# 3. BackTracking
+# 3. 回溯
+
+## 77.Combinations
+
+> Question: https://leetcode.com/problems/combinations/description/
+>
+> Given two integers `n` and `k`, return *all possible combinations of* `k` *numbers chosen from the range* `[1, n]`.
+>
+> You may return the answer in **any order**.
+>
+> **Example 1:**
+>
+> ```shell
+> Input: n = 4, k = 2
+> Output: [[1,2],[1,3],[1,4],[2,3],[2,4],[3,4]]
+> Explanation: There are 4 choose 2 = 6 total combinations.
+> Note that combinations are unordered, i.e., [1,2] and [2,1] are considered to be the same combination.
+> ```
+>
+> **Example 2:**
+>
+> ```shell
+> Input: n = 1, k = 1
+> Output: [[1]]
+> Explanation: There is 1 choose 1 = 1 total combination.
+> ```
+>
+> ***Constrains:***
+>
+> - `1 <= n <= 20`
+> - `1 <= k <= n`
+
+```C++
+class Solution {
+private:
+  vector<int> path;
+  vector<vector<int>> result;
+  void backtracking(int n, int k, int index) {
+    // if path.size() == k, then it means that we have traversed to the leaf
+    // node, that is to say, we have found a qualified subset
+    if (path.size() == k) {
+      result.push_back(path);
+      return;
+    }
+
+    for (int i = index; i <= n - (k - path.size()) + 1; i++) {
+      path.push_back(i);
+      backtracking(n, k, i + 1);
+      // backtracking: undo this step!
+      path.pop_back();
+    }
+  }
+
+public:
+  vector<vector<int>> combine(int n, int k) {
+    path.clear();
+    result.clear();
+    backtracking(n, k, 1);
+    return result;
+  }
+};
+```
+
+### (77.解题关键)
+
+显然，我们不可能用***for循环***来遍历这道题，因为k可能会很大。 这样的话我们的***for循环***就可以完成了，所以这道题最重要的就是用回溯的方法。
+
+事实上，回溯算法是一种递归算法，我们将回溯算法能够解决的问题抽象成树结构，因为回溯算法解决的问题是递归地搜索集合中的子集。 集合的大小构成了树的宽度。 递归的深度构成了树的深度。
+
+我们在编写回溯算法时，一般需要考虑以下几点：
+
+- 回溯算法一般不需要返回值，因为它们实际上修改了一些公共变量。
+- 回溯算法的参数一般不是一开始就确定的，而是在写逻辑的过程中一一确定的。
+- 算法的回溯其实就是回溯我们这一步所做的事情，就是回溯，剩下的都是递归算法解决的问题。
+- ***回溯算法中的剪枝操作***其实就是限制我们for循环遍历的条件，然后直接过滤掉那些错误的情况。
+
+## 216.CombinationSumIII
+
+> Question: https://leetcode.com/problems/combination-sum-iii/
+>
+> Find all valid combinations of `k` numbers that sum up to `n` such that the following conditions are true:
+>
+> - Only numbers `1` through `9` are used.
+> - Each number is used **at most once**.
+>
+> Return *a list of all possible valid combinations*. The list must not contain the same combination twice, and the combinations may be returned in any order.
+>
+> 
+>
+> **Example 1:**
+>
+> ```
+> Input: k = 3, n = 7
+> Output: [[1,2,4]]
+> Explanation:
+> 1 + 2 + 4 = 7
+> There are no other valid combinations.
+> ```
+>
+> **Example 2:**
+>
+> ```
+> Input: k = 3, n = 9
+> Output: [[1,2,6],[1,3,5],[2,3,4]]
+> Explanation:
+> 1 + 2 + 6 = 9
+> 1 + 3 + 5 = 9
+> 2 + 3 + 4 = 9
+> There are no other valid combinations.
+> ```
+>
+> **Example 3:**
+>
+> ```
+> Input: k = 4, n = 1
+> Output: []
+> Explanation: There are no valid combinations.
+> Using 4 different numbers in the range [1,9], the smallest sum we can get is 1+2+3+4 = 10 and since 10 > 1, there are no valid combination.
+> ```
+>
+> 
+>
+> **Constraints:**
+>
+> - `2 <= k <= 9`
+> - `1 <= n <= 60`
+
+```C++
+class Solution {
+private:
+  int path_sum = 0;
+  vector<int> path;
+  vector<vector<int>> result;
+  void backtracking(int k, int sum, int index) {
+    bool flag = true;
+    if (path_sum == sum && path.size() == k) {
+      result.push_back(path);
+      return;
+    } else if (path_sum > sum || path.size() > k) {
+      return;
+    }
+
+    for (int i = index; i <= 9; i++) {
+      path_sum += i;
+      path.push_back(i);
+      backtracking(k, sum, i + 1);
+      path_sum -= i;
+      path.pop_back();
+      if ((path_sum + i) > sum) {
+        return;
+      }
+    }
+  }
+
+public:
+  vector<vector<int>> combinationSum3(int k, int n) {
+    backtracking(k, n, 1);
+    return result;
+  }
+};
+```
+
+### (216.解题关键)
+
+这个问题可以利用回溯算法来解决。
 
 ## 17.LetterCombinationsOfaPhoneNumber
 
@@ -408,11 +572,9 @@ public:
 };
 ```
 
-### (17.Key of question)
+### (17.解题关键)
 
-Because of the loop, we can't list all the situations. So we use the backtracking algorithm( actually recursion) , but it should be noted that this topic does not require us to preform pruning operations, because we need all situaitions.
-
-
+由于循环，我们无法列出所有情况。 所以我们使用回溯算法（实际上是递归），但需要注意的是，本主题并不要求我们执行剪枝操作，因为我们需要所有情况。
 
 ## 39.CombinationSum
 
@@ -600,13 +762,13 @@ int main(int argc, char **argv) {
 }
 ```
 
-### (39.Key of question)
+### (39.解题关键)
 
-The key to solving this problem is that we need to consider the situation of repeated numbers, and what we need to do if this situation is realized. If we choose to traverse all candidate numbers for each recursion, this will eventually lead to the need to remove those duplicates (these duplicates are just that the order of the numbers is not the same). The correct approach is to sequentially reduce the scope of traversal.
+解决这个问题的关键是我们需要考虑重复数字的情况，以及如果实现这种情况我们需要做什么。 如果我们选择每次递归都遍历所有候选数字，这最终会导致需要去除那些重复项（这些重复项只是数字的顺序不一样）。 正确的做法是依次缩小遍历的范围。
 
-Then you need to consider the case of repeated addition of numbers.
+那么就需要考虑数字重复相加的情况。
 
-There are the example codes :[example.cpp](./BackTracking/39.CombinationSum/main.cpp). 
+示例代码：[example.cpp](./BackTracking/39.CombinationSum/main.cpp)。
 
 ## 40.Combination Sum II
 
@@ -728,182 +890,19 @@ int main(int argc, char *argv[]) {
 
 
 
-### (40.Key of question)
+### (40.解题关键)
 
-At first glance, when we look at this question, doesn’t it feel the same as the previous question? In fact, it is different. The key to this question is that although there are identical numbers in a given set of numbers, there cannot be duplicate numbers in the result set that we finally filter out.
+这一道题，我们乍一看，感觉和前面的题目不是一样的吗？其实不一样，这道题的关键在于，给定的数字集合当中虽然存在有相同的数字，但是我们最终筛选出来的结果集合中不可以存在重复的数字。
 
-For example: Given the set of numbers `{1,1,2,3,4}`, if the target is required to be 5, although the addition of two 1 and 4 can make the sum the target, but in the result set, The two are duplicates and cannot exist at the same time. But for 1 + 1 + 3 = target, this can exist for `{1,1,3}`. That is to say, for the same situation, you can use the numbers in the collection at random, and each number can only be used once, and if there are the same numbers, it can be used twice.
+比如说：给定`{1,1,2,3,4}`这个数字集合当中，如果要求target为5，虽然两个1和4分别相加都可以使得其和为target，但是结果集中，这二者是重复的，不能同时存在。但是对于1 + 1 + 3 = target，对于`{1,1,3}`这个是可以存在的。就是说对于同一种情况当中，你随便使用集合中的数字，每一个数字只能使用一次，如果有相同的数字就可以使用两次。
 
-In this case, it involves the problem of deduplication, which actually means that used elements cannot be selected repeatedly.
+这样的话就涉及到了***去重***的问题，其实就是说使用过的元素不能重复选取。
 
-But what does it mean that used elements cannot be selected repeatedly? Could it be that when I select the second 1 in `{1,1,3}`, I think there is already 1, so I can’t select 1 again? This angle If you look at it, it is deduplication of the branches of the tree we finally formed.
+但是什么叫做使用过的元素不能重复选取，难道是我选择`{1,1,3}`中的第二个1的时候认为已经有1了，所以我不可以再次选择1了吗?这个角度看的话是对我们***最终形成的树的树枝进行去重***。
 
-In other words, when I traverse `{1,1,2,3,4}` for the first time, I will definitely select the first 1 the first time, then push it into the stack and pop it out, and then it is the turn of the second 1 , at this time, since we have already selected 1 once before, does it mean that we cannot select this 1 again? From this perspective, we are deduplicating the same tree layer of our final tree. ***
+或者说我第一次遍历`{1,1,2,3,4}`的时候，第一次的时候肯定选择第一个1，然后入栈出栈，接下来轮到第二个1了，这个时候由于我们前面已经选择过一次1了，所以说我们不可以再次选择这个1了吗？从这个角度看的话是对我们 ***最终形成的树的同一树层进行去重。***
 
-Therefore, for ***deduplication***, there are two dimensions in the tree structure, one dimension is used on the branch, and the other dimension is used at the same tree layer. ***We need to clearly understand under what circumstances and from what angle we should think about deduplication!***
+所以说，对于***去重***，在树形结构中是存在两个维度的，一个维度是在树枝上使用过，另一个维度是同一树层使用过。***我们需要清楚的认识到什么情况下应该以什么角度来思考去重！***
 
-There are the example codes :[example.cpp](./BackTracking/40.CombinationSumII/main.cpp). 
+- 
 
-## 77.Combinations
-
-> Question: https://leetcode.com/problems/combinations/description/
->
-> Given two integers `n` and `k`, return *all possible combinations of* `k` *numbers chosen from the range* `[1, n]`.
->
-> You may return the answer in **any order**.
->
-> **Example 1:**
->
-> ```shell
-> Input: n = 4, k = 2
-> Output: [[1,2],[1,3],[1,4],[2,3],[2,4],[3,4]]
-> Explanation: There are 4 choose 2 = 6 total combinations.
-> Note that combinations are unordered, i.e., [1,2] and [2,1] are considered to be the same combination.
-> ```
->
-> **Example 2:**
->
-> ```shell
-> Input: n = 1, k = 1
-> Output: [[1]]
-> Explanation: There is 1 choose 1 = 1 total combination.
-> ```
->
-> ***Constrains:***
->
-> - `1 <= n <= 20`
-> - `1 <= k <= n`
-
-```C++
-class Solution {
-private:
-  vector<int> path;
-  vector<vector<int>> result;
-  void backtracking(int n, int k, int index) {
-    // if path.size() == k, then it means that we have traversed to the leaf
-    // node, that is to say, we have found a qualified subset
-    if (path.size() == k) {
-      result.push_back(path);
-      return;
-    }
-
-    for (int i = index; i <= n - (k - path.size()) + 1; i++) {
-      path.push_back(i);
-      backtracking(n, k, i + 1);
-      // backtracking: undo this step!
-      path.pop_back();
-    }
-  }
-
-public:
-  vector<vector<int>> combine(int n, int k) {
-    path.clear();
-    result.clear();
-    backtracking(n, k, 1);
-    return result;
-  }
-};
-```
-
-### (77.Key of quesion)
-
-Obviously, it is impossible for us to use the ***for loop*** to traverse this question, because k may be very large. In this case, our ***for loop*** can be finished, so the most important thing about this question is to use the backtracking method.
-
-In fact, the backtracking algorithm is a recursive algorithm, and we abstract the problems that the backtracking algorithm can solve into a tree structure, because the problems solved by the backtracking algorithm are to recursively search for subsets in the set. The size of the set constitutes the width of the tree. The depth of recursion constitutes the depth of tree.
-
-When we write backtracking algorithms, we generally need to consider a few points:
-
-- Backtracking algorithms generally do not need to return a value, because they actually modify some public variables.
-- The parameters of the backtracking algorithm are generally not determined at the beginning, but are determined one by one in the process of writing logic.
-- The backtracking of algorithm is actually backtracking what we did in this step, which is backtracking, and the rest are all problems solved by the recursive algorithm.
-- ***The pruning operation*** in the backtracking algorithm is actually to limit the conditions of our for loop traversal, and then directly filter out those wrong situations.
-
-## 216.CombinationSumIII
-
-> Question: https://leetcode.com/problems/combination-sum-iii/
->
-> Find all valid combinations of `k` numbers that sum up to `n` such that the following conditions are true:
->
-> - Only numbers `1` through `9` are used.
-> - Each number is used **at most once**.
->
-> Return *a list of all possible valid combinations*. The list must not contain the same combination twice, and the combinations may be returned in any order.
->
->  
->
-> **Example 1:**
->
-> ```
-> Input: k = 3, n = 7
-> Output: [[1,2,4]]
-> Explanation:
-> 1 + 2 + 4 = 7
-> There are no other valid combinations.
-> ```
->
-> **Example 2:**
->
-> ```
-> Input: k = 3, n = 9
-> Output: [[1,2,6],[1,3,5],[2,3,4]]
-> Explanation:
-> 1 + 2 + 6 = 9
-> 1 + 3 + 5 = 9
-> 2 + 3 + 4 = 9
-> There are no other valid combinations.
-> ```
->
-> **Example 3:**
->
-> ```
-> Input: k = 4, n = 1
-> Output: []
-> Explanation: There are no valid combinations.
-> Using 4 different numbers in the range [1,9], the smallest sum we can get is 1+2+3+4 = 10 and since 10 > 1, there are no valid combination.
-> ```
->
->  
->
-> **Constraints:**
->
-> - `2 <= k <= 9`
-> - `1 <= n <= 60`
-
-```C++
-class Solution {
-private:
-  int path_sum = 0;
-  vector<int> path;
-  vector<vector<int>> result;
-  void backtracking(int k, int sum, int index) {
-    bool flag = true;
-    if (path_sum == sum && path.size() == k) {
-      result.push_back(path);
-      return;
-    } else if (path_sum > sum || path.size() > k) {
-      return;
-    }
-
-    for (int i = index; i <= 9; i++) {
-      path_sum += i;
-      path.push_back(i);
-      backtracking(k, sum, i + 1);
-      path_sum -= i;
-      path.pop_back();
-      if ((path_sum + i) > sum) {
-        return;
-      }
-    }
-  }
-
-public:
-  vector<vector<int>> combinationSum3(int k, int n) {
-    backtracking(k, n, 1);
-    return result;
-  }
-};
-```
-
-### (216.Key of question)
-
-This problem can be solved by using the backtracking algorithm.
