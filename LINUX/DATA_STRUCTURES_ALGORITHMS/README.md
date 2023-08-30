@@ -1340,9 +1340,86 @@ public:
 
 ### 7.2.2 邻接表
 
+邻接表应该是最经常使用的一种存储方式，因为它和我们的思维习惯比较相似而且也能节省存储空间！
 
+其实现起来无非就是以链表为基本元素的数组：
+
+```C++
+typedef enum { UNVISITED, PROCESSING, VISITED, COMPLETED, PENDING } VStatus;
+
+// the struct of vertex:
+struct Vertex {
+  int data;
+  int indegree, outdegree;
+  VStatus status;
+
+  Vertex(const int &d)
+      : data(d), indegree(0), outdegree(0), status(UNVISITED) {}
+  Vertex(const Vertex &rhs)
+      : data(rhs.data), indegree(rhs.indegree), outdegree(rhs.outdegree),
+        status(rhs.status) {}
+
+  bool operator==(const Vertex &rhs) { return data == rhs.data; }
+};
+
+struct Node {
+  Vertex _vertex;
+  Node *_next;
+
+  Node(const int &d, Node *next) : _vertex(d), _next(nullptr) {}
+};
+
+class Graph_Adj {
+private:
+  int vexnum;
+  int edgenum;
+  std::vector<Vertex> vertexes;
+  std::vector<Node *> edges;
+}
+```
+
+***严蔚敏的《数据结构（C语言版）》：***
+
+```C++
+// ------图的邻接表存储表示--------
+#define MAX_VERTEX_NUM 20
+typedef struct ArcNode {
+    int adjvex;				        // 该弧所指向的顶点的位置
+    struct ArcNode * nextarc; w	     // 指向下一条弧的指针
+    InfoType * info;      			// 该弧相关信息的指针
+}ArcNode;
+
+typedef struct VNode {
+    VertexType data;
+    ArcNode *firstarc;
+}VNode, AdjList[MAX_VERTEX_NUM][MAX_VERTEX_NUM];
+
+typedef struct {
+    AdjList vertices;			    
+    int vernum, arcnum;			 // 图的当前顶点数和弧数
+    int kind;					//图的种类标志
+}ALGraph;
+```
+
+在无向图的邻接表中，顶点${v_{i}}$的度恰巧为第${i}$个链表的结点的个数，当然如果是利用对象的观念来设计邻接表的时候，你可以将顶点抽象化为一个对象，然后我们进行插入或者删除的时候，就可以 ***直接同步更新相关结点的度即可。***
+
+在有向图的邻接表中，第${i}$个链表的结点的个数只是顶点${v_{i}}$的出度，如果想要求出入度的话，你就需要遍历整个邻接表。
 
 ### 7.2.3 逆邻接表
+
+上面的分析我们可以看到如果我们在邻接表中想要去求的某一个结点的入度会十分的麻烦，那这个时候该怎么办呢？
+
+类似于邻接表，我们只需要将邻接表中的邻接顶点修改为以顶点${v_{i}}$为头的弧即可。
+
+
+
+***在邻接表中很容易找到任意顶点的第一邻接点和下一个邻接点，但是如果要判断两个顶点之间是否有边相连的话，就需要搜索相应的链表，因此，不如邻接矩阵方便。***
+
+### 7.2.4 十字链表
+
+***首先声明十字链表是有向图的另一种链式存储结构。***我们可以将其看作为有向图的邻接表和逆邻接表结合得到的一种链表。
+
+### 7.2.5 邻接多重表
 
 
 
