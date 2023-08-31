@@ -1,4 +1,4 @@
-#include "graph_matrix.h"
+#include "./include/graph_matrix.h"
 #include <utility>
 
 int main(int argc, char *argv[]) {

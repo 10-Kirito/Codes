@@ -71,6 +71,7 @@ public:
 
 // insert the new vertex:
 inline void Graph_Adj::insert(const int &data) {
+  vexnum++;
   vertexes.push_back(Vertex(data));
   edges.push_back(new Node(data, nullptr));
 }
@@ -108,6 +109,7 @@ inline void Graph_Adj::insert_edge(const std::pair<int, int> &edge) {
   }
 
   head->_next = new Node(second_num, nullptr);
+  edgenum++;
 }
 
 template <typename... Args>

@@ -1,4 +1,4 @@
-#include "graph_adj.h"
+#include "./include/graph_adj.h"
 #include <utility>
 
 int main(int argc, char *argv[]) {
