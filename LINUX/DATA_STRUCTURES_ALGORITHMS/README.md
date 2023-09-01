@@ -1295,6 +1295,8 @@ ${\pi =\{v_{0},v_{1},v_{2},v_{3},\cdots,v_{m}\}}$
 
 使用二维数组来保存图中的信息！
 
+示例代码： [example.cpp](./GRAPH/matrix_main.cpp)
+
 ```C++
 // The type of graph:
 // --DG: directed graph,
@@ -1343,6 +1345,8 @@ public:
 邻接表应该是最经常使用的一种存储方式，因为它和我们的思维习惯比较相似而且也能节省存储空间！
 
 其实现起来无非就是以链表为基本元素的数组：
+
+示例代码：[example.cpp](./GRAPH/adj_main.cpp)
 
 ```C++
 typedef enum { UNVISITED, PROCESSING, VISITED, COMPLETED, PENDING } VStatus;
@@ -1415,7 +1419,16 @@ typedef struct {
 
 ***在邻接表中很容易找到任意顶点的第一邻接点和下一个邻接点，但是如果要判断两个顶点之间是否有边相连的话，就需要搜索相应的链表，因此，不如邻接矩阵方便。***
 
+示例代码: [graph_adj.h](./GRAPH/include/graph_adj.h)
 
+该头文件中提供了两种插入边的方式，一种是邻接表，另一种则是逆邻接表：
+
+```C++
+// inverse adjacency list operation:
+  void insert_edge(const std::pair<int, int> &, INVERSE_ADJ);
+  void insert_edge(const std::initializer_list<std::pair<int, int>> &,
+                   INVERSE_ADJ);
+```
 
 ### 7.2.4 十字链表
 
@@ -1424,6 +1437,8 @@ typedef struct {
 其实就是记录***以每一个顶点为头的所有边***以及***每一个顶点为尾的所有边***，并将这些边分别使用链表进行存储即可。一个是邻接表，另一个是逆邻接表。
 
 在十字链表当中，对于于有向图中的每一条弧都有一个结点，对于每一个顶点也是存在一个结点。
+
+示例代码：[example.cpp](./GRAPH/orthog_list_main.cpp)
 
 ```C++
 // the vertex nodes:

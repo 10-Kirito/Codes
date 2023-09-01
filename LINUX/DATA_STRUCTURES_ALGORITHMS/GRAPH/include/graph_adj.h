@@ -8,6 +8,7 @@
 #include <exception>
 #include <initializer_list>
 #include <iostream>
+#include <memory>
 #include <stdexcept>
 #include <utility>
 #include <vector>
@@ -36,8 +37,10 @@ struct Vertex {
 struct Node {
   Vertex _vertex;
   Node *_next;
+  VStatus status;
 
-  Node(const int &d, Node *next) : _vertex(d), _next(nullptr) {}
+  Node(const int &d, Node *next)
+      : _vertex(d), _next(nullptr), status(UNVISITED) {}
 };
 
 class Graph_Adj {
@@ -46,6 +49,28 @@ private:
   int edgenum;
   std::vector<Vertex> vertexes;
   std::vector<Node *> edges;
+
+  // traversal algorithm:
+  void dfs(Node *node, void (*visit)(const int &)) {
+    node->status = VISITED;
+    visit(node->_vertex.data);
+
+    if (node->_next) {
+      node = edges[(
+          std::find_if(edges.begin(), edges.end(),
+                       [node](const std::vector<Node *>::value_type &val) {
+                         return val->_vertex == node->_next->_vertex;
+                       }) -
+          edges.begin())];
+    }
+
+    for (; node != nullptr; node = node->_next) {
+      if (node->status == UNVISITED) {
+        dfs(node, visit);
+      }
+    }
+  };
+  void bfs();
 
 public:
   Graph_Adj() : vexnum(0), edgenum(0) {}
@@ -64,6 +89,19 @@ public:
   void insert_edge(const std::pair<int, int> &, INVERSE_ADJ);
   void insert_edge(const std::initializer_list<std::pair<int, int>> &,
                    INVERSE_ADJ);
+
+  // tarversal algorithm:
+  // 1.BFS, Breadth_First Search:
+  void bfs_traversal(void (*visit)(const int &)) {}
+  //
+  // 2.DFS, Depth_First Search:
+  void dfs_traversal(void (*visit)(const int &)) {
+    for (int i = 0; i < edges.size(); i++) {
+      if (edges[i]->status == UNVISITED) {
+        dfs(edges[i], visit);
+      }
+    }
+  }
 
   // show the details of the graph_adj:
   void show() const;
@@ -109,6 +147,7 @@ inline void Graph_Adj::insert_edge(const std::pair<int, int> &edge) {
   }
 
   head->_next = new Node(second_num, nullptr);
+  // head->_next = edges[iter_2 - vertexes.begin()];
   edgenum++;
 }
 
@@ -152,11 +191,13 @@ inline void Graph_Adj::insert_edge(const std::pair<int, int> &edge,
     head = head->_next;
   }
 
+  // head->_next = new Node(first_num, nullptr);
   head->_next = new Node(first_num, nullptr);
 }
 
 inline void
-Graph_Adj::insert_edge(const std::initializer_list<std::pair<int, int>> &data, INVERSE_ADJ) {
+Graph_Adj::insert_edge(const std::initializer_list<std::pair<int, int>> &data,
+                       INVERSE_ADJ) {
   for (const auto &edge : data)
     insert_edge(edge, INVERSE_ADJ());
 }

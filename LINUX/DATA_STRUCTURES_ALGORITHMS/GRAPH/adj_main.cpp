@@ -1,5 +1,8 @@
 #include "./include/graph_adj.h"
+#include <iostream>
 #include <utility>
+
+void visit(const int &data) { std::cout << data << " "; }
 
 int main(int argc, char *argv[]) {
   std::cout << "graph adjacency list test:" << std::endl;
@@ -14,6 +17,12 @@ int main(int argc, char *argv[]) {
   graph_inverse.insert(1, 2, 3, 4);
   graph_inverse.insert_edge({{1, 2}, {1, 3}, {4, 1}, {3, 4}}, INVERSE_ADJ());
   graph_inverse.show();
+
+  std::cout << std::endl;
+  std::cout << "graph dfs traversal test:" << std::endl;
+
+  graph.dfs_traversal(visit);
+
 
   return 0;
 }
