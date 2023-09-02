@@ -20,9 +20,23 @@ int main(int argc, char *argv[]) {
 
   std::cout << std::endl;
   std::cout << "graph dfs traversal test:" << std::endl;
-
   graph.dfs_traversal(visit);
+  std::cout << std::endl;
+  std::cout << std::endl;
 
+  Graph_Adj graph_1;
+  graph_1.insert(1, 2, 3, 4, 5, 6, 7, 8);
+
+  graph_1.insert_edge(
+      {{1, 2}, {2, 4}, {2, 5}, {4, 8}, {5, 8}, {1, 3}, {3, 6}, {3, 7}, {6, 7}});
+  graph_1.show();
+  std::cout << std::endl;
+
+
+  graph_1.dfs_traversal(visit);
+  std::cout << std::endl;
+  graph_1.bfs_traversal(visit);
+  std::cout << std::endl;
 
   return 0;
 }

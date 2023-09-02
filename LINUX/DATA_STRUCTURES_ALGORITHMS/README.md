@@ -1478,11 +1478,102 @@ struct ArcNode {
 
 ### 7.3.1 深度优先搜索算法
 
+> https://www.51cto.com/article/614590.html 这里面的图示很清楚的说明了深度优先搜索算法以及广度优先搜索算法的思想。
 
+深度优先，表面意思就是深度优先深度优先遍历从某一个顶点出发，访问该顶点，然后对该顶点的第一个未被访问的临界顶点再次使用深度优先遍历，直到访问结束之后。回溯到上一个顶点，查看该顶点是否存在未被访问的邻接顶点，如果存在的话继续对该邻接顶点进行深度优先遍历，直到所有的顶点全部访问结束。
+
+示例代码：
+
+[example.cpp](./GRAPH/adj_main.cpp) 
+
+```C++
+// 2.DFS, Depth_First Search:
+  void dfs_traversal(void (*visit)(const int &)) {
+    for (int i = 0; i < edges.size(); i++) {
+      edges[i]->status = UNVISITED;
+    }
+
+    for (int i = 0; i < edges.size(); i++) {
+      if (edges[i]->status == UNVISITED) {
+        dfs(edges[i], visit);
+      }
+    }
+  }
+
+// traversal algorithm:
+  void dfs(Node *node, void (*visit)(const int &)) {
+    // find the node's location in edges:
+    auto ptr = std::find_if(edges.begin(), edges.end(),
+                            [node](const std::vector<Node *>::value_type &val) {
+                              return val->_vertex == node->_vertex;
+                            });
+    if (ptr == edges.end()) {
+      return;
+    }
+
+    node = edges[ptr - edges.begin()];
+
+    if (node->status == VISITED) {
+      return;
+    }
+
+    node->status = VISITED;
+    visit(node->_vertex.data);
+
+    for (; node != nullptr; node = node->_next) {
+      if (node->status == UNVISITED) {
+        dfs(node, visit);
+      }
+    }
+  };
+```
+
+这里是对利用邻接表表示的图进行深度优先遍历，由于我当时设计这个数据结构的时候没有设计好，导致这里代码有点乱，如果设计好的数据结构的话，代码不会这么冗余。
 
 ### 7.3.2 广度优先搜索算法
 
+广度优先遍历实际上就是二叉树中的层序遍历，先访问一个顶点的所有邻接顶点，然后使用队列来进行保存，之后再一个一个出队列，出队列的同时入队该结点的所有的邻接结点，......
 
+其实本质是和树的层次遍历是一模一样的。
+
+示例代码：
+
+[example.cpp](./GRAPH/adj_main.cpp) 
+
+```C++
+void bfs_traversal(void (*visit)(const int &)) {
+    // reset all nodes of graph:
+    for (int i = 0; i < edges.size(); i++) {
+      edges[i]->status = UNVISITED;
+    }
+
+    std::queue<Node *> queue;
+
+    if (empty()) {
+      return;
+    }
+    queue.push(edges[0]);
+
+    while (!queue.empty()) {
+      Node *node = queue.front();
+      if (node->status == UNVISITED) {
+        visit(node->_vertex.data);
+        node->status = VISITED;
+      }
+      queue.pop();
+
+      for (node = node->_next; node != nullptr; node = node->_next) {
+        auto ptr =
+            std::find_if(edges.begin(), edges.end(),
+                         [node](const std::vector<Node *>::value_type &val) {
+                           return val->_vertex == node->_vertex;
+                         });
+
+        queue.push(edges[ptr - edges.begin()]);
+      }
+    }
+  }
+```
 
 ## 7.4 应用
 

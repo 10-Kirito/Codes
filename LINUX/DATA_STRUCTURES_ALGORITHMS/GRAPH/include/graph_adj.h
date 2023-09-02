@@ -9,6 +9,7 @@
 #include <initializer_list>
 #include <iostream>
 #include <memory>
+#include <queue>
 #include <stdexcept>
 #include <utility>
 #include <vector>
@@ -52,17 +53,23 @@ private:
 
   // traversal algorithm:
   void dfs(Node *node, void (*visit)(const int &)) {
+    // find the node's location in edges:
+    auto ptr = std::find_if(edges.begin(), edges.end(),
+                            [node](const std::vector<Node *>::value_type &val) {
+                              return val->_vertex == node->_vertex;
+                            });
+    if (ptr == edges.end()) {
+      return;
+    }
+
+    node = edges[ptr - edges.begin()];
+
+    if (node->status == VISITED) {
+      return;
+    }
+
     node->status = VISITED;
     visit(node->_vertex.data);
-
-    if (node->_next) {
-      node = edges[(
-          std::find_if(edges.begin(), edges.end(),
-                       [node](const std::vector<Node *>::value_type &val) {
-                         return val->_vertex == node->_next->_vertex;
-                       }) -
-          edges.begin())];
-    }
 
     for (; node != nullptr; node = node->_next) {
       if (node->status == UNVISITED) {
@@ -70,7 +77,6 @@ private:
       }
     }
   };
-  void bfs();
 
 public:
   Graph_Adj() : vexnum(0), edgenum(0) {}
@@ -90,12 +96,50 @@ public:
   void insert_edge(const std::initializer_list<std::pair<int, int>> &,
                    INVERSE_ADJ);
 
+  // return true if the number of edges is zero
+  bool empty() const { return edgenum == 0; }
+
   // tarversal algorithm:
   // 1.BFS, Breadth_First Search:
-  void bfs_traversal(void (*visit)(const int &)) {}
+  void bfs_traversal(void (*visit)(const int &)) {
+    // reset all nodes of graph:
+    for (int i = 0; i < edges.size(); i++) {
+      edges[i]->status = UNVISITED;
+    }
+
+    std::queue<Node *> queue;
+
+    if (empty()) {
+      return;
+    }
+    queue.push(edges[0]);
+
+    while (!queue.empty()) {
+      Node *node = queue.front();
+      if (node->status == UNVISITED) {
+        visit(node->_vertex.data);
+        node->status = VISITED;
+      }
+      queue.pop();
+
+      for (node = node->_next; node != nullptr; node = node->_next) {
+        auto ptr =
+            std::find_if(edges.begin(), edges.end(),
+                         [node](const std::vector<Node *>::value_type &val) {
+                           return val->_vertex == node->_vertex;
+                         });
+
+        queue.push(edges[ptr - edges.begin()]);
+      }
+    }
+  }
   //
   // 2.DFS, Depth_First Search:
   void dfs_traversal(void (*visit)(const int &)) {
+    for (int i = 0; i < edges.size(); i++) {
+      edges[i]->status = UNVISITED;
+    }
+
     for (int i = 0; i < edges.size(); i++) {
       if (edges[i]->status == UNVISITED) {
         dfs(edges[i], visit);
@@ -147,7 +191,6 @@ inline void Graph_Adj::insert_edge(const std::pair<int, int> &edge) {
   }
 
   head->_next = new Node(second_num, nullptr);
-  // head->_next = edges[iter_2 - vertexes.begin()];
   edgenum++;
 }
 
