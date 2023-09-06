@@ -81,7 +81,7 @@ public:
     std::vector<Vertex>::difference_type index_second =
         std::find_if(
             vertexes.begin(), vertexes.end(),
-            [edge](const Vertex &temp) { return temp.data == edge.first; }) -
+            [edge](const Vertex &temp) { return temp.data == edge.second; }) -
         vertexes.begin();
 
     if (index_first == vexnum || index_second == vexnum) {

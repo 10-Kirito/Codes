@@ -58,16 +58,18 @@ private:
                             [node](const std::vector<Node *>::value_type &val) {
                               return val->_vertex == node->_vertex;
                             });
+    // if don't find the node, return
     if (ptr == edges.end()) {
       return;
     }
-
     node = edges[ptr - edges.begin()];
 
+    // if the node has been visited, return
     if (node->status == VISITED) {
       return;
     }
 
+    // visit the node:
     node->status = VISITED;
     visit(node->_vertex.data);
 
@@ -76,7 +78,7 @@ private:
         dfs(node, visit);
       }
     }
-  };
+  }
 
 public:
   Graph_Adj() : vexnum(0), edgenum(0) {}
