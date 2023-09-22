@@ -2652,6 +2652,34 @@ int main(int argc, char *argv[]) {
 
 ![image-20230921163700476](assets/image-20230921163700476.png)
 
+***示例代码：***
+
+```C++
+// 3. 希尔排序:
+void Hill_Sort(std::vector<int> &nums) {
+  std::size_t n = nums.size();
+  int dk;
+
+  // 分为不同的步长，从总长度的一半开始，依次每一次除以2:
+  for (dk = n / 2; dk >= 1; dk = dk / 2) {
+    // 遍历各个分好的小组:
+    // (注意，这里的循环遍历每一次是进行加一的操作，每一轮进行直接插入排序是不位于一个
+    // 组的，是在不同的小组之间进行切换的.)
+    for (int i = dk; i < n; ++i) {
+      // 如果当前分组的当前元素小于前面的元素的话，进行直接插入排序:
+      if (nums[i] < nums[i - dk]) {
+        int temp = nums[i];
+        int j;
+        for (j = i - dk; j >= 0 && nums[j] >= temp; j = j - dk) {
+          nums[j + dk] = nums[j];
+        }
+        nums[j + dk] = temp;
+      }
+    }
+  }
+}
+```
+
 #### (算法效率)
 
 ***空间复杂度***：$O(1)$.
@@ -2660,4 +2688,127 @@ int main(int argc, char *argv[]) {
 
 (***稳定性***)
 
+**不稳定.**
+
 由于我们每一次排序是将表先拆分为若干个子表进行排序，所以说很有可能原本两个相等的元素被拆为到另外的两个子表当中，排序之后可能会导致该两个相同的元素的相对位置发生改变。
+
+## 9.3 交换排序
+
+> 所谓交换排序，是根据序列中两个元素关键字的比较结果来对换这两个记录在序列中的位置。
+
+*冒泡排序和快速排序.*
+
+### 9.3.1冒泡排序
+
+该种算法的思想就是，每一次两个两个从前往后进行比较，如果不符合我们的规定的顺序就进行交换。我们从头到尾遍历一遍就相当于冒泡一遍，最坏的情况下我们需要冒泡n次，除非中间我们发现已经有序了，就停止冒泡。
+
+***示例代码：***
+
+```C++
+// 4.冒泡排序:
+void Bubble_Sort(std::vector<int> &nums) {
+  int temp;
+  for (int i = 0; i < nums.size(); ++i) {
+    bool flag = true;
+    for (int j = 0; j < nums.size() - 1; ++j) {
+      if (nums[j] > nums[j + 1]) {
+        flag = false;
+        temp = nums[j + 1];
+        nums[j + 1] = nums[j];
+        nums[j] = temp;
+      }
+    }
+    show_nums(nums);
+    // 如果该轮冒泡之后，flag变量仍然为true，说明此时的序列已经有序，我们不需要再次进行排序:
+    if (flag) {
+      return;
+    }
+  }
+}
+```
+
+#### (算法效率)
+
+***空间复杂度：***$O(1)$.
+
+***时间复杂度：***
+
+​		最好$O(n).$
+
+​		最坏$O(n_{2})$.
+
+​		平均$O(n_{2})$.
+
+(***稳定性***)
+
+看你实现，一般是稳定的，也就是我们要求只有不等的时候才进行交换。
+
+### 9.3.2快速排序算法
+
+该算法的思想是从待排序的表中取出一个元素，然后在该表当中寻找该元素的正确位置，使得该元素左边的元素全部都是小于该元素，右边的元素全部大于该元素。接着将整个待排序表分为两部分，分别对左边的部分和右边的部分分别使用快速排序算法递归调用。
+
+```C++
+// 5. 快速排序算法:
+int Quick(std::vector<int> &nums, int low, int high);
+void Quick_Sort(std::vector<int> &nums, int low, int high);
+
+void Quick_Sort_Algori(std::vector<int> &nums) {
+  if (nums.empty()) {
+    return;
+  }
+  Quick_Sort(nums, 0, nums.size() - 1);
+}
+
+void Quick_Sort(std::vector<int> &nums, int low, int high) {
+  // 注意这里不能写low == high,第一次写该算法的时候就是这里写了== 导致在这里找bug找了半天
+  // 如果这里是等于的话，当左边或者右边只有连个元素的时候，下一轮一定是相等的，在调用了Quick_Sort()算法
+  // 时候，会导致high比low小，但是不相等，但是由于我们在这里写的是==导致不会停止.
+  if (low >= high) {
+    return;
+  }
+  int pivot = Quick(nums, low, high);
+  Quick_Sort(nums, low, pivot - 1);
+  show_nums(nums);
+  Quick_Sort(nums, pivot + 1, high);
+  show_nums(nums);
+}
+
+// 快速排序算法辅助函数，我们此算法的目的是为了获得当前low指针指向的元素应该在的位置，然后再次分为两组.
+int Quick(std::vector<int> &nums, int low, int high) {
+  int temp = nums[low];
+  while (low < high) {
+    for (; low < high && nums[high] >= temp; --high);
+    nums[low] = nums[high];
+    for (;low < high && nums[low] <= temp; ++low);
+    nums[high] = nums[low];
+  }
+
+  nums[low] = temp;
+  return low;
+}
+```
+
+#### (算法效率)
+
+其实快速排序就是将所有的元素组织成为一棵二叉树，而二叉树的层数就是算法递归的深度，也就是我们的空间复杂度。
+
+***空间复杂度：***
+
+​		最好情况: $O(log_{2}n)$.
+
+​		最坏情况: $O(n)$.n 
+
+***时间复杂度：***
+
+​		最好情况: $O(nlog_{2}n)$.
+
+​		最坏情况: $O(n_{2})$. 此时的二叉树就是单边树.
+
+​		***平均情况：***$O(nlog_{2}n)$
+
+整个待排序数组分成了一个二叉树，我们对每一个结点的所花费的时候为$O(n)$.
+
+(***稳定性***)
+
+不稳定.当low或者high指向的元素和pivot元素相等的时候，我们会选择略过，这就会导致原来位于pivot左边的low在经过排序之后，low会跑到pivot右边.
+
