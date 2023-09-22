@@ -904,5 +904,138 @@ int main(int argc, char *argv[]) {
 
 所以说，对于***去重***，在树形结构中是存在两个维度的，一个维度是在树枝上使用过，另一个维度是同一树层使用过。***我们需要清楚的认识到什么情况下应该以什么角度来思考去重！***
 
-- 
 
+
+# 4. 哈希
+
+## 49.Group Anagrams(字母异位词)
+
+> Question: https://leetcode.com/problems/group-anagrams/description/
+>
+> Given an array of strings `strs`, group **the anagrams** together. You can return the answer in **any order**.
+>
+> An **Anagram** is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once. 
+>
+> **Example 1:**
+>
+> ```
+> Input: strs = ["eat","tea","tan","ate","nat","bat"]
+> Output: [["bat"],["nat","tan"],["ate","eat","tea"]]
+> ```
+>
+> **Example 2:**
+>
+> ```
+> Input: strs = [""]
+> Output: [[""]]
+> ```
+>
+> **Example 3:**
+>
+> ```
+> Input: strs = ["a"]
+> Output: [["a"]]
+> ```
+
+### (49.第一种解法，失败)
+
+该种解法的想法是，一个一个来进行比较，是否是字母异位词，如果是的话，就将其安排到同一个数组当中并插进结果当中，并且同时将其删除；一直这样做，直到Input数组为空为止。
+
+```C++
+class Solution {
+  vector<vector<string>> result;
+  vector<string> set;
+
+public:
+  vector<vector<string>> groupAnagrams(vector<string> &strs) {
+    // if strs is NULL, return NULL
+    if (strs.empty()) {
+      return result;
+    }
+
+    //
+    while (!strs.empty()) {
+      tools(strs);
+    }
+
+    return result;
+  }
+
+  void tools(vector<string> &strs) {
+    set.clear();
+    string temp = strs[0];
+
+    // initialization
+    set.push_back(temp);
+    strs.erase(strs.begin());
+    if (strs.empty()) {
+      result.push_back(set);
+      return;
+    }
+
+    for (auto it = strs.begin(); it != strs.end();) {
+      if (isAnagram(temp, *it)) {
+        set.push_back(*it);
+        it = strs.erase(it);
+      }else {
+        ++it;
+      }
+    }
+
+    result.push_back(set);
+  }
+
+
+  // Check two string if is Anagram:
+  bool isAnagram(const string &str_1, const string &str_2) {
+    int record[26] = {0};
+
+    for (int i = 0; i < str_1.size(); ++i) {
+      record[str_1[i] - 'a']++;
+    }
+
+    for (int i = 0; i < str_2.size(); ++i) {
+      record[str_2[i] - 'a']--;
+    }
+    for (int i = 0; i < 26; ++i) {
+      if (record[i] != 0) {
+        return false;
+      }
+    }
+    return true;
+  }
+};
+```
+
+示例代码：[example.cpp](./Problems/49.Group_Anagrams/main_v1.cpp)。
+
+### (49.第二种解法，成功，但是没有自己实现哈希)
+
+第二种的解法的关键是先对每一个字符串进行排序，然后按照排好顺序的字符串为key，构造哈希表，遍历每一个元素，如果两个字符串是字母异位词的话，那么其对应的key应该是相同的，他们会被插入到相同的vector中，最终返回结果即可。
+
+```c++
+class Solution {
+  vector<vector<string>> result;
+  vector<string> set;
+
+public:
+  vector<vector<string>> groupAnagrams(vector<string> &strs) {
+    std::unordered_map<string, vector<string>> map;
+
+    for (string elem: strs) {
+      string t = elem;
+      std::sort(t.begin(), t.end());
+      map[t].push_back(elem);
+    }
+
+    vector<vector<string>> anagrams;
+
+    for (auto elem : map) {
+      anagrams.push_back(elem.second);
+    }
+    return anagrams;
+  }
+};
+```
+
+示例代码：[example.cpp](./Problems/49.Group_Anagrams/main.cpp)。

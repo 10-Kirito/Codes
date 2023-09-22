@@ -907,3 +907,137 @@ public:
 ### (216.Key of question)
 
 This problem can be solved by using the backtracking algorithm.
+
+# 4.HashTable
+
+## 49.Group Anagrams
+
+> Question: https://leetcode.com/problems/group-anagrams/description/
+>
+> Given an array of strings `strs`, group **the anagrams** together. You can return the answer in **any order**.
+>
+> An **Anagram** is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once. 
+>
+> **Example 1:**
+>
+> ```
+> Input: strs = ["eat","tea","tan","ate","nat","bat"]
+> Output: [["bat"],["nat","tan"],["ate","eat","tea"]]
+> ```
+>
+> **Example 2:**
+>
+> ```
+> Input: strs = [""]
+> Output: [[""]]
+> ```
+>
+> **Example 3:**
+>
+> ```
+> Input: strs = ["a"]
+> Output: [["a"]]
+> ```
+
+### (49.First solution, Failed)
+
+The idea of this solution is to compare them one by one to see if they are anagrams. If so, arrange them into the same array and insert them into the result, and delete them at the same time; keep doing this until until the input array is empty.
+
+```C++
+class Solution {
+  vector<vector<string>> result;
+  vector<string> set;
+
+public:
+  vector<vector<string>> groupAnagrams(vector<string> &strs) {
+    // if strs is NULL, return NULL
+    if (strs.empty()) {
+      return result;
+    }
+
+    //
+    while (!strs.empty()) {
+      tools(strs);
+    }
+
+    return result;
+  }
+
+  void tools(vector<string> &strs) {
+    set.clear();
+    string temp = strs[0];
+
+    // initialization
+    set.push_back(temp);
+    strs.erase(strs.begin());
+    if (strs.empty()) {
+      result.push_back(set);
+      return;
+    }
+
+    for (auto it = strs.begin(); it != strs.end();) {
+      if (isAnagram(temp, *it)) {
+        set.push_back(*it);
+        it = strs.erase(it);
+      }else {
+        ++it;
+      }
+    }
+
+    result.push_back(set);
+  }
+
+
+  // Check two string if is Anagram:
+  bool isAnagram(const string &str_1, const string &str_2) {
+    int record[26] = {0};
+
+    for (int i = 0; i < str_1.size(); ++i) {
+      record[str_1[i] - 'a']++;
+    }
+
+    for (int i = 0; i < str_2.size(); ++i) {
+      record[str_2[i] - 'a']--;
+    }
+    for (int i = 0; i < 26; ++i) {
+      if (record[i] != 0) {
+        return false;
+      }
+    }
+    return true;
+  }
+};
+```
+
+example codes：[example.cpp](./Problems/49.Group_Anagrams/main_v1.cpp)。
+
+### (49.Second solution, Succeed,But not with owned hash algorithm)
+
+The key to the second solution is to sort each string first, then construct a hash table based on the sorted strings as keys, and traverse each element. If the two strings are anagrams, Then the corresponding keys should be the same, they will be inserted into the same vector, and the result will be returned.
+
+```c++
+class Solution {
+  vector<vector<string>> result;
+  vector<string> set;
+
+public:
+  vector<vector<string>> groupAnagrams(vector<string> &strs) {
+    std::unordered_map<string, vector<string>> map;
+
+    for (string elem: strs) {
+      string t = elem;
+      std::sort(t.begin(), t.end());
+      map[t].push_back(elem);
+    }
+
+    vector<vector<string>> anagrams;
+
+    for (auto elem : map) {
+      anagrams.push_back(elem.second);
+    }
+    return anagrams;
+  }
+};
+```
+
+example codes：[example.cpp](./Problems/49.Group_Anagrams/main.cpp)。
