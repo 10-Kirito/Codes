@@ -2812,3 +2812,178 @@ int Quick(std::vector<int> &nums, int low, int high) {
 
 不稳定.当low或者high指向的元素和pivot元素相等的时候，我们会选择略过，这就会导致原来位于pivot左边的low在经过排序之后，low会跑到pivot右边.
 
+## 9.4 选择排序
+
+> 每一趟在待排序元素中选取关键字最小或者最大的元素加入有序子序列。
+
+### 9.4.1 简单选择排序
+
+该算法的思想就是对待排序的$n$个元素进行$(n-1)$趟排序，第i趟排序会将区间$[i,n]$之间的最小的元素或者最大的元素和位于第i个位置的元素交换位置。这样的话，经过$n-1$趟排序就可以将原来无序的序列排序为有序的。
+
+***示例代码：***
+
+```C++
+#include <iostream>
+#include <vector>
+
+// 辅助输出函数:
+void show_nums(const std::vector<int> &nums) {
+  for (const auto &elem : nums) {
+    std::cout << elem << " ";
+  }
+
+  std::cout << std::endl;
+}
+
+void select_sort(std::vector<int> &nums) {
+  // 首先需要进行n-1趟排序:
+  for (int i = 0; i < (nums.size() - 1); ++i) {
+    // 每一次排序从区间[j,n-1]中选择出最小的元素，将其和元素j进行交换:
+    // 我们是记录位置:
+    int min = i;
+    for (int j = i + 1; j < nums.size(); ++j) {
+      if (nums[j] < nums[min]) {
+        min = j;
+      }
+    }
+    // 找出最小的元素之后，将其余位置i上的元素进行交换:
+    std::swap(nums[i], nums[min]);
+    /* int temp = nums[i];
+    nums[i] = nums[min];
+    nums[min] = temp; */
+    show_nums(nums);
+  }
+}
+
+int main(int argc, char *argv[]) {
+  std::vector<int> nums{49, 38, 65, 97, 76, 13, 27, 49};
+  show_nums(nums);
+  select_sort(nums);
+  std::cout << "简单选择排序:" << std::endl;
+  show_nums(nums);
+  return 0;
+}
+```
+
+#### (算法效率)
+
+***空间复杂度：***$O(1)$.
+
+***时间复杂度：***$O(n_{2})$.
+
+无论有序、逆序还是乱序，都需要进行$n-1$趟处理，总共需要对比关键字$(n-1)+(n-2)+...+1= \frac{n(n-1)}{2}$次，元素交换次数小于$n-1$.
+
+(***稳定性***)
+
+不稳定.
+
+### 9.4.2 堆排序
+
+堆排序(Heap Sort)是一种树型选择排序，在排序的过程中，将待排序的记录$L[1...n]$看成一棵完全二叉树的顺序存储结构，利用完全二叉树中双亲结点和孩子结点之间的内在联系，在当前无序中选择关键字最大或者最小的记录。
+
+堆的定义如下，n个关键字序列$L[1...n]$称为堆，当且仅当该序列满足:
+
+1. $L(i)\ge L(2i)$且$L(i)\ge L(2i+1)$ ($i \leq n/2$), 在树型结构中的意思就是所有的父结点都比左孩子以及右孩子都要大，满足该种定义的话，称之为大堆；
+2. $L(i)\leq L(2i)$且$L(i)\leq L(2i+1)$ ($i \leq n/2$), 在树型结构中的意思就是所有的父结点都要左孩子以及右孩子都要小，满足该定义的话，称之为小堆；
+
+> PS: 在顺序存储的完全二叉树中，非终端结点的编号为$i \leq n/2$.
+
+(***建立大根堆***)
+
+从后面往前依次遍历非终端结点，检查当前结点是否满足根 $\ge$ 左、右，如果不满足的话，将当前结点与更大的一个孩子进行互换。
+
+***若元素互换破坏了下一级的堆，则采用相同的方法继续往下进行调整。***
+
+(***算法思想***)
+
+堆排序算法的思想就是对待排序序列建立大根堆，这样的话我们就可以得到一个最大值(也就相当于选择排序，只不过我们寻找最大值或者最小值的方法不一样而已)，我们将最大值和最后的一个元素进行交换。***接着，我们再次对除去已经插好位置的元素再次建立大根堆***，这就又得到了又一个最大值，然后将其插放在适当的位置之后，再次建立大根堆，一直到元素的个数为1为止。
+
+***示例代码：***
+
+```C++
+#include <iostream>
+#include <vector>
+
+// 辅助输出函数:
+void show_nums(const std::vector<int> &nums) {
+  for (const auto &elem : nums) {
+    std::cout << elem << " ";
+  }
+
+  std::cout << std::endl;
+}
+
+void heap_adjust(std::vector<int> &nums, int end);
+
+// 堆排序算法:
+void heap_sort(std::vector<int> &nums) {
+  int temp;
+  for (int i = nums.size() - 1; i > 0; --i) {
+    // 循环n-1次，每一次我们都构建一个大根堆
+    heap_adjust(nums, i);
+    // 交换最大值和i指向的元素，然后进入下一次遍历
+    temp = nums[i];
+    nums[i] = nums[0];
+    nums[0] = temp;
+    show_nums(nums);
+  }
+}
+
+// 建立大根堆算法:
+// 将nums数组的[0,end]区间的元素建立大根堆.
+void heap_adjust(std::vector<int> &nums, int end) { 
+  for (int i = (end - 1) / 2; i >= 0; --i) { 
+    // 由于我们的数组是从[0,n]开始的，所以说最后一个非终端结点为(end -1) / 2.
+    // 这里使用next变量来存储我们待会i指向的值可能会被换到的位置:
+    int next = i;
+    int temp = nums[i];
+    for (int k = (next * 2 + 1); k <= end;) {
+      int max = k;                           
+      // 这里的k < end是为了防止只有一个孩子结点，此时就会出现越界的情况:
+      // 后面的判断条件是只有当右孩子更大的时候，我们才更新max为k+1,否则就是原来的k
+      if (k < end && nums[k] < nums[k + 1])
+        max = k + 1;
+      if (nums[next] < nums[max]) {  
+        // 比较父母结点与左右孩子结点中的最大值，如果父母本来就比两个孩子大的话
+        // 就什么也不用做，如果父母没有两个孩子大，就将父母和两个孩子交换位置:
+        nums[next] = nums[max];
+        nums[max] = temp;
+        next = max;
+      }
+      // 查看下面是否由于我们本次的调整导致下面不满足最大堆的的定义:
+      k = (k * 2 + 1);
+    }
+  }
+}
+
+int main(int argc, char *argv[]) {
+  std::vector<int> nums{49, 38, 65, 97, 76, 13, 27, 49};
+  show_nums(nums);
+  heap_sort(nums);
+  std::cout << "堆排序:" << std::endl;
+  show_nums(nums);
+  std::cout << "---------------------" << std::endl;
+  std::vector<int> nums_1{87, 45, 78, 32, 17, 65, 53, 9};
+  show_nums(nums_1);
+  heap_sort(nums_1);
+  std::cout << "堆排序:" << std::endl;
+  show_nums(nums_1);
+  return 0;
+}
+```
+
+#### (算法效率)
+
+调整的时间与树高有关，为 $\small O(h)$。在建含 n 个元素的堆时，关键字的比较总次数不超过 4n，时间复杂度为$ \small O(n)$，这说明***可以在线性时间内将一个无序数组建成一个堆。***
+
+***堆排序适合关键字较多的情况。***例如，在 1 亿个数中选出前 100 个最大值？首先使用一个大小为 100 的数组，读入前100个数，建立小顶堆，而后依次读入余下的数，若小于堆顶则舍弃，否则用该数取代堆顶并重新调整堆，待数据读取完毕，堆中 100 个数即为所求。 
+
+堆排序算法的性能分析如下：
+
+空间效率：仅使用了常数个辅助单元，所以空间复杂度为 0(1)。
+
+*时间效率：**建堆时间为 $\small O(n)$**，之后有 n - 1 次向下调整操作，**每次调整的时间复杂度为 $\small O(h)$**，故在最好、最坏和平均情况下，**堆排序的时间复杂度为 $\small O(nlogn)$。***
+
+(***稳定性***)
+
+进行筛选时，有可能把后面相同关键字的元素调整到前面，所以堆排序算法是一种不稳定的排序方法。例如，表 L = {1, **2**, 2}，构造初始堆时可能将 **2** 交换到堆顶，此时 L = {**2**, 1, 2}，最终排序序列为 L = {1, 2, **2**}，显然，2 与 **2** 的相对次序已发生变化。

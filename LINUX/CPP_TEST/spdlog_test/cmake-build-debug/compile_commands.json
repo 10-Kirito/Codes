@@ -1,0 +1,8 @@
+[
+{
+  "directory": "/home/kirito/3.Codes/LINUX/CPP_TEST/spdlog_test/cmake-build-debug",
+  "command": "/usr/bin/c++ -DFMT_LOCALE -DFMT_SHARED -DSPDLOG_FMT_EXTERNAL -g -fdiagnostics-color=always -o CMakeFiles/spdlog_examples.dir/hello.cpp.o -c /home/kirito/3.Codes/LINUX/CPP_TEST/spdlog_test/hello.cpp",
+  "file": "/home/kirito/3.Codes/LINUX/CPP_TEST/spdlog_test/hello.cpp",
+  "output": "CMakeFiles/spdlog_examples.dir/hello.cpp.o"
+}
+]
