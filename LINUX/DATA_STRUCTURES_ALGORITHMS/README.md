@@ -2525,7 +2525,7 @@ LL型插入：
 #include <iostream>
 #include <vector>
 
-void Insert_Sort(std::vector<int> &nums) {
+void insert_sort(std::vector<int> &nums) {
   int n = nums.size();
   int temp, j;
 
@@ -2587,7 +2587,7 @@ int main(int argc, char *argv[]) {
 #include <vector>
 
 // 2. 折半插入排序:
-void Insert_Sort(std::vector<int> &nums, bool) {
+void insert_sort(std::vector<int> &nums, bool) {
   int n = nums.size();
   int temp;
 
@@ -2656,7 +2656,7 @@ int main(int argc, char *argv[]) {
 
 ```C++
 // 3. 希尔排序:
-void Hill_Sort(std::vector<int> &nums) {
+void shell_sort(std::vector<int> &nums) {
   std::size_t n = nums.size();
   int dk;
 
@@ -2706,7 +2706,7 @@ void Hill_Sort(std::vector<int> &nums) {
 
 ```C++
 // 4.冒泡排序:
-void Bubble_Sort(std::vector<int> &nums) {
+void bubble_sort(std::vector<int> &nums) {
   int temp;
   for (int i = 0; i < nums.size(); ++i) {
     bool flag = true;
@@ -2749,36 +2749,38 @@ void Bubble_Sort(std::vector<int> &nums) {
 
 ```C++
 // 5. 快速排序算法:
-int Quick(std::vector<int> &nums, int low, int high);
-void Quick_Sort(std::vector<int> &nums, int low, int high);
+int quick(std::vector<int> &nums, int low, int high);
+void quick_sort(std::vector<int> &nums, int low, int high);
 
-void Quick_Sort_Algori(std::vector<int> &nums) {
+void quick_sort_algorithm(std::vector<int> &nums) {
   if (nums.empty()) {
     return;
   }
-  Quick_Sort(nums, 0, nums.size() - 1);
+  quick_sort(nums, 0, nums.size() - 1);
 }
 
-void Quick_Sort(std::vector<int> &nums, int low, int high) {
+void quick_sort(std::vector<int> &nums, int low, int high) {
   // 注意这里不能写low == high,第一次写该算法的时候就是这里写了== 导致在这里找bug找了半天
-  // 如果这里是等于的话，当左边或者右边只有连个元素的时候，下一轮一定是相等的，在调用了Quick_Sort()算法
+  // 如果这里是等于的话，当左边或者右边只有连个元素的时候，下一轮一定是相等的，在调用了quick_sort()算法
   // 时候，会导致high比low小，但是不相等，但是由于我们在这里写的是==导致不会停止.
   if (low >= high) {
     return;
   }
-  int pivot = Quick(nums, low, high);
-  Quick_Sort(nums, low, pivot - 1);
+  int pivot = quick(nums, low, high);
+  quick_sort(nums, low, pivot - 1);
   show_nums(nums);
-  Quick_Sort(nums, pivot + 1, high);
+  quick_sort(nums, pivot + 1, high);
   show_nums(nums);
 }
 
 // 快速排序算法辅助函数，我们此算法的目的是为了获得当前low指针指向的元素应该在的位置，然后再次分为两组.
-int Quick(std::vector<int> &nums, int low, int high) {
+int quick(std::vector<int> &nums, int low, int high) {
   int temp = nums[low];
   while (low < high) {
+    // 从右边寻找空位:
     for (; low < high && nums[high] >= temp; --high);
     nums[low] = nums[high];
+    // 从左边寻找空位:
     for (;low < high && nums[low] <= temp; ++low);
     nums[high] = nums[low];
   }
@@ -2898,6 +2900,8 @@ int main(int argc, char *argv[]) {
 
 堆排序算法的思想就是对待排序序列建立大根堆，这样的话我们就可以得到一个最大值(也就相当于选择排序，只不过我们寻找最大值或者最小值的方法不一样而已)，我们将最大值和最后的一个元素进行交换。***接着，我们再次对除去已经插好位置的元素再次建立大根堆***，这就又得到了又一个最大值，然后将其插放在适当的位置之后，再次建立大根堆，一直到元素的个数为1为止。
 
+所以说代码的核心在于我们如何建立大根堆或者小根堆，我们建立之后只需遍历一边即可完成排序。
+
 ***示例代码：***
 
 ```C++
@@ -2978,7 +2982,7 @@ int main(int argc, char *argv[]) {
 
 ***堆排序适合关键字较多的情况。***例如，在 1 亿个数中选出前 100 个最大值？首先使用一个大小为 100 的数组，读入前100个数，建立小顶堆，而后依次读入余下的数，若小于堆顶则舍弃，否则用该数取代堆顶并重新调整堆，待数据读取完毕，堆中 100 个数即为所求。 
 
-堆排序算法的性能分析如下：
+z堆排序算法的性能分析如下：
 
 空间效率：仅使用了常数个辅助单元，所以空间复杂度为 0(1)。
 
@@ -2987,3 +2991,30 @@ int main(int argc, char *argv[]) {
 (***稳定性***)
 
 进行筛选时，有可能把后面相同关键字的元素调整到前面，所以堆排序算法是一种不稳定的排序方法。例如，表 L = {1, **2**, 2}，构造初始堆时可能将 **2** 交换到堆顶，此时 L = {**2**, 1, 2}，最终排序序列为 L = {1, 2, **2**}，显然，2 与 **2** 的相对次序已发生变化。
+
+#### (堆的插入和删除)
+
+- 堆的插入：
+
+对于小根堆的话，我们插入一个元素的时候，我们先将其放在最后面，接着依次去比较***新插入元素***以及***其父结点元素***的大小，如果小的话，就交换***新插入元素***和***其父结点元素***。一直进行比较和交换，一直到根结点。
+
+- 堆的删除：
+
+对于小根堆的话，我们删除一个元素之后，将堆底的元素来代替刚刚删除的元素的位置然后，让该元素进行下坠，一直到不能下坠为止。这里的下坠即使将刚才代替的元素和其孩子结点的大小进行比较，如果是大于的话，就进行交换，也就是所谓的下坠。
+
+## 9.5 归并排序
+
+归并排序，就像名字所展示的那样，我们是将两个或者两个以上的已经有序的序列合并成一个有序的序列。
+
+
+
+
+
+
+
+## 9.6 基数排序
+
+
+
+
+

@@ -27,14 +27,17 @@ void heap_sort(std::vector<int> &nums) {
 // 建立大根堆算法:
 // 将nums数组的[0,end]区间的元素建立大根堆.
 void heap_adjust(std::vector<int> &nums, int end) { 
+  // 关键在于这里我们得到最后一个非终端结点的下标，接着我们就可以从下面往上面进行遍历，保证将最大的一个元素放在
+  // 二叉树的根结点的位置:
+  // (我们建立小根堆的也是同样的的道理，我们只不过将小于号换成了大于号)
   for (int i = (end - 1) / 2; i >= 0; --i) { // 由于我们的数组是从[0,n]开始的，所以说最后一个非终端结点为(end -1) / 2.
     int next = i;
     int temp = nums[i];
     for (int k = (next * 2 + 1); k <= end;) {
       int max = k;                           // 这里的k < end是为了防止只有一个孩子结点，此时就会出现越界的情况:
-      if (k < end && nums[k] < nums[k + 1])  // 如果左孩子更大一点:
+      if (k < end && nums[k] > nums[k + 1])  // 如果左孩子更大一点:
         max = k + 1;
-      if (nums[next] < nums[max]) {  // 比较父母结点与左右孩子结点中的最大值，如果父母本来就比两个孩子大的话
+      if (nums[next] > nums[max]) {  // 比较父母结点与左右孩子结点中的最大值，如果父母本来就比两个孩子大的话
         nums[next] = nums[max];      // 就什么也不用做，如果父母没有两个孩子大，就将父母和两个孩子交换位置:
         nums[max] = temp;
         next = max;
