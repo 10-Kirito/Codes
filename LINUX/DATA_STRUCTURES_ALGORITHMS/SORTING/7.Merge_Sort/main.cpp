@@ -14,18 +14,22 @@ std::vector<int> merge(const std::vector<int> &lh, const std::vector<int> &rh) {
 
   int i{0}, j{0}, k{0};
 
-  while (i < n || j < m) {
-    if (lh[i] < rh[j] && i < n && j < m || i < n && j >= m) {
-      result[k] = lh[i];
-      ++i;
+  while (i < n && j < m) {
+    if (lh[i] < rh[j]) {
+      result[k++] = lh[i++];
     }
-    if (lh[i] >= rh[j] && i < n && j < m || i >= n && j < m) {
-      result[k] = rh[j];
-      ++j;
+    if (lh[i] >= rh[j]) {
+      result[k++] = rh[j++];
     }
-    ++k;
   }
 
+  while (i < n) {
+    result[k++] = lh[i++];
+  }
+
+  while (j < m) {
+    result[k++] = rh[j++];
+  }
   return result;
 }
 
@@ -42,7 +46,7 @@ int main(int argc, char *argv[]) {
   std::vector<int> vector_2{2, 100, 101, 102, 104};
   std::vector<int> vector_3{1, 23, 60, 70, 99};
 
-  std::vector<int> result = merge(vector_1, vector_2);
+  std::vector<int> result = merge(vector_1, vector_2, vector_3,vector_2);
 
   for (const auto &elem : result) {
     std::cout << elem << " ";
