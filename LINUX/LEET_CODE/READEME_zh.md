@@ -1,7 +1,5 @@
 # Algorithm
 
-[![](https://camo.githubusercontent.com/15a53d5ec5d896319068168a27da0203156bbdb9/68747470733a2f2f6a617977636a6c6f76652e6769746875622e696f2f73622f6c616e672f656e676c6973682e737667)](README.md)[![](https://camo.githubusercontent.com/cb8cb80af654f3dae14a4aa62e44bf62f16953d6/68747470733a2f2f6a617977636a6c6f76652e6769746875622e696f2f73622f6c616e672f6368696e6573652e737667)](README_zh.md)
-
 # 1. 数组
 
 ## 1.Two Sum
@@ -1042,3 +1040,60 @@ public:
 
 # 5. 动态规划
 
+
+
+
+
+# 6. 并查集
+
+> 基本概念可以参考: [并查集](../DATA_STRUCTURES_ALGORITHMS/README.md)
+
+## 200. 岛屿数量问题
+
+> https://leetcode.com/problems/number-of-islands/
+
+> 通过该道题我们可以看到，如果我们想要去利用并查集去解决问题的话，我们首先需要先抓住问题的核心关键点，该题目中，我们首先需要将那些'0'即海水的结点给排除掉，因为他们不参与合并的过程，我们仅仅需要考虑那些岛屿结点，我们将这些岛屿结点合并之后就可以很快的解决这个问题！
+>
+> 还有一点需要注意的是，我们有的时候可以直接简单手搓一个并查集，因为并查集这个数据结构本身的内容就不多，所以说我们可以选择直接写一个并查集，然后去使用他；但是有的时候我们其实只是利用其中的一个逻辑就是合并和查找，我们有的时候也没有必要去重新实现一个！
+
+- *并查集解决方案：*
+
+[200.Number_Of_Islands](../LEET_CODE/UnionSet/200.Number_Of_Islands/200.number-of-islands-union-find.cpp)
+
+- *dfs深度优先遍历解决方案：*
+
+[200.Number_Of_Islands](../LEET_CODE/UnionSet/200.Number_Of_Islands/200.number-of-islands-dfs.cpp)
+
+
+
+## 128. 求最长连续序列的长度问题
+
+> #### https://leetcode.com/problems/longest-consecutive-sequence/description/ 
+
+> 经过分析我们很明显的可以感觉到这个题目就是一个可以使用并查集来解决的问题，而且我们注意到我们求的是不是并查集的个数，而是并查集当中最大的那一个树的结点的数量，我们最好的解决办法就是之前在启发式合并当中使用到的`size`数组，我们可以利用来记录每一个集合的数量，接着我们只需要构建并查集这个数据结构即可。
+>
+> 我们也可以多一个成员变量`maxsize`，就是动态的实时的记录并查集当中的最大的那一个树的结点的个数。
+>
+> ***注意，我们在分析问题的时候注意变通，上一个并查集题目我们不需要求出每一个集合当中元素的个数，所以说上一道题目我们不需要去设置`maxsize`这个成员变量，但是本题目的话，很显然，我们是需要的！！！***
+
+- *并查集解决方案*：
+
+[200.Longest-consecutive-sequence](../LEET_CODE/UnionSet/128.Longest_Consecutive_Sequence/128.Longest_Consecutive_Sequence.cpp)
+
+- *另外一种简单的解决方案：*
+
+[200.Longest-consecutive-sequence](../LEET_CODE/UnionSet/128.Longest_Consecutive_Sequence/128.Longest_Consecutive_Sequence_another.cpp)
+
+## 130. Surrounded_regions
+
+> https://leetcode.com/problems/surrounded-regions/description/
+
+> 首先，这一题第一次做的时候是没有做出来，看的别人的题解。
+>
+> 该问题就是一种我们知道可以使用并查集来解决的，但是我们如何将该道题与并查集联系起来，接着来解决该问题。
+>
+> 通过问题描述可以知道，如果$O$是被$X$所包围的话就要将其替换为$X$, 如果有$O$位于边界之上的话，其不能被替换。那么我们就可以令位于边界之上的结点以及与其连通的结点归属为一个集合，该集合属于特殊集合，我们需要在初始化并查集的时候额外的初始化一个，如果结点与该特殊结点位于一个集合当中的话，说明该结点不能被替换，否则就会被替换掉!!!
+
+- 并查集解决方案：
+
+[130.Surrounded-regioins](../LEET_CODE/UnionSet/130.Surrounded_Regions/130.surrounded_regions.cpp)
