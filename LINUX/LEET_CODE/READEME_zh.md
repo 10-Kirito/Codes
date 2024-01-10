@@ -1098,11 +1098,44 @@ public:
 
 [130.Surrounded-regioins](../LEET_CODE/UnionSet/130.Surrounded_Regions/130.surrounded_regions.cpp)
 
+## 261. 以图判树(无向图判断环)
 
+> 给定编号从 `0` 到 `n - 1` 的 `n` 个结点。给定一个整数 `n` 和一个 `edges` 列表，其中 `edges[i] = [ai, bi]` 表示图中节点 `ai` 和 `bi` 之间存在一条无向边。
+>
+> 如果这些边能够形成一个合法有效的树结构，则返回 `true` ，否则返回 `false` 。
+>
+> **示例 1：**
+>
+> <img src="https://assets.leetcode.com/uploads/2021/03/12/tree1-graph.jpg" alt="img" style="zoom:50%;" />
+>
+> ```
+> 输入: n = 5, edges = [[0,1],[0,2],[0,3],[1,4]]
+> 输出: true
+> ```
+>
+> **示例 2:**
+>
+> <img src="https://assets.leetcode.com/uploads/2021/03/12/tree2-graph.jpg" alt="img" style="zoom:50%;" />
+>
+> ```
+> 输入: n = 5, edges = [[0,1],[1,2],[2,3],[1,3],[1,4]]
+> 输出: false 
+> ```
+>
+> **提示：**
+>
+> - `1 <= n <= 2000`
+> - `0 <= edges.length <= 5000`
+> - `edges[i].length == 2`
+> - `0 <= ai, bi < n`
+> - `ai != bi`
+> - 不存在自循环或重复的边
 
+- 并查集解法：
 
+[261.Graph-Vaild-Tree-Union-Set](../LEET_CODE/UnionSet/261.Graph_Vaild_Tree/261.graph_vaild_tree_union_set.cpp)
 
-
+> 并查集的做法就是，一开始所有的结点都各自为营，之后遍历所有的边，如果两个顶点属于不同的集合的话，就将二者合并，之后如果发现一条边的两个结点都处于一个集合的话，就说明该无向图存在环!!!
 
 # 7. 图论
 
@@ -1200,7 +1233,7 @@ void traverse(Graph graph, int s) {
 > - `ai != bi`
 > - 不存在自循环或重复的边
 
-该题目实际上就是一个判定无向图是否存在环的问题！这里需要和判定有向图是否存在环区别开来！！！
+该题目实际上就是一个判定向图是否存在环的问题！这里需要和判定有向图是否存在环区别开来！！！
 
 - 深度有限遍历解法：
 
