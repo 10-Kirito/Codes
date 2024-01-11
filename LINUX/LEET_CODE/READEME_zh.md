@@ -1137,6 +1137,53 @@ public:
 
 > 并查集的做法就是，一开始所有的结点都各自为营，之后遍历所有的边，如果两个顶点属于不同的集合的话，就将二者合并，之后如果发现一条边的两个结点都处于一个集合的话，就说明该无向图存在环!!!
 
+## 323. 无向图中连通分量的数目
+
+> 你有一个包含 `n` 个节点的图。给定一个整数 `n` 和一个数组 `edges` ，其中 `edges[i] = [ai, bi]` 表示图中 `ai` 和 `bi` 之间有一条边。
+>
+> 返回 *图中已连接分量的数目* 。
+>
+>  
+>
+> **示例 1:**
+>
+> <img src="https://assets.leetcode.com/uploads/2021/03/14/conn1-graph.jpg" alt="img" style="zoom:50%;" />
+>
+> ```
+> 输入: n = 5, edges = [[0, 1], [1, 2], [3, 4]]
+> 输出: 2
+> ```
+>
+> **示例 2:**
+>
+> <img src="https://assets.leetcode.com/uploads/2021/03/14/conn2-graph.jpg" alt="img" style="zoom:50%;" />
+>
+> ```
+> 输入: n = 5, edges = [[0,1], [1,2], [2,3], [3,4]]
+> 输出:  1
+> ```
+>
+>  
+>
+> **提示：**
+>
+> - `1 <= n <= 2000`
+> - `1 <= edges.length <= 5000`
+> - `edges[i].length == 2`
+> - `0 <= ai <= bi < n`
+> - `ai != bi`
+> - `edges` 中不会出现重复的边
+
+- 并查集解法：
+
+[323.Solution.cpp](../LEET_CODE/UnionSet/323.Number_Of_Connected_CIAUG/323.main.cpp)
+
+> 这一道题就是基本的并查集做法，只需要简单实现一下相应的`unite`函数和`find`函数即可!
+
+
+
+
+
 # 7. 图论
 
 ## 7.0 前提补充
