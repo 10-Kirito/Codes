@@ -1040,9 +1040,35 @@ public:
 
 # 5. 动态规划
 
+## 509.  斐波那契数
 
+> https://leetcode.cn/problems/fibonacci-number/description/
 
+- 暴力递归解决方案：
 
+[509.Fibonacci_Number(暴力递归解法)](./Dynamic_Programming/509.Fibonacci_Number/main_1.cpp)
+
+> 我们来看一下递归解法的递归树(来自[labuladong 的算法笔记](https://labuladong.github.io/algo/))：
+>
+> <img src="assets/image-20240117113228927.png" alt="image-20240117113228927" style="zoom:50%;" />
+>
+> 通过上面的递归树，我们很容易的看到我们存在大量的重复计算。如果计算该算法的复杂度的话，我们可以看到递归的个数为树的结点的个数为$O(2^n)$， 每一次递归的时间为$O(1)$, 所以说该算法的时间复杂度为$O(2^n)$， 成爆炸性增长。
+>
+> 所以说我们如果可以减少重复计算的次数的话，我们就可以减少大量的时间。
+
+- 带备忘录的递归解法：
+
+[509.Fibonacci_Number(带备忘录的递归解法)](./Dynamic_Programming/509.Fibonacci_Number/main_2.cpp)
+
+> 上面第一种暴力递归解法的问题所在就是存在大量的重复计算，所以说我们可以暂且将那些计算过的值存储起来，之后我们递归计算的时候，先查看我们是否已经计算过该值，如果计算过直接使用就可以了。
+>
+> 此时我们需要进行的递归次数即为$fib(1), fib(2), fib(3), fib(4), fib(5) \dots$, 即为$O(n)$.所以递归算法的时间复杂度为$O(n)$.
+
+- 动态规划解法：
+
+[509.Fibonacci_Number(动态规划解法)](./Dynamic_Programming/509.Fibonacci_Number/main.cpp)
+
+> 其实上面的第二种解法已经接近正常的动态规划解法，但是上面的第二种解法是自顶向下的，我们更常用的动态规划则是自底向上的。
 
 # 6. 并查集
 
